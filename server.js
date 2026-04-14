@@ -65,15 +65,14 @@ app.post("/lead", async (req, res) => {
   try {
     const lead = req.body;
 
-    const name = lead.name || "there";
-    const email = lead.email || "";
-    const phone = lead.phone || "";
-    const projectType = lead.projectType || "";
-    const size = lead.size || "";
-    const condition = lead.condition || "";
-    const details = lead.details || "";
-    const photos = lead.photos || "";
-    const hasPhotos = !!photos;
+const name = lead.name || lead.Name || "there";
+const email = lead.email || lead.Email || "";
+const phone = lead.phone || lead.Phone || "";
+const projectType = lead.projectType || lead["Project Type"] || "";
+const size = lead.size || lead["Approximate size of the project"] || "";
+const condition = lead.condition || lead["Condition of walls"] || "";
+const details = lead.details || lead["Additional details (optional)"] || "";
+const photos = lead.photos || lead["Upload Photos (Recommended)"] || "";
 
     const [baseLow, baseHigh] = getBaseRange(projectType, size);
     const [low, high] = adjustRange(baseLow, baseHigh, condition, hasPhotos);
