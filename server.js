@@ -34,7 +34,7 @@ function getBaseRange(projectType, sizeText) {
   return [1200, 3500];
 }
 
-function adjustRange(low, high, condition, hasPhotos) {
+function adjustRange(low, high, condition) {
   const c = (condition || "").toLowerCase();
 
   if (c.includes("minor")) {
@@ -43,10 +43,6 @@ function adjustRange(low, high, condition, hasPhotos) {
   } else if (c.includes("heavy")) {
     low *= 1.2;
     high *= 1.35;
-  }
-
-  if (!hasPhotos) {
-    high *= 1.15;
   }
 
   low = Math.round(low / 50) * 50;
@@ -69,38 +65,12 @@ console.log("RAW BODY:", JSON.stringify(req.body, null, 2));
 
 const payload = req.body?.data || req.body?.body || req.body;
 
-const name =
-  payload.name ||
-  payload.Name ||
-  "there";
-
-const email =
-  payload.email ||
-  payload.Email ||
-  "";
-
-const phone =
-  payload.phone ||
-  payload.Phone ||
-  "";
-
-const projectType =
-  payload.projectType ||
-  payload["Project Type"] ||
-  "";
-
-const size =
-  payload.size ||
-  payload.Size ||
-  payload["Approximate size of the project"] ||
-  "";
-
-const condition =
-  payload.condition ||
-  payload.Condition ||
-  payload["Condition of walls"] ||
-  "";
-
+const name = payload.name || payload.Name || "there";
+const email = payload.email || payload.Email || "";
+const phone = payload.phone || payload.Phone || "";
+const projectType = payload.projectType || payload["Project Type"] || "";
+const size = payload.size || payload.Size || payload["Approximate size of the project"] || "";
+const condition = payload.condition || payload.Condition || payload["Condition of walls"] || "";
 const details =
   payload.details ||
   payload.Details ||
@@ -108,16 +78,10 @@ const details =
   payload["Anything else we should know?"] ||
   "";
 
-const photos =
-  payload.photos ||
-  payload.Photos ||
-  payload["Upload Photos (Recommended)"] ||
-  "";
-
-const hasPhotos = !!photos;
-
+// Photo is received but ignored for pricing
+const photos = payload.photos || payload.Photos || "";
     const [baseLow, baseHigh] = getBaseRange(projectType, size);
-    const [low, high] = adjustRange(baseLow, baseHigh, condition, hasPhotos);
+   const [low, high] = adjustRange(baseLow, baseHigh, condition);
 
     const prompt = `
 You are Ten Bell Painting's lead-response assistant.
@@ -136,7 +100,7 @@ Project type: ${projectType}
 Size: ${size}
 Condition: ${condition}
 Additional details: ${details}
-Photos uploaded: ${hasPhotos ? "yes" : "no"}
+Photos uploaded: ${photos ? "yes" : "no"}
 `;
 
     const response = await openai.responses.create({
@@ -179,7 +143,7 @@ Project Type: ${projectType}
 Size: ${size}
 Condition: ${condition}
 Details: ${details}
-Photos uploaded: ${hasPhotos ? "yes" : "no"}
+Photos: ${photos || "none"}
 
 Suggested range: $${low} to $${high}
 `,
