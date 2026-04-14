@@ -64,62 +64,57 @@ app.get("/", (req, res) => {
 
 app.post("/lead", async (req, res) => {
   try {
-    const lead = req.body;
+   const lead = req.body;
 console.log("RAW BODY:", JSON.stringify(req.body, null, 2));
 
-const payload = req.body?.body || req.body?.data || req.body;
+const payload = req.body?.data || req.body?.body || req.body;
 
 const name =
   payload.name ||
   payload.Name ||
-  payload["name"] ||
-  payload["Name"] ||
   "there";
 
 const email =
   payload.email ||
   payload.Email ||
-  payload["email"] ||
-  payload["Email"] ||
   "";
 
 const phone =
   payload.phone ||
   payload.Phone ||
-  payload["phone"] ||
-  payload["Phone"] ||
   "";
 
 const projectType =
   payload.projectType ||
   payload["Project Type"] ||
-  payload["projectType"] ||
   "";
 
 const size =
   payload.size ||
+  payload.Size ||
   payload["Approximate size of the project"] ||
-  payload["size"] ||
   "";
 
 const condition =
   payload.condition ||
+  payload.Condition ||
   payload["Condition of walls"] ||
-  payload["condition"] ||
   "";
 
 const details =
   payload.details ||
+  payload.Details ||
   payload["Additional details (optional)"] ||
   payload["Anything else we should know?"] ||
-  payload["details"] ||
   "";
 
 const photos =
   payload.photos ||
+  payload.Photos ||
   payload["Upload Photos (Recommended)"] ||
-  payload["photos"] ||
   "";
+
+const hasPhotos = !!photos;
 
     const [baseLow, baseHigh] = getBaseRange(projectType, size);
     const [low, high] = adjustRange(baseLow, baseHigh, condition, hasPhotos);
