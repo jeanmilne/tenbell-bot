@@ -7,6 +7,12 @@ const app = express();
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
+console.log("ENV CHECK:", {
+  hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+  hasGmailUser: !!process.env.GMAIL_USER,
+  hasGmailAppPassword: !!process.env.GMAIL_APP_PASSWORD,
+});
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
