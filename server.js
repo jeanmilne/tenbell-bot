@@ -5,6 +5,7 @@ const OpenAI = require("openai");
 
 const app = express();
 app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -64,15 +65,61 @@ app.get("/", (req, res) => {
 app.post("/lead", async (req, res) => {
   try {
     const lead = req.body;
+console.log("RAW BODY:", JSON.stringify(req.body, null, 2));
 
-const name = lead.name || lead.Name || "there";
-const email = lead.email || lead.Email || "";
-const phone = lead.phone || lead.Phone || "";
-const projectType = lead.projectType || lead["Project Type"] || "";
-const size = lead.size || lead["Approximate size of the project"] || "";
-const condition = lead.condition || lead["Condition of walls"] || "";
-const details = lead.details || lead["Additional details (optional)"] || "";
-const photos = lead.photos || lead["Upload Photos (Recommended)"] || "";
+const payload = req.body?.body || req.body?.data || req.body;
+
+const name =
+  payload.name ||
+  payload.Name ||
+  payload["name"] ||
+  payload["Name"] ||
+  "there";
+
+const email =
+  payload.email ||
+  payload.Email ||
+  payload["email"] ||
+  payload["Email"] ||
+  "";
+
+const phone =
+  payload.phone ||
+  payload.Phone ||
+  payload["phone"] ||
+  payload["Phone"] ||
+  "";
+
+const projectType =
+  payload.projectType ||
+  payload["Project Type"] ||
+  payload["projectType"] ||
+  "";
+
+const size =
+  payload.size ||
+  payload["Approximate size of the project"] ||
+  payload["size"] ||
+  "";
+
+const condition =
+  payload.condition ||
+  payload["Condition of walls"] ||
+  payload["condition"] ||
+  "";
+
+const details =
+  payload.details ||
+  payload["Additional details (optional)"] ||
+  payload["Anything else we should know?"] ||
+  payload["details"] ||
+  "";
+
+const photos =
+  payload.photos ||
+  payload["Upload Photos (Recommended)"] ||
+  payload["photos"] ||
+  "";
 
     const [baseLow, baseHigh] = getBaseRange(projectType, size);
     const [low, high] = adjustRange(baseLow, baseHigh, condition, hasPhotos);
