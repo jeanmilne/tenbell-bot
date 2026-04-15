@@ -25,6 +25,9 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// -------------------------
+// Helpers
+// -------------------------
 function parseRooms(rooms) {
   const r = String(rooms || "").trim().toLowerCase();
   if (r === "1") return 1;
@@ -59,78 +62,210 @@ function normalizePaintItems(paintItemsRaw) {
       .filter(Boolean);
   }
 
+  // Remove noise / weird values
+  paintItems = paintItems.filter(
+    (item) => !["other", "n/a", "na", "-"].includes(item)
+  );
+
   return paintItems;
 }
 
-function calculateBase(projectType, floorSqFt, rooms, paintItems, condition) {
-  let base = 0;
-
+function getBaseRate(projectType, rooms) {
   const type = String(projectType || "").toLowerCase();
-  const cond = String(condition || "").toLowerCase();
+
+  if (type.includes("single room")) {
+    return 0; // handled separately
+  }
+
+  if (type.includes("condo") || type.includes("apartment") || type.includes("rental")) {
+    if (rooms <= 1) return 3.0;
+    if (rooms === 2) return 3.25;
+    if (rooms === 3) return 3.4;
+    if (rooms === 4) return 3.6;
+    return 3.9;
+  }
+
+  if (type.includes("house")) {
+    if (rooms <= 2) return 3.6;
+    if (rooms <= 4) return 3.75;
+    return 4.1;
+  }
+
+  if (type.includes("commercial")) {
+    return 3.5;
+  }
+
+  return 3.5;
+}
+
+function getConditionMultiplier(condition) {
+  const c = String(condition || "").toLowerCase();
+
+  if (c.includes("good")) return 1.0;
+  if (c.includes("minor")) return 1.15;
+  if (c.includes("medium")) return 1.25;
+  if (c.includes("heavy")) return 1.38;
+
+  return 1.1;
+}
+
+function roundTo50(n) {
+  return Math.round(n / 50) * 50;
+}
+
+/**
+ * Ten Bell pricing engine
+ *
+ * Philosophy:
+ * - Fair Toronto / GTA mid-market pricing
+ * - Protect margin for subcontracting
+ * - Keep quotes wide enough to avoid underpricing
+ */
+function calculateEstimate({
+  projectType,
+  floorSqFt,
+  rooms,
+  paintItems,
+  condition,
+  details,
+}) {
+  const type = String(projectType || "").toLowerCase();
+  const detailText = String(details || "").toLowerCase();
 
   const includesWalls = paintItems.length === 0 || paintItems.includes("walls");
   const includesDoors = paintItems.includes("doors");
   const includesTrim = paintItems.includes("trim");
-  const includesCeilings = paintItems.includes("ceilings") || paintItems.includes("ceiling");
+  const includesCeilings =
+    paintItems.includes("ceilings") || paintItems.includes("ceiling");
 
-  let wallFactor = 2.8;
+  const conditionMultiplier = getConditionMultiplier(condition);
 
-  if (type.includes("house")) wallFactor = 3.1;
-  if (type.includes("condo")) wallFactor = 2.7;
-  if (type.includes("apartment")) wallFactor = 2.8;
-  if (type.includes("rental")) wallFactor = 2.9;
-  if (type.includes("single room")) wallFactor = 2.6;
-  if (type.includes("commercial")) wallFactor = 2.9;
+  let base = 0;
+  let notes = [];
 
-  let roomMultiplier = 1.0;
-  if (rooms === 1) roomMultiplier = 0.9;
-  if (rooms === 2) roomMultiplier = 1.0;
-  if (rooms === 3) roomMultiplier = 1.08;
-  if (rooms === 4) roomMultiplier = 1.15;
-  if (rooms >= 5) roomMultiplier = 1.22;
+  // Detect awkward areas / stairwells / high ceilings from details
+  const hasAwkwardAreas =
+    detailText.includes("stair") ||
+    detailText.includes("stairwell") ||
+    detailText.includes("awkward");
+  const hasHighCeilings =
+    detailText.includes("10'") ||
+    detailText.includes("10 ft") ||
+    detailText.includes("10ft") ||
+    detailText.includes("12'") ||
+    detailText.includes("12 ft") ||
+    detailText.includes("12ft") ||
+    detailText.includes("high ceiling");
 
-  // Special handling for single-room jobs with little detail
-  if (type.includes("single room") && floorSqFt === 0) {
-    base = includesWalls ? 400 : 0;
-    if (includesDoors) base += 100;
-    if (includesTrim) base += 150;
-    if (includesCeilings) base += 150;
-  } else {
-    if (includesWalls && floorSqFt > 0) {
-      base += floorSqFt * wallFactor * 2.1 * roomMultiplier;
-    }
-
-    if (includesCeilings && floorSqFt > 0) {
-      base += floorSqFt * 2.1;
+  // Single room jobs are better handled separately
+  if (type.includes("single room")) {
+    if (includesWalls) {
+      base += 400;
+      notes.push("single-room walls baseline");
     }
 
     if (includesDoors) {
+      base += 100;
+      notes.push("single-room door add-on");
+    }
+
+    if (includesTrim) {
+      base += 150;
+      notes.push("single-room trim add-on");
+    }
+
+    if (includesCeilings) {
+      base += 175;
+      notes.push("single-room ceiling add-on");
+    }
+
+    base *= conditionMultiplier;
+  } else {
+    const baseRate = getBaseRate(projectType, rooms || 0);
+
+    if (includesWalls && floorSqFt > 0) {
+      base += floorSqFt * baseRate;
+      notes.push(`walls at $${baseRate.toFixed(2)}/sqft floor area`);
+    }
+
+    // Ceilings: same ballpark as walls would overprice. Keep lower.
+    if (includesCeilings && floorSqFt > 0) {
+      const ceilingRate = 1.65;
+      base += floorSqFt * ceilingRate;
+      notes.push(`ceilings at $${ceilingRate.toFixed(2)}/sqft`);
+    }
+
+    // Doors: estimate from room count if user did not provide a count
+    if (includesDoors) {
       const estimatedDoors = Math.max(1, rooms || 1);
       base += estimatedDoors * 100;
+      notes.push(`${estimatedDoors} estimated doors at $100 each`);
     }
 
-    if (includesTrim && floorSqFt > 0) {
-      const estimatedTrimFeet = Math.max(40, floorSqFt * 0.18);
+    // Trim: rough estimator from floor area if selected
+    if (includesTrim) {
+      const estimatedTrimFeet = floorSqFt > 0
+        ? Math.max(40, Math.round(floorSqFt * 0.16))
+        : Math.max(40, (rooms || 1) * 25);
       base += estimatedTrimFeet * 2;
-    } else if (includesTrim) {
-      base += 150;
+      notes.push(`${estimatedTrimFeet} estimated trim ft at $2/ft`);
     }
+
+    // Awkward areas
+    if (hasAwkwardAreas && floorSqFt > 0) {
+      base += floorSqFt * 0.3;
+      notes.push("awkward area / stairwell add-on");
+    }
+
+    // High ceilings
+    if (hasHighCeilings) {
+      base *= 1.18;
+      notes.push("high ceiling multiplier");
+    }
+
+    base *= conditionMultiplier;
   }
 
-  if (cond.includes("minor")) {
-    base *= 1.15;
-  } else if (cond.includes("heavy")) {
-    base *= 1.35;
+  // Minimum job
+  if (base < 500) {
+    base = 500;
+    notes.push("minimum job price applied");
   }
 
-  if (base < 500) base = 500;
+  // Safer range
+  let low = roundTo50(base * 0.92);
+  let high = roundTo50(base * 1.18);
 
-  const low = Math.round((base * 0.9) / 50) * 50;
-  const high = Math.round((base * 1.25) / 50) * 50;
+  // Guardrails for walls-only condo/apartment/rental so it does not overshoot
+  const isWallsOnly =
+    includesWalls && !includesDoors && !includesTrim && !includesCeilings;
+  const isCondoLike =
+    type.includes("condo") || type.includes("apartment") || type.includes("rental");
 
-  return { low, high, base };
+  if (isWallsOnly && isCondoLike && floorSqFt > 0 && String(condition).toLowerCase().includes("good")) {
+    const marketLow = roundTo50(floorSqFt * 3.0);
+    const marketHigh = roundTo50(floorSqFt * 4.0);
+
+    low = Math.max(low, marketLow);
+    high = Math.min(Math.max(high, marketLow + 200), marketHigh);
+
+    if (high < low) {
+      high = low + 300;
+    }
+
+    notes.push("walls-only condo market guardrail applied");
+  }
+
+  return {
+    low,
+    high,
+    notes,
+  };
 }
 
+// -------------------------
+// Routes
+// -------------------------
 app.get("/", (req, res) => {
   res.send("Ten Bell lead bot is running");
 });
@@ -189,15 +324,16 @@ Ten Bell Painting
 tenbellpainting@gmail.com`;
 
       if (email) {
-        await transporter.sendMail({
+        const fallbackCustomerResult = await transporter.sendMail({
           from: process.env.GMAIL_USER,
           to: email,
           subject: "Thanks for reaching out to Ten Bell Painting",
           text: fallbackMessage,
         });
+        console.log("FALLBACK EMAIL SENT TO:", email, fallbackCustomerResult.messageId);
       }
 
-      await transporter.sendMail({
+      const fallbackInternalResult = await transporter.sendMail({
         from: process.env.GMAIL_USER,
         to: process.env.GMAIL_USER,
         subject: `New Lead: ${name}`,
@@ -218,17 +354,23 @@ Photos: ${photos || "none"}
 Not enough information for price range.
 `,
       });
+      console.log(
+        "FALLBACK INTERNAL EMAIL SENT TO:",
+        process.env.GMAIL_USER,
+        fallbackInternalResult.messageId
+      );
 
       return res.status(200).json({ success: true, fallback: true });
     }
 
-    const { low, high } = calculateBase(
+    const { low, high, notes } = calculateEstimate({
       projectType,
       floorSqFt,
-      roomCount,
+      rooms: roomCount,
       paintItems,
-      condition
-    );
+      condition,
+      details,
+    });
 
     const prompt = `
 You are Ten Bell Painting's lead-response assistant.
@@ -237,9 +379,9 @@ Write a short professional email to a painting lead in Toronto.
 The email must:
 - thank them for reaching out
 - give a non-binding price range of $${low} to $${high}
-- mention that pricing depends on prep, repairs, and confirming the final scope
+- mention that pricing depends on prep, repairs, layout complexity, and confirming the final scope
 - invite them to reply if the range works for them
-- keep the tone concise and professional
+- keep the tone concise, confident, and professional
 
 Lead details:
 Name: ${name}
@@ -263,7 +405,7 @@ Additional details: ${details}
 
 Thanks for reaching out to Ten Bell Painting. Based on the details you sent, your project likely falls in the $${low} to $${high} range.
 
-Final pricing depends on prep, repairs, and confirming the final scope. If that range works for you, reply here and I’ll follow up with next steps.
+Final pricing depends on prep, repairs, layout complexity, and confirming the final scope. If that range works for you, reply here and I’ll follow up with next steps.
 
 Thanks,
 Ten Bell Painting
@@ -271,15 +413,16 @@ Ten Bell Painting
 tenbellpainting@gmail.com`;
 
     if (email) {
-      await transporter.sendMail({
+      const customerResult = await transporter.sendMail({
         from: process.env.GMAIL_USER,
         to: email,
         subject: "Your Ten Bell Painting price range",
         text: customerMessage,
       });
+      console.log("CUSTOMER EMAIL SENT TO:", email, customerResult.messageId);
     }
 
-    await transporter.sendMail({
+    const internalResult = await transporter.sendMail({
       from: process.env.GMAIL_USER,
       to: process.env.GMAIL_USER,
       subject: `New Lead: ${name}`,
@@ -298,8 +441,12 @@ Details: ${details}
 Photos: ${photos || "none"}
 
 Suggested range: $${low} to $${high}
+
+Pricing notes:
+- ${notes.join("\n- ")}
 `,
     });
+    console.log("INTERNAL EMAIL SENT TO:", process.env.GMAIL_USER, internalResult.messageId);
 
     res.status(200).json({
       success: true,
