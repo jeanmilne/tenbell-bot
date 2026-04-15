@@ -28,57 +28,43 @@ const transporter = nodemailer.createTransport({
 // -------------------------
 // Helpers
 // -------------------------
-function parseRooms(rooms) {
-  const r = String(rooms || "").trim().toLowerCase();
-  if (r === "1") return 1;
-  if (r === "2") return 2;
-  if (r === "3") return 3;
-  if (r === "4") return 4;
-  if (r === "5+" || r === "5") return 5;
-
-  const n = parseInt(r, 10);
-  return Number.isFinite(n) ? n : 0;
-}
-
-function parseFloorSqFt(sizeText) {
-  const text = String(sizeText || "").toLowerCase();
+function parseSquareFootage(value) {
+  const text = String(value || "").toLowerCase();
   const match = text.match(/(\d{2,5})/);
   return match ? parseInt(match[1], 10) : 0;
 }
 
-function estimateSqFtFromRooms(rooms) {
-  const r = parseInt(rooms, 10);
-  if (!r || r <= 0) return 0;
-  if (r === 1) return 400;
-  if (r === 2) return 700;
-  if (r === 3) return 1000;
-  if (r === 4) return 1300;
-  if (r >= 5) return 1600;
-  return 0;
+function parseRooms(value) {
+  const text = String(value || "").trim().toLowerCase();
+
+  if (!text || text === "0") return 0;
+  if (text === "more than 10") return 10;
+
+  const n = parseInt(text, 10);
+  return Number.isFinite(n) ? n : 0;
 }
 
-function normalizePaintItems(paintItemsRaw) {
-  let paintItems = [];
+function normalizePaintItems(raw) {
+  let items = [];
 
-  if (Array.isArray(paintItemsRaw)) {
-    paintItems = paintItemsRaw.map((item) => String(item).toLowerCase().trim());
-  } else if (typeof paintItemsRaw === "string") {
-    paintItems = paintItemsRaw
+  if (Array.isArray(raw)) {
+    items = raw.map((x) => String(x).toLowerCase().trim());
+  } else if (typeof raw === "string") {
+    items = raw
       .split(",")
-      .map((item) => item.toLowerCase().trim())
+      .map((x) => x.toLowerCase().trim())
       .filter(Boolean);
   }
 
-  return paintItems.filter(
-    (item) => !["other", "n/a", "na", "-", "none"].includes(item)
+  return items.filter(
+    (item) => !["n/a", "na", "-", "none"].includes(item)
   );
 }
 
-function hasEnoughInfo({ paintItems, size, rooms }) {
+function hasEnoughInfo({ paintItems, squareFootage }) {
   const hasPaintScope = Array.isArray(paintItems) && paintItems.length > 0;
-  const hasSize = !!String(size || "").trim();
-  const hasRooms = !!String(rooms || "").trim();
-  return hasPaintScope && (hasSize || hasRooms);
+  const hasSqFt = !!String(squareFootage || "").trim();
+  return hasPaintScope && hasSqFt;
 }
 
 function inferDetailsSignals(detailsText, currentCondition) {
@@ -110,9 +96,9 @@ function inferDetailsSignals(detailsText, currentCondition) {
     text.includes("entryway") ||
     text.includes("hard to reach");
 
-  let inferredCondition = existingCondition || "good";
+  let inferredCondition = existingCondition || "good (just repaint)";
 
-  if (!existingCondition || existingCondition === "good") {
+  if (!existingCondition || existingCondition.includes("good")) {
     const heavySignals =
       text.includes("replace drywall") ||
       text.includes("replace panel") ||
@@ -122,22 +108,15 @@ function inferDetailsSignals(detailsText, currentCondition) {
       text.includes("big hole") ||
       text.includes("panel size");
 
-    const mediumSignals =
-      text.includes("softball") ||
-      text.includes("patch") ||
-      text.includes("patched") ||
-      text.includes("multiple holes") ||
-      text.includes("damaged walls");
-
     const minorSignals =
       text.includes("nail holes") ||
       text.includes("scratches") ||
       text.includes("scuffs") ||
       text.includes("minor repair") ||
-      text.includes("touch up");
+      text.includes("touch up") ||
+      text.includes("patch");
 
     if (heavySignals) inferredCondition = "heavy repairs needed";
-    else if (mediumSignals) inferredCondition = "medium repairs needed";
     else if (minorSignals) inferredCondition = "minor repairs needed";
   }
 
@@ -148,43 +127,76 @@ function inferDetailsSignals(detailsText, currentCondition) {
   };
 }
 
-function getBaseRate(projectType, rooms) {
+function getConditionMultiplier(condition) {
+  const c = String(condition || "").toLowerCase();
+
+  if (c.includes("good")) return 1.0;
+  if (c.includes("minor")) return 1.12;
+  if (c.includes("heavy")) return 1.3;
+
+  return 1.0;
+}
+
+function getPaintChangeMultiplier(paintChange) {
+  const text = String(paintChange || "").toLowerCase();
+
+  if (text.includes("major color change")) return 1.3;
+  if (text.includes("color change")) return 1.15;
+  if (text.includes("color match")) return 1.0;
+
+  return 1.0;
+}
+
+function getBaseWallsRate(projectType, rooms) {
   const type = String(projectType || "").toLowerCase();
 
-  if (type.includes("single room")) {
-    return 0;
-  }
-
   if (type.includes("condo") || type.includes("apartment") || type.includes("rental")) {
-    if (rooms <= 1) return 3.0;
-    if (rooms === 2) return 3.25;
-    if (rooms === 3) return 3.4;
-    if (rooms === 4) return 3.6;
-    return 3.9;
+    if (rooms <= 2) return 3.0;
+    if (rooms <= 4) return 3.25;
+    if (rooms <= 6) return 3.5;
+    return 3.75;
   }
 
   if (type.includes("house")) {
-    if (rooms <= 2) return 3.6;
-    if (rooms <= 4) return 3.75;
-    return 4.1;
+    if (rooms <= 3) return 3.5;
+    if (rooms <= 6) return 3.75;
+    return 4.0;
   }
 
   if (type.includes("commercial")) {
     return 3.5;
   }
 
-  return 3.5;
+  return 3.4;
 }
 
-function getConditionMultiplier(condition) {
-  const c = String(condition || "").toLowerCase();
+function getRoomComplexityMultiplier(rooms) {
+  if (rooms <= 0) return 1.0;
+  if (rooms <= 2) return 1.0;
+  if (rooms <= 4) return 1.08;
+  if (rooms <= 6) return 1.15;
+  if (rooms <= 8) return 1.22;
+  return 1.28;
+}
 
-  if (c.includes("good")) return 1.0;
-  if (c.includes("minor")) return 1.15;
-  if (c.includes("medium")) return 1.25;
-  if (c.includes("heavy")) return 1.38;
+function estimateDoorsFromRooms(rooms, projectType) {
+  const type = String(projectType || "").toLowerCase();
 
-  return 1.0;
+  if (type.includes("condo") || type.includes("apartment") || type.includes("rental")) {
+    return Math.max(1, Math.round((rooms || 1) * 0.8));
+  }
+
+  if (type.includes("house")) {
+    return Math.max(2, Math.round((rooms || 1) * 1.1));
+  }
+
+  return Math.max(1, rooms || 1);
+}
+
+function estimateTrimFeet(squareFootage, rooms) {
+  const sqFtBased = squareFootage > 0 ? Math.round(squareFootage * 0.14) : 0;
+  const roomBased = rooms > 0 ? rooms * 28 : 0;
+  return Math.max(40, sqFtBased, roomBased);
 }
 
 function roundTo50(n) {
@@ -193,118 +205,105 @@ function roundTo50(n) {
 
 function calculateEstimate({
   projectType,
-  floorSqFt,
+  squareFootage,
   rooms,
   paintItems,
   condition,
+  paintChange,
   details,
 }) {
   let base = 0;
-  let notes = [];
+  const notes = [];
 
   const type = String(projectType || "").toLowerCase();
-
-  const includesWalls = paintItems.length === 0 || paintItems.includes("walls");
-  const includesDoors = paintItems.includes("doors");
-  const includesTrim = paintItems.includes("trim");
-  const includesCeilings =
-    paintItems.includes("ceilings") || paintItems.includes("ceiling");
-
   const signals = inferDetailsSignals(details, condition);
   const finalCondition = signals.inferredCondition;
+
   const conditionMultiplier = getConditionMultiplier(finalCondition);
+  const paintChangeMultiplier = getPaintChangeMultiplier(paintChange);
+  const roomComplexityMultiplier = getRoomComplexityMultiplier(rooms);
 
-  if (type.includes("single room")) {
-    if (includesWalls) {
-      base += 400;
-      notes.push("single-room walls baseline");
-    }
+  const includesWalls = paintItems.includes("walls");
+  const includesDoors = paintItems.includes("doors");
+  const includesTrim = paintItems.includes("trim");
+  const includesCeiling =
+    paintItems.includes("ceiling") || paintItems.includes("ceilings");
+  const includesOther = paintItems.includes("other");
 
-    if (includesDoors) {
-      base += 100;
-      notes.push("single-room door add-on");
-    }
-
-    if (includesTrim) {
-      base += 150;
-      notes.push("single-room trim add-on");
-    }
-
-    if (includesCeilings) {
-      base += 175;
-      notes.push("single-room ceiling add-on");
-    }
-
-    base *= conditionMultiplier;
-  } else {
-    const baseRate = getBaseRate(projectType, rooms || 0);
-
-    if (includesWalls && floorSqFt > 0) {
-      base += floorSqFt * baseRate;
-      notes.push(`walls at $${baseRate.toFixed(2)}/sqft floor area`);
-    }
-
-    if (includesCeilings && floorSqFt > 0) {
-      const ceilingRate = 1.65;
-      base += floorSqFt * ceilingRate;
-      notes.push(`ceilings at $${ceilingRate.toFixed(2)}/sqft`);
-    }
-
-    if (includesDoors) {
-      const estimatedDoors = Math.max(1, rooms || 1);
-      base += estimatedDoors * 100;
-      notes.push(`${estimatedDoors} estimated doors at $100 each`);
-    }
-
-    if (includesTrim) {
-      const estimatedTrimFeet = floorSqFt > 0
-        ? Math.max(40, Math.round(floorSqFt * 0.16))
-        : Math.max(40, (rooms || 1) * 25);
-      base += estimatedTrimFeet * 2;
-      notes.push(`${estimatedTrimFeet} estimated trim ft at $2/ft`);
-    }
-
-    if (signals.awkwardAreas && floorSqFt > 0) {
-      base += floorSqFt * 0.3;
-      notes.push("awkward area / stairwell add-on");
-    }
-
-    if (signals.highCeilings) {
-      base *= 1.12;
-      notes.push("high ceiling multiplier");
-    }
-
-    base *= conditionMultiplier;
+  if (includesWalls) {
+    const wallsRate = getBaseWallsRate(projectType, rooms);
+    base += squareFootage * wallsRate;
+    notes.push(`walls at $${wallsRate.toFixed(2)}/sq ft`);
   }
+
+  if (includesCeiling) {
+    const ceilingRate = 1.6;
+    base += squareFootage * ceilingRate;
+    notes.push(`ceiling at $${ceilingRate.toFixed(2)}/sq ft`);
+  }
+
+  if (includesDoors) {
+    const estimatedDoors = estimateDoorsFromRooms(rooms, projectType);
+    base += estimatedDoors * 100;
+    notes.push(`${estimatedDoors} estimated doors at $100 each`);
+  }
+
+  if (includesTrim) {
+    const trimFeet = estimateTrimFeet(squareFootage, rooms);
+    base += trimFeet * 2;
+    notes.push(`${trimFeet} estimated trim ft at $2/ft`);
+  }
+
+  if (includesOther) {
+    base += 150;
+    notes.push("other scope allowance");
+  }
+
+  base *= roomComplexityMultiplier;
+  notes.push(`room complexity multiplier x${roomComplexityMultiplier.toFixed(2)}`);
+
+  if (signals.highCeilings) {
+    base *= 1.1;
+    notes.push("high ceiling multiplier");
+  }
+
+  if (signals.awkwardAreas) {
+    base += squareFootage * 0.3;
+    notes.push("awkward area / stairwell add-on");
+  }
+
+  base *= paintChangeMultiplier;
+  notes.push(`paint change multiplier x${paintChangeMultiplier.toFixed(2)}`);
+
+  base *= conditionMultiplier;
+  notes.push(`condition multiplier x${conditionMultiplier.toFixed(2)}`);
 
   if (base < 500) {
     base = 500;
     notes.push("minimum job price applied");
   }
 
-  let low = roundTo50(base * 0.92);
+  let low = roundTo50(base * 0.9);
   let high = roundTo50(base * 1.18);
 
-  const isWallsOnly =
-    includesWalls && !includesDoors && !includesTrim && !includesCeilings;
+  // Guardrail for condo/apartment/rental walls-only jobs so they stay market reasonable
   const isCondoLike =
     type.includes("condo") || type.includes("apartment") || type.includes("rental");
+  const isWallsOnly =
+    includesWalls && !includesDoors && !includesTrim && !includesCeiling && !includesOther;
 
   if (
-    isWallsOnly &&
     isCondoLike &&
-    floorSqFt > 0 &&
-    finalCondition.toLowerCase().includes("good")
+    isWallsOnly &&
+    String(finalCondition).toLowerCase().includes("good")
   ) {
-    const marketLow = roundTo50(floorSqFt * 3.0);
-    const marketHigh = roundTo50(floorSqFt * 4.0);
+    const marketLow = roundTo50(squareFootage * 2.9);
+    const marketHigh = roundTo50(squareFootage * 3.8);
 
     low = Math.max(low, marketLow);
     high = Math.min(Math.max(high, marketLow + 200), marketHigh);
 
-    if (high < low) {
-      high = low + 300;
-    }
+    if (high < low) high = low + 300;
 
     notes.push("walls-only condo market guardrail applied");
   }
@@ -336,51 +335,50 @@ app.post("/lead", async (req, res) => {
     const email = payload.email || payload.Email || "";
     const address = payload.address || payload["Project Address"] || "";
     const projectType = payload.projectType || payload["Project Type"] || "";
+    const squareFootageRaw =
+      payload.squareFootage ||
+      payload["Square footage of space"] ||
+      "";
     const paintItemsRaw =
       payload.paintItems ||
       payload["What are you looking to paint"] ||
-      payload["What are you looking to have painted?"] ||
       "";
-    const size =
-      payload.size ||
-      payload.Size ||
-      payload["Approximate size of project"] ||
-      payload["Approximate size of the project"] ||
+    const roomsRaw =
+      payload.rooms ||
+      payload["Number of rooms/spaces"] ||
       "";
-    const rooms = payload.rooms || payload["Number of rooms/spaces"] || "";
     const condition =
       payload.condition ||
-      payload.Condition ||
       payload["Condition of walls"] ||
+      "";
+    const paintChange =
+      payload.paintChange ||
+      payload["Will this be the same color or a color change?"] ||
       "";
     const details =
       payload.details ||
-      payload.Details ||
       payload["Additional details"] ||
-      payload["Additional details (optional)"] ||
-      payload["Anything else we should know?"] ||
       "";
-    const photos = payload.photos || payload.Photos || payload["Upload photo"] || "";
+    const photos =
+      payload.photos ||
+      payload["Upload photos"] ||
+      "";
 
+    const squareFootage = parseSquareFootage(squareFootageRaw);
+    const rooms = parseRooms(roomsRaw);
     let paintItems = normalizePaintItems(paintItemsRaw);
+
     if (!paintItems.length) {
       paintItems = ["walls"];
     }
 
-    let floorSqFt = parseFloorSqFt(size);
-    const roomCount = parseRooms(rooms);
+    // Respond to Wix immediately
+    res.sendStatus(200);
 
-    if (!floorSqFt && roomCount) {
-      floorSqFt = estimateSqFtFromRooms(roomCount);
-    }
-
-    // Respond to Wix immediately so automation does not hang
-    res.status(200).json({ success: true });
-
-    // Continue processing in background
+    // Process in background
     setImmediate(async () => {
       try {
-        if (!hasEnoughInfo({ paintItems, size, rooms })) {
+        if (!hasEnoughInfo({ paintItems, squareFootage: squareFootageRaw })) {
           const fallbackMessage = `Hi ${name},
 
 Thanks for reaching out to Ten Bell Painting.
@@ -413,10 +411,11 @@ Phone: ${phone}
 Email: ${email}
 Address: ${address}
 Project Type: ${projectType}
+Square Footage: ${squareFootageRaw}
 Paint Items: ${paintItems.join(", ") || "walls"}
-Size: ${size}
-Rooms: ${rooms}
+Rooms: ${roomsRaw}
 Condition: ${condition || "not provided"}
+Paint Change: ${paintChange || "not provided"}
 Details: ${details}
 Photos: ${photos || "none"}
 
@@ -433,10 +432,11 @@ Not enough information for price range.
 
         const { low, high, notes, finalCondition, signals } = calculateEstimate({
           projectType,
-          floorSqFt,
-          rooms: roomCount,
+          squareFootage,
+          rooms,
           paintItems,
-          condition: condition || "good",
+          condition: condition || "good (just repaint)",
+          paintChange,
           details,
         });
 
@@ -449,18 +449,18 @@ Write a short professional email to a painting lead in Toronto.
 The email must:
 - thank them for reaching out
 - give a non-binding price range of $${low} to $${high}
-- mention that pricing depends on prep, repairs, layout complexity, and confirming the final scope
-- if some details were estimated, briefly mention that this is a rough ballpark
+- mention that pricing depends on prep, repairs, layout complexity, number of coats, and confirming the final scope
 - invite them to reply if the range works for them
 - keep the tone concise, confident, and professional
 
 Lead details:
 Name: ${name}
 Project type: ${projectType}
+Square footage: ${squareFootageRaw}
 Paint items: ${paintItems.join(", ") || "walls"}
-Approximate size: ${size || `${floorSqFt} sq ft estimated from room count`}
-Rooms/spaces: ${rooms}
+Rooms/spaces: ${roomsRaw}
 Condition used for estimate: ${finalCondition}
+Paint change: ${paintChange}
 Address: ${address}
 Additional details: ${details}
 Detected high ceilings: ${signals.highCeilings ? "yes" : "no"}
@@ -474,7 +474,7 @@ Detected awkward areas: ${signals.awkwardAreas ? "yes" : "no"}
 
 Thanks for reaching out to Ten Bell Painting. Based on the details you sent, your project likely falls in the $${low} to $${high} range.
 
-Final pricing depends on prep, repairs, layout complexity, and confirming the final scope. If that range works for you, reply here and I’ll follow up with next steps.
+Final pricing depends on prep, repairs, layout complexity, number of coats, and confirming the final scope. If that range works for you, reply here and I’ll follow up with next steps.
 
 Thanks,
 Ten Bell Painting
@@ -502,11 +502,11 @@ Phone: ${phone}
 Email: ${email}
 Address: ${address}
 Project Type: ${projectType}
+Square Footage: ${squareFootageRaw}
 Paint Items: ${paintItems.join(", ") || "walls"}
-Size: ${size || "not provided"}
-Estimated Floor Sq Ft Used: ${floorSqFt || "none"}
-Rooms: ${rooms}
+Rooms: ${roomsRaw}
 Condition Used: ${finalCondition}
+Paint Change: ${paintChange || "not provided"}
 Details: ${details}
 Photos: ${photos || "none"}
 
