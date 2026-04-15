@@ -203,7 +203,6 @@ function calculateEstimate({
   let notes = [];
 
   const type = String(projectType || "").toLowerCase();
-  const detailText = String(details || "").toLowerCase();
 
   const includesWalls = paintItems.length === 0 || paintItems.includes("walls");
   const includesDoors = paintItems.includes("doors");
@@ -211,7 +210,7 @@ function calculateEstimate({
   const includesCeilings =
     paintItems.includes("ceilings") || paintItems.includes("ceiling");
 
-  const signals = inferDetailsSignals(detailText, condition);
+  const signals = inferDetailsSignals(details, condition);
   const finalCondition = signals.inferredCondition;
   const conditionMultiplier = getConditionMultiplier(finalCondition);
 
@@ -375,8 +374,14 @@ app.post("/lead", async (req, res) => {
       floorSqFt = estimateSqFtFromRooms(roomCount);
     }
 
-    if (!hasEnoughInfo({ paintItems, size, rooms })) {
-      const fallbackMessage = `Hi ${name},
+    // Respond to Wix immediately so automation does not hang
+    res.status(200).json({ success: true });
+
+    // Continue processing in background
+    setImmediate(async () => {
+      try {
+        if (!hasEnoughInfo({ paintItems, size, rooms })) {
+          const fallbackMessage = `Hi ${name},
 
 Thanks for reaching out to Ten Bell Painting.
 
@@ -387,21 +392,21 @@ Ten Bell Painting
 905-536-6799
 tenbellpainting@gmail.com`;
 
-      if (email) {
-        const fallbackCustomerResult = await transporter.sendMail({
-          from: process.env.GMAIL_USER,
-          to: email,
-          subject: "Thanks for reaching out to Ten Bell Painting",
-          text: fallbackMessage,
-        });
-        console.log("FALLBACK EMAIL SENT TO:", email, fallbackCustomerResult.messageId);
-      }
+          if (email) {
+            const fallbackCustomerResult = await transporter.sendMail({
+              from: process.env.GMAIL_USER,
+              to: email,
+              subject: "Thanks for reaching out to Ten Bell Painting",
+              text: fallbackMessage,
+            });
+            console.log("FALLBACK EMAIL SENT TO:", email, fallbackCustomerResult.messageId);
+          }
 
-      const fallbackInternalResult = await transporter.sendMail({
-        from: process.env.GMAIL_USER,
-        to: process.env.GMAIL_USER,
-        subject: `New Lead: ${name}`,
-        text: `New lead received
+          const fallbackInternalResult = await transporter.sendMail({
+            from: process.env.GMAIL_USER,
+            to: process.env.GMAIL_USER,
+            subject: `New Lead: ${name}`,
+            text: `New lead received
 
 Name: ${name}
 Phone: ${phone}
@@ -417,26 +422,27 @@ Photos: ${photos || "none"}
 
 Not enough information for price range.
 `,
-      });
-      console.log(
-        "FALLBACK INTERNAL EMAIL SENT TO:",
-        process.env.GMAIL_USER,
-        fallbackInternalResult.messageId
-      );
+          });
+          console.log(
+            "FALLBACK INTERNAL EMAIL SENT TO:",
+            process.env.GMAIL_USER,
+            fallbackInternalResult.messageId
+          );
+          return;
+        }
 
-      return res.status(200).json({ success: true, fallback: true });
-    }
+        const { low, high, notes, finalCondition, signals } = calculateEstimate({
+          projectType,
+          floorSqFt,
+          rooms: roomCount,
+          paintItems,
+          condition: condition || "good",
+          details,
+        });
 
-    const { low, high, notes, finalCondition, signals } = calculateEstimate({
-      projectType,
-      floorSqFt,
-      rooms: roomCount,
-      paintItems,
-      condition: condition || "good",
-      details,
-    });
-
-    const prompt = `
+        const response = await openai.responses.create({
+          model: "gpt-5.4",
+          input: `
 You are Ten Bell Painting's lead-response assistant.
 
 Write a short professional email to a painting lead in Toronto.
@@ -459,16 +465,12 @@ Address: ${address}
 Additional details: ${details}
 Detected high ceilings: ${signals.highCeilings ? "yes" : "no"}
 Detected awkward areas: ${signals.awkwardAreas ? "yes" : "no"}
-`;
+`,
+        });
 
-    const response = await openai.responses.create({
-      model: "gpt-5.4",
-      input: prompt,
-    });
-
-    const customerMessage =
-      response.output_text?.trim() ||
-      `Hi ${name},
+        const customerMessage =
+          response.output_text?.trim() ||
+          `Hi ${name},
 
 Thanks for reaching out to Ten Bell Painting. Based on the details you sent, your project likely falls in the $${low} to $${high} range.
 
@@ -479,21 +481,21 @@ Ten Bell Painting
 905-536-6799
 tenbellpainting@gmail.com`;
 
-    if (email) {
-      const customerResult = await transporter.sendMail({
-        from: process.env.GMAIL_USER,
-        to: email,
-        subject: "Your Ten Bell Painting price range",
-        text: customerMessage,
-      });
-      console.log("CUSTOMER EMAIL SENT TO:", email, customerResult.messageId);
-    }
+        if (email) {
+          const customerResult = await transporter.sendMail({
+            from: process.env.GMAIL_USER,
+            to: email,
+            subject: "Your Ten Bell Painting price range",
+            text: customerMessage,
+          });
+          console.log("CUSTOMER EMAIL SENT TO:", email, customerResult.messageId);
+        }
 
-    const internalResult = await transporter.sendMail({
-      from: process.env.GMAIL_USER,
-      to: process.env.GMAIL_USER,
-      subject: `New Lead: ${name}`,
-      text: `New lead received
+        const internalResult = await transporter.sendMail({
+          from: process.env.GMAIL_USER,
+          to: process.env.GMAIL_USER,
+          subject: `New Lead: ${name}`,
+          text: `New lead received
 
 Name: ${name}
 Phone: ${phone}
@@ -516,21 +518,20 @@ Suggested range: $${low} to $${high}
 Pricing notes:
 - ${notes.join("\n- ")}
 `,
-    });
-    console.log("INTERNAL EMAIL SENT TO:", process.env.GMAIL_USER, internalResult.messageId);
-
-    res.status(200).json({
-      success: true,
-      low,
-      high,
-      emailed: !!email,
+        });
+        console.log("INTERNAL EMAIL SENT TO:", process.env.GMAIL_USER, internalResult.messageId);
+      } catch (backgroundError) {
+        console.error("BACKGROUND ERROR:", backgroundError);
+      }
     });
   } catch (error) {
     console.error("Lead bot error:", error);
-    res.status(500).json({
-      success: false,
-      error: "Something went wrong",
-    });
+    if (!res.headersSent) {
+      res.status(500).json({
+        success: false,
+        error: "Something went wrong",
+      });
+    }
   }
 });
 
