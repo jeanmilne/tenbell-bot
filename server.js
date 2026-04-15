@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // -------------------------
-// Helpers
+// HELPERS
 // -------------------------
 function parseSquareFootage(value) {
   const text = String(value || "").toLowerCase();
@@ -48,11 +48,26 @@ function normalizePaintItems(raw) {
   return items.length ? items : ["walls"];
 }
 
+// 🔥 FIXED ROOM MULTIPLIER (your logic)
+function getRoomMultiplier(rooms) {
+  if (!rooms || rooms <= 0) return 1.0;
+
+  if (rooms === 1) return 1.2;
+  if (rooms === 2) return 1.1;
+
+  if (rooms <= 4) return 1.0;
+
+  if (rooms <= 6) return 0.95;
+
+  return 0.9;
+}
+
 function getPaintMultiplier(paintChange) {
   const text = String(paintChange || "").toLowerCase();
 
   if (text.includes("major")) return 1.3;
   if (text.includes("color change")) return 1.15;
+
   return 1.0;
 }
 
@@ -61,14 +76,8 @@ function getConditionMultiplier(condition) {
 
   if (c.includes("minor")) return 1.12;
   if (c.includes("heavy")) return 1.3;
-  return 1.0;
-}
 
-function getRoomMultiplier(rooms) {
-  if (rooms <= 2) return 1.0;
-  if (rooms <= 4) return 1.08;
-  if (rooms <= 6) return 1.15;
-  return 1.2;
+  return 1.0;
 }
 
 function getWallsRate(projectType, rooms) {
@@ -85,6 +94,9 @@ function getWallsRate(projectType, rooms) {
   return 3.4;
 }
 
+// -------------------------
+// ESTIMATE
+// -------------------------
 function calculateEstimate({
   projectType,
   squareFootage,
@@ -129,13 +141,13 @@ function calculateEstimate({
   base *= getPaintMultiplier(paintChange);
   base *= getConditionMultiplier(condition);
 
-  // HIGH CEILINGS DETECTION
+  // HIGH CEILINGS (simple detection)
   const d = String(details || "").toLowerCase();
   if (d.includes("9") || d.includes("10") || d.includes("high ceiling")) {
     base *= 1.1;
   }
 
-  // MINIMUM
+  // MINIMUM JOB
   if (base < 500) base = 500;
 
   const low = Math.round(base * 0.9 / 50) * 50;
@@ -193,13 +205,13 @@ app.post("/lead", (req, res) => {
     const squareFootage = parseSquareFootage(squareFootageRaw);
     const rooms = parseRooms(roomsRaw);
 
-    // RESPOND TO WIX IMMEDIATELY
+    // RESPOND TO WIX FAST
     res.sendStatus(200);
 
-    // BACKGROUND WORK
+    // BACKGROUND PROCESS
     setImmediate(async () => {
       try {
-        if (!squareFootage || !paintItems.length) return;
+        if (!squareFootage) return;
 
         const { low, high } = calculateEstimate({
           projectType,
