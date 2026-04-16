@@ -52,25 +52,31 @@ function parsePaintItems(raw) {
   return cleaned.length ? cleaned : ["walls"];
 }
 
-// ─── FINAL LOCKED PRICING ENGINE ─────────────────────────────────────────────
-// Validated against 20 Toronto market scenarios. Average deviation: -3% from market mid.
-// Aligned with on-site quote app model.
+// ─── Room count → assumed space premiums ─────────────────────────────────────
+// When a customer selects room count on the Wix form, we infer typical spaces
+// so the price reflects the actual complexity of the job.
+function getSpacePremiumsFromRooms(rooms) {
+  const r = parseInt(rooms, 10) || 0;
+  // Returns: { beds, halls, bathSm, bathMd, bathLg, kitchen }
+  if (r <= 0) return { beds:0, halls:0, bathSm:0, bathMd:0, bathLg:0, kitchen:0 };
+  if (r === 1) return { beds:0, halls:0, bathSm:1, bathMd:0, bathLg:0, kitchen:0 };
+  if (r === 2) return { beds:1, halls:0, bathSm:1, bathMd:0, bathLg:0, kitchen:0 };
+  if (r === 3) return { beds:1, halls:1, bathSm:0, bathMd:1, bathLg:0, kitchen:0 };
+  if (r === 4) return { beds:2, halls:1, bathSm:0, bathMd:1, bathLg:0, kitchen:1 };
+  if (r === 5) return { beds:2, halls:1, bathSm:0, bathMd:1, bathLg:1, kitchen:1 };
+  return       { beds:3, halls:2, bathSm:0, bathMd:1, bathLg:1, kitchen:1 };
+}
 
+// ─── FINAL LOCKED PRICING ENGINE ─────────────────────────────────────────────
 function getWallsRate(sqft, projectType) {
   const type = String(projectType || "").toLowerCase();
-
   if (type.includes("house")) {
     if (sqft <= 1000) return 2.75;
     if (sqft <= 1500) return 2.55;
     if (sqft <= 2000) return 2.35;
     return 2.10;
   }
-
-  if (type.includes("commercial")) {
-    return getWallsRate(sqft, "condo") * 1.20;
-  }
-
-  // condo / apartment / rental (default)
+  if (type.includes("commercial")) return getWallsRate(sqft, "condo") * 1.20;
   if (sqft <= 300)  return 3.75;
   if (sqft <= 450)  return 2.90;
   if (sqft <= 700)  return 2.55;
@@ -89,11 +95,9 @@ function getCeilingRate(sqft) {
   return 0.75;
 }
 
-function roundTo50(n) {
-  return Math.round(n / 50) * 50;
-}
+function roundTo50(n) { return Math.round(n / 50) * 50; }
 
-function estimateRange({ projectType, sqft, paintItems, condition, paintChange }) {
+function estimateRange({ projectType, sqft, paintItems, condition, paintChange, rooms }) {
   let base = 0;
 
   const walls   = paintItems.includes("walls");
@@ -101,30 +105,35 @@ function estimateRange({ projectType, sqft, paintItems, condition, paintChange }
   const doors   = paintItems.includes("doors");
   const ceiling = paintItems.includes("ceiling") || paintItems.includes("ceilings");
 
+  let wallBase = 0;
   if (walls) {
-    base += sqft * getWallsRate(sqft, projectType);
+    wallBase = sqft * getWallsRate(sqft, projectType);
+    base += wallBase;
   }
+  if (trim)    base += Math.max(40, Math.round(sqft * 0.15)) * 2;
+  if (doors)   base += 2 * 100;
+  if (ceiling) base += sqft * getCeilingRate(sqft);
 
-  if (trim) {
-    const trimFt = Math.max(40, Math.round(sqft * 0.15));
-    base += trimFt * 2;
-  }
+  // Space premiums inferred from room count
+  const sp = getSpacePremiumsFromRooms(rooms);
+  let premiums = 0;
+  premiums += sp.beds    * 25;
+  premiums += sp.halls   * 50;
+  premiums += sp.bathSm  * 75;
+  premiums += sp.bathMd  * 125;
+  premiums += sp.bathLg  * 150;
+  premiums += sp.kitchen * 75;
 
-  if (doors) {
-    // Estimate 2 doors if selected but no count given
-    base += 2 * 100;
-  }
-
-  if (ceiling) {
-    base += sqft * getCeilingRate(sqft);
-  }
+  // Cap premiums at 15% of wall base to prevent inflation on small units
+  if (wallBase > 0) premiums = Math.min(premiums, wallBase * 0.15);
+  base += premiums;
 
   // Condition
   const cond = String(condition || "").toLowerCase();
   if (cond.includes("minor")) base *= 1.12;
   else if (cond.includes("heavy")) base *= 1.30;
 
-  // Paint change / coats
+  // Paint change
   const pc = String(paintChange || "").toLowerCase();
   if (pc.includes("major") || pc.includes("3 coat") || pc.includes("primer")) {
     base *= 1.30;
@@ -135,7 +144,7 @@ function estimateRange({ projectType, sqft, paintItems, condition, paintChange }
   if (base < 500) base = 500;
 
   const low  = roundTo50(base * 0.90);
-  const high = roundTo50(base * 1.10);
+  const high = roundTo50(base * 1.20);
 
   return { low, high };
 }
@@ -168,7 +177,7 @@ tenbellpainting@gmail.com`,
 
 function buildInternalEmail({
   name, phone, email, address, projectType, sqftRaw, roomsRaw,
-  paintItems, condition, paintChange, details, photos, low, high,
+  paintItems, condition, paintChange, details, photos, low, high, spaces,
 }) {
   return {
     subject: `New Lead: ${name}`,
@@ -189,6 +198,11 @@ Paint Change: ${paintChange || "—"}
 Details:      ${details || "—"}
 Photos:       ${photos || "none"}
 
+Assumed spaces from room count:
+  Bedrooms: ${spaces.beds} · Hallways: ${spaces.halls}
+  Small bath: ${spaces.bathSm} · Std bath: ${spaces.bathMd} · Ensuite: ${spaces.bathLg}
+  Kitchen: ${spaces.kitchen}
+
 Suggested range: $${low} – $${high}`,
   };
 }
@@ -201,35 +215,37 @@ app.post("/lead", (req, res) => {
 
   const p = req.body?.data || req.body;
 
-  const name          = getField(p, "name")          || "there";
-  const phone         = getField(p, "phone");
-  const email         = getField(p, "email");
-  const address       = getField(p, "address",        "project address");
-  const projectType   = getField(p, "projectType",    "project type");
-  const sqftRaw       = getField(p, "squareFootage",  "square footage of space",
-                                    "square footage of Space", "square footage");
-  const roomsRaw      = getField(p, "rooms",          "number of rooms/spaces");
-  const condition     = getField(p, "condition",      "condition of walls") || "good (just repaint)";
-  const paintChange   = getField(p, "paintChange",    "paintchange",
-                                    "will this be the same color or a color change?") || "color match";
-  const details       = getField(p, "details",        "additional details");
-  const photos        = getField(p, "photos",         "upload photos");
-  const paintItemsRaw = getField(p, "paintItems",     "paintitems",
+  const name        = getField(p, "name")         || "there";
+  const phone       = getField(p, "phone");
+  const email       = getField(p, "email");
+  const address     = getField(p, "address",       "project address");
+  const projectType = getField(p, "projectType",   "project type");
+  const sqftRaw     = getField(p, "squareFootage", "square footage of space",
+                                   "Square Footage of Space", "square footage");
+  const roomsRaw    = getField(p, "rooms",         "number of rooms/spaces");
+  const condition   = getField(p, "condition",     "condition of walls") || "good (just repaint)";
+  const paintChange = getField(p, "paintChange",   "paintchange",
+                                   "will this be the same color or a color change?") || "color match";
+  const details     = getField(p, "details",       "additional details");
+  const photos      = getField(p, "photos",        "upload photos");
+  const paintItemsRaw = getField(p, "paintItems",  "paintitems",
                                     "what are you looking to paint");
 
   console.log("EMAIL →", email);
   console.log("SQFT →", sqftRaw);
+  console.log("ROOMS →", roomsRaw);
   console.log("TYPE →", projectType);
 
   const sqft       = parseSqFt(sqftRaw);
+  const rooms      = parseRooms(roomsRaw);
   const paintItems = parsePaintItems(paintItemsRaw);
+  const spaces     = getSpacePremiumsFromRooms(rooms);
 
   // Respond to Wix immediately
   res.sendStatus(200);
 
   setImmediate(async () => {
     try {
-      // Not enough info
       if (!sqft || !paintItems.length) {
         console.log("Insufficient info — sending fallback");
 
@@ -257,21 +273,16 @@ tenbellpainting@gmail.com`,
           from: process.env.GMAIL_USER,
           to: process.env.GMAIL_USER,
           subject: `New Lead (no range): ${name}`,
-          text: `New lead — not enough info for range\n\n${JSON.stringify(p, null, 2)}`,
+          text: `New lead — not enough info\n\n${JSON.stringify(p, null, 2)}`,
         });
         console.log("FALLBACK → internal");
         return;
       }
 
       const { low, high } = estimateRange({
-        projectType,
-        sqft,
-        paintItems,
-        condition,
-        paintChange,
+        projectType, sqft, paintItems, condition, paintChange, rooms,
       });
 
-      // Customer email
       if (email) {
         const { subject, body } = buildCustomerEmail({
           name, projectType, sqftRaw, paintItems, low, high,
@@ -285,10 +296,9 @@ tenbellpainting@gmail.com`,
         console.log("QUOTE → customer:", email);
       }
 
-      // Internal email
       const { subject: intSubject, body: intBody } = buildInternalEmail({
         name, phone, email, address, projectType, sqftRaw, roomsRaw,
-        paintItems, condition, paintChange, details, photos, low, high,
+        paintItems, condition, paintChange, details, photos, low, high, spaces,
       });
       await transporter.sendMail({
         from: process.env.GMAIL_USER,
