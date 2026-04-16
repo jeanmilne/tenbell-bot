@@ -6,7 +6,6 @@ const app = express();
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// ─── Gmail transporter ────────────────────────────────────────────────────────
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -15,16 +14,23 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function grab(payload, keys, fallback = "") {
-  for (const k of keys) {
-    const v = payload?.[k];
-    if (v !== undefined && v !== null && String(v).trim() !== "") return String(v).trim();
+// ─── Case-insensitive field reader ───────────────────────────────────────────
+// Wix sends inconsistent capitalisation — this handles all of it
+function getField(obj, ...keys) {
+  if (!obj || typeof obj !== "object") return "";
+  const lower = Object.fromEntries(
+    Object.entries(obj).map(([k, v]) => [k.toLowerCase().trim(), v])
+  );
+  for (const key of keys) {
+    const val = lower[key.toLowerCase().trim()];
+    if (val !== undefined && val !== null && String(val).trim() !== "") {
+      return String(val).trim();
+    }
   }
-  return fallback;
+  return "";
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 function parseSqFt(raw) {
   const match = String(raw || "").match(/\d{2,5}/);
   return match ? parseInt(match[0], 10) : 0;
@@ -48,9 +54,8 @@ function parsePaintItems(raw) {
 }
 
 // ─── Pricing engine ───────────────────────────────────────────────────────────
-
 function wallsRate(projectType, rooms) {
-  const t = projectType.toLowerCase();
+  const t = String(projectType || "").toLowerCase();
   if (t.includes("condo") || t.includes("apartment") || t.includes("rental")) {
     if (rooms <= 2) return 3.0;
     if (rooms <= 4) return 3.2;
@@ -61,8 +66,7 @@ function wallsRate(projectType, rooms) {
   return 3.3;
 }
 
-// Small jobs cost more per sq ft (heavy setup relative to work).
-// Larger jobs get slight efficiency pricing.
+// Small jobs cost more per sqft (setup-heavy). Larger jobs get efficiency pricing.
 function roomMultiplier(rooms) {
   if (!rooms || rooms <= 0) return 1.0;
   if (rooms === 1) return 1.2;
@@ -73,14 +77,14 @@ function roomMultiplier(rooms) {
 }
 
 function paintMultiplier(paintChange) {
-  const t = paintChange.toLowerCase();
+  const t = String(paintChange || "").toLowerCase();
   if (t.includes("major")) return 1.3;
-  if (t.includes("color change")) return 1.15;
-  return 1.0; // color match / same color
+  if (t.includes("color change") || t.includes("colour change")) return 1.15;
+  return 1.0;
 }
 
 function conditionMultiplier(condition) {
-  const t = condition.toLowerCase();
+  const t = String(condition || "").toLowerCase();
   if (t.includes("minor")) return 1.12;
   if (t.includes("heavy")) return 1.3;
   return 1.0;
@@ -130,8 +134,8 @@ function estimateRange({ projectType, sqft, rooms, paintItems, condition, paintC
   base *= cm;
   notes.push(`condition adj x${cm.toFixed(2)}`);
 
-  // High-ceiling detection from details
-  const d = details.toLowerCase();
+  // High ceiling detection from details
+  const d = String(details || "").toLowerCase();
   if (d.includes("high ceiling") || /1[012]\s*('|ft)/.test(d) || /9\s*('|ft)/.test(d)) {
     base *= 1.1;
     notes.push("high ceiling adj x1.10");
@@ -146,15 +150,15 @@ function estimateRange({ projectType, sqft, rooms, paintItems, condition, paintC
 }
 
 // ─── Email builders ───────────────────────────────────────────────────────────
-
-function customerEmail({ name, projectType, sqftRaw, paintItems, low, high }) {
+function buildCustomerEmail({ name, projectType, sqftRaw, paintItems, low, high }) {
   const type  = projectType || "space";
   const scope = paintItems.includes("walls") ? "painting the walls" : "the painting work";
   const size  = sqftRaw ? `${sqftRaw} ` : "";
 
   return {
     subject: `${projectType || "Painting"} Estimate — Ten Bell Painting`,
-    body: `Hi ${name},
+    body:
+`Hi ${name},
 
 Thanks for reaching out to Ten Bell Painting.
 
@@ -171,10 +175,12 @@ tenbellpainting@gmail.com`,
   };
 }
 
-function internalEmail({ name, phone, email, address, projectType, sqftRaw, rooms, paintItems, condition, paintChange, details, photos, low, high, notes }) {
+function buildInternalEmail({ name, phone, email, address, projectType, sqftRaw, roomsRaw,
+  paintItems, condition, paintChange, details, photos, low, high, notes }) {
   return {
     subject: `New Lead: ${name}`,
-    body: `New lead received
+    body:
+`New lead received
 
 Name:         ${name}
 Phone:        ${phone || "—"}
@@ -183,7 +189,7 @@ Address:      ${address || "—"}
 
 Project Type: ${projectType || "—"}
 Square Ft:    ${sqftRaw || "—"}
-Rooms:        ${rooms || "—"}
+Rooms:        ${roomsRaw || "—"}
 Paint Items:  ${paintItems.join(", ")}
 Condition:    ${condition || "—"}
 Paint Change: ${paintChange || "—"}
@@ -198,52 +204,53 @@ ${notes.map((n) => `  - ${n}`).join("\n")}`,
 }
 
 // ─── Route ────────────────────────────────────────────────────────────────────
-
 app.get("/", (_req, res) => res.send("Ten Bell lead bot is running"));
 
 app.post("/lead", (req, res) => {
-  // Log raw payload for debugging
   console.log("RAW:", JSON.stringify(req.body, null, 2));
 
-  // Wix wraps the form data inside a "data" key
+  // Wix wraps form data inside a "data" key
   const p = req.body?.data || req.body;
 
-  // ── Field extraction ──
-  const name        = grab(p, ["name",         "Name"],                              "there");
-  const phone       = grab(p, ["phone",         "Phone"]);
-  const email       = grab(p, ["email",         "Email"]);
-  const address     = grab(p, ["address",       "Project Address"]);
-  const projectType = grab(p, ["projectType",   "Project Type"]);
-  const sqftRaw     = grab(p, ["squareFootage", "Square footage of space"]);
-  const roomsRaw    = grab(p, ["rooms",         "Number of rooms/spaces"]);
-  const condition   = grab(p, ["condition",     "Condition of walls"],                "good (just repaint)");
-  const paintChange = grab(p, ["paintChange",   "Will this be the same color or a color change?"], "Color match (1 coat of paint)");
-  const details     = grab(p, ["details",       "Additional details"]);
-  const photos      = grab(p, ["photos",        "Upload photos"]);
-  const paintItemsRaw = grab(p, ["paintItems",  "What are you looking to paint"]);
+  // ── Extract all fields (case-insensitive) ──
+  const name        = getField(p, "name")        || "there";
+  const phone       = getField(p, "phone");
+  const email       = getField(p, "email");
+  const address     = getField(p, "address", "project address");
+  const projectType = getField(p, "projectType", "project type");
+  const sqftRaw     = getField(p, "squareFootage", "square footage of space", "square footage");
+  const roomsRaw    = getField(p, "rooms", "number of rooms/spaces");
+  const condition   = getField(p, "condition", "condition of walls") || "good (just repaint)";
+  const paintChange = getField(p, "paintChange", "paintchange",
+                                "will this be the same color or a color change?") || "color match";
+  const details     = getField(p, "details", "additional details");
+  const photos      = getField(p, "photos", "upload photos");
+  const paintItemsRaw = getField(p, "paintItems", "paintitems", "what are you looking to paint");
 
   console.log("EMAIL →", email);
+  console.log("SQFT →", sqftRaw);
+  console.log("PAINT ITEMS →", paintItemsRaw);
 
-  const sqft      = parseSqFt(sqftRaw);
-  const rooms     = parseRooms(roomsRaw);
+  const sqft       = parseSqFt(sqftRaw);
+  const rooms      = parseRooms(roomsRaw);
   const paintItems = parsePaintItems(paintItemsRaw);
 
-  // Respond to Wix immediately so the automation never hangs
+  // Respond to Wix immediately so automation never hangs
   res.sendStatus(200);
 
-  // Do the heavy work in the background
   setImmediate(async () => {
     try {
       // ── Not enough info ──
       if (!sqft || !paintItems.length) {
-        console.log("Insufficient info — sending fallback");
+        console.log("Insufficient info — sqft:", sqft, "paintItems:", paintItems);
 
         if (email) {
           await transporter.sendMail({
             from: process.env.GMAIL_USER,
             to: email,
             subject: "Thanks for reaching out to Ten Bell Painting",
-            text: `Hi ${name},
+            text:
+`Hi ${name},
 
 Thanks for reaching out to Ten Bell Painting.
 
@@ -274,7 +281,9 @@ tenbellpainting@gmail.com`,
 
       // ── Customer email ──
       if (email) {
-        const { subject, body } = customerEmail({ name, projectType, sqftRaw, paintItems, low, high });
+        const { subject, body } = buildCustomerEmail({
+          name, projectType, sqftRaw, paintItems, low, high,
+        });
         await transporter.sendMail({
           from: process.env.GMAIL_USER,
           to: email,
@@ -285,8 +294,8 @@ tenbellpainting@gmail.com`,
       }
 
       // ── Internal email ──
-      const { subject: intSubject, body: intBody } = internalEmail({
-        name, phone, email, address, projectType, sqftRaw, rooms: roomsRaw,
+      const { subject: intSubject, body: intBody } = buildInternalEmail({
+        name, phone, email, address, projectType, sqftRaw, roomsRaw,
         paintItems, condition, paintChange, details, photos, low, high, notes,
       });
       await transporter.sendMail({
