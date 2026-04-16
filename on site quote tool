@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="TBP Quote">
+<title>Ten Bell Painting — Quote Tool</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--teal:#73C7AA;--teal-dk:#4fa88a;--teal-lt:#eaf8f3;--blue:#63CCF5;--blue-lt:#e8f6fd;--bg:#ffffff;--bg2:#f7f8fa;--text:#1a1a1a;--text2:#6b7280;--border:#e5e7eb;--border2:#d1d5db;--radius:12px;--radius-lg:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+.app{max-width:480px;margin:0 auto;padding:0 1rem 3rem}
+.hdr{padding:1.25rem 0 1rem;display:flex;align-items:center;gap:14px;border-bottom:2.5px solid var(--teal);margin-bottom:.75rem}
+.logo{width:42px;height:42px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo svg{width:24px;height:24px;fill:white}
+.hdr h1{font-size:18px;font-weight:600;color:var(--text)}
+.hdr p{font-size:12px;color:var(--text2);margin-top:2px}
+.prog{display:flex;gap:4px;margin:.75rem 0 1.5rem}
+.pd{flex:1;height:4px;border-radius:2px;background:var(--border)}
+.pd.done{background:var(--teal)}
+.step{display:none}.step.active{display:block}
+.slbl{font-size:11px;font-weight:600;color:var(--teal);letter-spacing:.07em;text-transform:uppercase;margin-bottom:.75rem}
+.stitle{font-size:16px;font-weight:600;color:var(--text);margin:1.25rem 0 .75rem}
+.stitle:first-of-type{margin-top:0}
+.fld{margin-bottom:.875rem}
+.fld label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:500}
+.fld input,.fld select{width:100%;padding:11px 12px;font-size:16px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);appearance:none;-webkit-appearance:none}
+.fld input:focus,.fld select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(115,199,170,.15)}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{background:var(--teal-lt);border:1px solid rgba(115,199,170,.3);border-radius:var(--radius);padding:11px 13px;margin-bottom:1rem;font-size:13px;color:var(--text2);line-height:1.5}
+.note strong{color:var(--text);font-weight:600}
+.sdiv{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin:1rem 0 .625rem;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.5rem}
+.sc{border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;background:var(--bg)}
+.sc label{font-size:12px;color:var(--text2);display:block;margin-bottom:5px;font-weight:500}
+.sc input{width:100%;padding:7px 8px;font-size:16px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);text-align:center}
+.sc input:focus{outline:none;border-color:var(--teal)}
+.sc .ss{font-size:11px;color:var(--text2);margin-top:4px}
+.chk{display:flex;align-items:center;gap:10px;padding:12px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);margin-bottom:8px;cursor:pointer;user-select:none;touch-action:manipulation}
+.chk.on{border-color:var(--teal);background:var(--teal-lt)}
+.chk .cb{width:20px;height:20px;border:1.5px solid var(--border2);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.chk.on .cb{background:var(--teal);border-color:var(--teal)}
+.chk.on .cb::after{content:'';display:block;width:5px;height:9px;border-right:2.5px solid white;border-bottom:2.5px solid white;transform:rotate(45deg) translate(-1px,-1px)}
+.chk span{font-size:15px;color:var(--text)}
+.chk small{font-size:11px;color:var(--text2);margin-left:auto}
+.tgrp{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.tb{padding:10px 15px;font-size:13px;border:1.5px solid var(--border);border-radius:20px;background:var(--bg);color:var(--text);cursor:pointer;user-select:none;touch-action:manipulation;display:inline-block}
+.tb.on{background:var(--teal);border-color:var(--teal);color:white;font-weight:600}
+.crow{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:8px;user-select:none;touch-action:manipulation}
+.crow.on{background:var(--teal-lt);border-color:var(--teal)}
+.crow .cb{width:20px;height:20px;border:1.5px solid var(--border2);border-radius:5px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center}
+.crow.on .cb{background:var(--teal);border-color:var(--teal)}
+.crow.on .cb::after{content:'';display:block;width:5px;height:9px;border-right:2.5px solid white;border-bottom:2.5px solid white;transform:rotate(45deg) translate(-1px,-1px)}
+.ct{font-size:14px;color:var(--text)}
+.cs{font-size:12px;color:var(--text2);margin-top:2px}
+.btnrow{display:flex;gap:10px;margin-top:1.5rem}
+.btn{flex:1;padding:15px;font-size:16px;font-weight:600;border-radius:var(--radius);cursor:pointer;border:1.5px solid var(--border2);background:var(--bg);color:var(--text);touch-action:manipulation}
+.btn:active{opacity:.8;transform:scale(.98)}
+.btn.pri{background:var(--teal);color:white;border-color:var(--teal)}
+.btn.bk{background:transparent;flex:0 0 80px;font-size:14px}
+.res-hdr{background:var(--teal);border-radius:var(--radius-lg);padding:1.5rem 1.25rem;margin-bottom:1rem;color:white;text-align:center}
+.res-hdr .rn{font-size:13px;opacity:.85;margin-bottom:6px}
+.res-hdr .price-label{font-size:11px;opacity:.75;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.res-hdr .price{font-size:52px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.res-hdr .ra{font-size:12px;opacity:.75}
+.card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:.875rem}
+.clbl{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.bdr{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;color:var(--text2);border-bottom:1px solid var(--border)}
+.bdr:last-child{border-bottom:none}
+.bdr.tot{font-size:15px;font-weight:600;color:var(--text);padding-top:8px}
+.bdr.coat-row{color:var(--teal-dk);font-weight:500}
+.mg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+.mc{text-align:center;padding:10px 4px;background:var(--bg2);border-radius:var(--radius)}
+.mcv{font-size:16px;font-weight:600;color:var(--text)}
+.mcl{font-size:11px;color:var(--text2);margin-top:2px}
+.mc.hl .mcv{color:var(--teal-dk)}
+.warn{background:#fff8e8;border:1px solid #f0c040;border-radius:var(--radius);padding:10px 12px;font-size:13px;color:#7a5a00;margin-bottom:.875rem;line-height:1.6}
+.ptag{display:inline-flex;align-items:center;background:var(--blue-lt);border:1px solid rgba(99,204,245,.4);border-radius:20px;padding:7px 14px;font-size:13px;color:#1a6a8a;margin-top:4px}
+.cr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.share-btn{width:100%;padding:15px;font-size:15px;font-weight:600;border-radius:var(--radius);cursor:pointer;border:1.5px solid var(--border2);background:var(--bg2);color:var(--text);touch-action:manipulation;margin-top:8px;text-align:center}
+.share-btn:active{opacity:.8}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hdr">
+  <div class="logo"><svg viewBox="0 0 24 24"><path d="M8 2h8v3H8zm-1 3h10v2H7zm-1 2h12l-1 14H6L5 7zm3 2v10h1V9zm2 0v10h1V9zm2 0v10h1V9z"/></svg></div>
+  <div><h1>Ten Bell Painting</h1><p>On-site quote tool</p></div>
+</div>
+<div class="prog"><div class="pd done" id="pd0"></div><div class="pd" id="pd1"></div><div class="pd" id="pd2"></div><div class="pd" id="pd3"></div><div class="pd" id="pd4"></div></div>
+
+<!-- STEP 0 -->
+<div class="step active" id="step0">
+  <div class="slbl">Step 1 of 5 — Job info</div>
+  <div class="stitle">Client details</div>
+  <div class="fld"><label>Client name</label><input type="text" id="clientName" placeholder="e.g. Sarah Chen" autocomplete="off"></div>
+  <div class="fld"><label>Address</label><input type="text" id="jobAddress" placeholder="123 King St W, Toronto" autocomplete="off"></div>
+  <div class="cr">
+    <div class="fld"><label>Phone</label><input type="tel" id="clientPhone" placeholder="416-555-0100"></div>
+    <div class="fld"><label>Email</label><input type="email" id="clientEmail" placeholder="email@email.com"></div>
+  </div>
+  <div class="fld"><label>Project type</label>
+    <select id="projectType">
+      <option value="condo">Condo</option>
+      <option value="apartment">Apartment</option>
+      <option value="house">House</option>
+      <option value="rental">Rental property</option>
+      <option value="commercial">Small commercial</option>
+    </select>
+  </div>
+  <div class="btnrow"><button class="btn pri" id="s0next">Next →</button></div>
+</div>
+
+<!-- STEP 1 -->
+<div class="step" id="step1">
+  <div class="slbl">Step 2 of 5 — Spaces</div>
+  <div class="stitle">Count each space being painted</div>
+  <div class="note"><strong>Difficulty premiums only.</strong> The sqft rate covers paint. These add a small amount for cutting and access complexity.</div>
+  <div class="sdiv">Living spaces</div>
+  <div class="sgrid">
+    <div class="sc"><label>Living / dining</label><input type="number" id="sLiving" value="0" min="0"><div class="ss">No premium</div></div>
+    <div class="sc"><label>Bedrooms</label><input type="number" id="sBed" value="0" min="0"><div class="ss">+$25 each</div></div>
+    <div class="sc"><label>Office / den</label><input type="number" id="sOffice" value="0" min="0"><div class="ss">+$25 each</div></div>
+    <div class="sc"><label>Hallways & entries</label><input type="number" id="sHall" value="0" min="0"><div class="ss">+$50 each</div></div>
+  </div>
+  <div class="sdiv">Bathrooms</div>
+  <div class="sgrid">
+    <div class="sc"><label>Small / powder room</label><input type="number" id="sBathSm" value="0" min="0"><div class="ss">+$75 each</div></div>
+    <div class="sc"><label>Standard bathroom</label><input type="number" id="sBathMd" value="0" min="0"><div class="ss">+$125 each</div></div>
+    <div class="sc"><label>Large / ensuite</label><input type="number" id="sBathLg" value="0" min="0"><div class="ss">+$150 each</div></div>
+  </div>
+  <div class="sdiv">Other spaces</div>
+  <div class="sgrid">
+    <div class="sc"><label>Kitchen</label><input type="number" id="sKitchen" value="0" min="0"><div class="ss">+$75 each</div></div>
+    <div class="sc"><label>Laundry room</label><input type="number" id="sLaundry" value="0" min="0"><div class="ss">+$50 each</div></div>
+    <div class="sc"><label>Closets</label><input type="number" id="sCloset" value="0" min="0"><div class="ss">+$50–100 by count</div></div>
+  </div>
+  <div class="sdiv">Stairwells</div>
+  <div class="sgrid">
+    <div class="sc"><label>Standard stairwell</label><input type="number" id="sStairSm" value="0" min="0"><div class="ss">+$200 flat</div></div>
+    <div class="sc"><label>Large / open stairwell</label><input type="number" id="sStairLg" value="0" min="0"><div class="ss">+$350 flat</div></div>
+  </div>
+  <div class="btnrow">
+    <button class="btn bk" id="s1back">← Back</button>
+    <button class="btn pri" id="s1next">Next →</button>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="step" id="step2">
+  <div class="slbl">Step 3 of 5 — Measurements</div>
+  <div class="stitle">Exact measurements</div>
+  <div class="note"><strong>Measure total floor area</strong> — length × width of each room added together.</div>
+  <div class="r2">
+    <div class="fld"><label>Total floor area (sqft)</label><input type="number" id="floorSqft" placeholder="e.g. 750"></div>
+    <div class="fld"><label>Ceiling height (ft)</label><input type="number" id="ceilHeight" value="8"></div>
+  </div>
+  <div class="fld"><label>Number of doors being painted</label><input type="number" id="numDoors" value="0"></div>
+  <div class="stitle">Occupied / furnished?</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="occ" data-val="no">No — vacant</div>
+    <div class="tb" data-grp="occ" data-val="yes">Yes — furniture present (+$75)</div>
+  </div>
+  <div class="btnrow">
+    <button class="btn bk" id="s2back">← Back</button>
+    <button class="btn pri" id="s2next">Next →</button>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step" id="step3">
+  <div class="slbl">Step 4 of 5 — Scope & condition</div>
+  <div class="stitle">What's being painted?</div>
+  <div class="chk on" data-scope="walls"><div class="cb"></div><span>Walls</span><small>base rate</small></div>
+  <div class="chk" data-scope="trim"><div class="cb"></div><span>Trim & baseboards</span><small>$2/linear ft</small></div>
+  <div class="chk" data-scope="doors"><div class="cb"></div><span>Doors</span><small>$100 each</small></div>
+  <div class="chk" data-scope="ceiling"><div class="cb"></div><span>Ceilings</span><small>tiered by sqft</small></div>
+  <div class="stitle">Color situation</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="coat" data-val="match">Same color (1 coat)</div>
+    <div class="tb" data-grp="coat" data-val="change">Color change (2 coats)</div>
+    <div class="tb" data-grp="coat" data-val="major">Major change / primer (3 coats)</div>
+  </div>
+  <div class="stitle">Wall condition</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="cond" data-val="good">Good</div>
+    <div class="tb" data-grp="cond" data-val="minor">Minor repairs</div>
+    <div class="tb" data-grp="cond" data-val="heavy">Heavy repairs</div>
+  </div>
+  <div class="stitle">Wallpaper present?</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="wp" data-val="no">No</div>
+    <div class="tb" data-grp="wp" data-val="yes">Yes — needs removal</div>
+  </div>
+  <div class="btnrow">
+    <button class="btn bk" id="s3back">← Back</button>
+    <button class="btn pri" id="s3next">Next →</button>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="step" id="step4">
+  <div class="slbl">Step 5 of 5 — Checklist & quote</div>
+  <div class="stitle">Site walkthrough checklist</div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">Walls clean — no grease, mold, or water damage</div></div></div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">Access confirmed</div><div class="cs">Elevator booked, parking arranged</div></div></div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">Space is or will be vacant</div><div class="cs">If occupied, noted in step 3</div></div></div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">No wallpaper to remove</div><div class="cs">Removal is a separate quote</div></div></div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">No surprise repairs needed</div><div class="cs">Matches what client described</div></div></div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">Trim and baseboards in good shape</div></div></div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">Paint color and sheen confirmed</div><div class="cs">Flat, eggshell, or semi-gloss agreed on</div></div></div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">Scope confirmed with client</div><div class="cs">Client knows what is and isn't included</div></div></div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">Timeline agreed</div><div class="cs">Start date and expected duration discussed</div></div></div>
+  <div class="fld" style="margin-top:1rem"><label>Additional notes</label>
+    <input type="text" id="extraNotes" placeholder="Anything else to flag for this job" autocomplete="off">
+  </div>
+  <div class="btnrow">
+    <button class="btn bk" id="s4back">← Back</button>
+    <button class="btn pri" id="calcBtn">Generate quote →</button>
+  </div>
+</div>
+
+<!-- STEP 5 -->
+<div class="step" id="step5">
+  <div class="slbl">Your quote</div>
+  <div id="warnBox" class="warn" style="display:none"></div>
+  <div class="res-hdr">
+    <div class="rn" id="rClient"></div>
+    <div class="price-label">Quoted price</div>
+    <div class="price" id="rPrice"></div>
+    <div class="ra" id="rAddr"></div>
+  </div>
+  <div class="card"><div class="clbl">Pricing breakdown</div><div id="bdArea"></div></div>
+  <div class="card"><div class="clbl">Your margin</div><div class="mg" id="mgArea"></div></div>
+  <div class="card"><div class="clbl">Materials needed</div><div id="matArea"></div></div>
+  <button class="share-btn" id="shareBtn">📋 Copy quote summary</button>
+  <div class="btnrow" style="margin-top:1rem">
+    <button class="btn bk" id="s5back">← Adjust</button>
+    <button class="btn pri" id="newBtn">New quote →</button>
+  </div>
+</div>
+</div>
+
+<script>
+const S={coat:'match',cond:'good',occ:'no',wp:'no',scope:['walls']};
+
+function goStep(n){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  for(let i=0;i<5;i++){const d=document.getElementById('pd'+i);if(d)d.classList.toggle('done',i<=Math.min(n,4));}
+  window.scrollTo(0,0);
+}
+
+function resetAll(){
+  // Reset state
+  S.coat='match';S.cond='good';S.occ='no';S.wp='no';S.scope=['walls'];
+  // Reset inputs
+  ['clientName','jobAddress','clientPhone','clientEmail','extraNotes'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  ['sLiving','sBed','sOffice','sHall','sBathSm','sBathMd','sBathLg',
+   'sKitchen','sLaundry','sCloset','sStairSm','sStairLg','numDoors'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='0';
+  });
+  const sqft=document.getElementById('floorSqft');if(sqft)sqft.value='';
+  const ceil=document.getElementById('ceilHeight');if(ceil)ceil.value='8';
+  document.getElementById('projectType').value='condo';
+  // Reset toggles
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.tb[data-val="no"]').forEach(b=>b.classList.add('on'));
+  document.querySelectorAll('.tb[data-val="match"]').forEach(b=>b.classList.add('on'));
+  document.querySelectorAll('.tb[data-val="good"]').forEach(b=>b.classList.add('on'));
+  // Reset scope checkboxes
+  document.querySelectorAll('.chk[data-scope]').forEach(el=>{
+    el.classList.toggle('on',el.dataset.scope==='walls');
+  });
+  // Reset checklist
+  document.querySelectorAll('.crow').forEach(el=>el.classList.remove('on'));
+  goStep(0);
+}
+
+document.getElementById('s0next').addEventListener('click',()=>goStep(1));
+document.getElementById('s1back').addEventListener('click',()=>goStep(0));
+document.getElementById('s1next').addEventListener('click',()=>goStep(2));
+document.getElementById('s2back').addEventListener('click',()=>goStep(1));
+document.getElementById('s2next').addEventListener('click',()=>goStep(3));
+document.getElementById('s3back').addEventListener('click',()=>goStep(2));
+document.getElementById('s3next').addEventListener('click',()=>goStep(4));
+document.getElementById('s4back').addEventListener('click',()=>goStep(3));
+document.getElementById('s5back').addEventListener('click',()=>goStep(4));
+document.getElementById('calcBtn').addEventListener('click',calculate);
+document.getElementById('newBtn').addEventListener('click',resetAll);
+document.getElementById('shareBtn').addEventListener('click',shareQuote);
+
+document.querySelectorAll('.tb').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const grp=this.dataset.grp,val=this.dataset.val;
+    if(!grp)return;
+    document.querySelectorAll(`.tb[data-grp="${grp}"]`).forEach(b=>b.classList.remove('on'));
+    this.classList.add('on');S[grp]=val;
+  });
+});
+document.querySelectorAll('.chk[data-scope]').forEach(el=>{
+  el.addEventListener('click',function(){
+    const val=this.dataset.scope;
+    this.classList.toggle('on');
+    const idx=S.scope.indexOf(val);
+    if(idx>-1)S.scope.splice(idx,1);else S.scope.push(val);
+  });
+});
+document.querySelectorAll('.crow').forEach(el=>{
+  el.addEventListener('click',function(){this.classList.toggle('on');});
+});
+
+function gi(id){return parseInt(document.getElementById(id).value)||0;}
+function gf(id,fb=0){const v=parseFloat(document.getElementById(id).value);return isNaN(v)?fb:v;}
+function r50(n){return Math.round(n/50)*50;}
+function fmt(n){return '$'+Math.round(n).toLocaleString();}
+
+function getWallsRate(sqft,type){
+  if(type==='house'){
+    if(sqft<=1000)return 2.75;if(sqft<=1500)return 2.55;
+    if(sqft<=2000)return 2.35;return 2.10;
+  }
+  if(type==='commercial')return getWallsRate(sqft,'condo')*1.20;
+  if(sqft<=300)return 3.75;if(sqft<=450)return 2.90;
+  if(sqft<=700)return 2.55;if(sqft<=900)return 2.50;
+  if(sqft<=1300)return 2.40;if(sqft<=2000)return 2.15;
+  return 1.85;
+}
+function getCeilingRate(sqft){
+  if(sqft<=600)return 1.50;if(sqft<=800)return 1.35;
+  if(sqft<=1100)return 1.20;if(sqft<=1500)return 1.05;
+  if(sqft<=2000)return 0.90;return 0.75;
+}
+function coatLabel(coat){
+  if(coat==='major')return '3 coats — major color change / primer';
+  if(coat==='change')return '2 coats — color change';
+  return '1 coat — same color';
+}
+
+function calculate(){
+  const sqft=gf('floorSqft');
+  const ceilH=gf('ceilHeight',8);
+  const doors=gi('numDoors');
+  const client=document.getElementById('clientName').value||'Client';
+  const addr=document.getElementById('jobAddress').value||'';
+  const phone=document.getElementById('clientPhone').value||'';
+  const email=document.getElementById('clientEmail').value||'';
+  const projType=document.getElementById('projectType').value;
+  const notes=document.getElementById('extraNotes').value||'';
+
+  const beds=gi('sBed'),offices=gi('sOffice'),halls=gi('sHall');
+  const bathSm=gi('sBathSm'),bathMd=gi('sBathMd'),bathLg=gi('sBathLg');
+  const kitchen=gi('sKitchen'),laundry=gi('sLaundry'),closets=gi('sCloset');
+  const stairSm=gi('sStairSm'),stairLg=gi('sStairLg');
+
+  if(!sqft){alert('Please enter floor area in step 3.');goStep(2);return;}
+
+  const type=projType==='house'?'house':projType==='commercial'?'commercial':'condo';
+  let base=0,wallBase=0;
+  const rows=[],warns=[];
+
+  if(S.scope.includes('walls')){
+    const rate=getWallsRate(sqft,type);
+    wallBase=sqft*rate;base+=wallBase;
+    rows.push({l:`Walls — ${sqft} sqft × $${rate.toFixed(2)}/sqft`,v:wallBase});
+  }
+  if(S.scope.includes('trim')){
+    const ft=Math.max(40,Math.round(sqft*0.15));
+    const c=ft*2;base+=c;
+    rows.push({l:`Trim — ~${ft}ft × $2/ft`,v:c});
+  }
+  if(S.scope.includes('doors')&&doors>0){
+    const c=doors*100;base+=c;
+    rows.push({l:`Doors — ${doors} × $100`,v:c});
+  }
+  if(S.scope.includes('ceiling')){
+    const rate=getCeilingRate(sqft);
+    const c=sqft*rate;base+=c;
+    rows.push({l:`Ceilings — ${sqft} sqft × $${rate.toFixed(2)}/sqft`,v:c});
+  }
+  if(ceilH>=10){
+    const pct=ceilH>=12?0.18:ceilH>=11?0.12:0.10;
+    const c=base*pct;base+=c;
+    rows.push({l:`High ceilings (${ceilH}ft) +${Math.round(pct*100)}%`,v:c});
+  }
+
+  let premiums=0;
+  premiums+=beds*25;premiums+=offices*25;premiums+=halls*50;
+  premiums+=bathSm*75;premiums+=bathMd*125;premiums+=bathLg*150;
+  premiums+=kitchen*75;premiums+=laundry*50;
+  if(closets===1)premiums+=50;
+  else if(closets===2)premiums+=75;
+  else if(closets>=3)premiums+=100;
+  premiums+=stairSm*200;premiums+=stairLg*350;
+  if(wallBase>0)premiums=Math.min(premiums,wallBase*0.15);
+  if(premiums>0){base+=premiums;rows.push({l:'Space complexity premiums',v:premiums});}
+
+  if(S.cond==='minor'){const c=base*0.12;base+=c;rows.push({l:'Minor repairs +12%',v:c});}
+  else if(S.cond==='heavy'){
+    const c=base*0.30;base+=c;
+    rows.push({l:'Heavy repairs +30%',v:c});
+    warns.push('Heavy repairs flagged — confirm drywall scope before finalising.');
+  }
+
+  if(S.coat==='change'){
+    const c=base*0.15;base*=1.15;
+    rows.push({l:coatLabel(S.coat),v:c,coat:true});
+  } else if(S.coat==='major'){
+    const c=base*0.30;base*=1.30;
+    rows.push({l:coatLabel(S.coat),v:c,coat:true});
+  } else {
+    rows.push({l:coatLabel(S.coat),v:null,coat:true});
+  }
+
+  if(S.occ==='yes'){base+=75;rows.push({l:'Occupied / furnished +$75',v:75});warns.push('Occupied space — allow extra time for furniture protection.');}
+  if(S.wp==='yes')warns.push('Wallpaper removal is a separate scope — quote it separately.');
+  if(base<500)base=500;
+
+  // Concrete price = base × 1.05 rounded to $50
+  // This lands at the midpoint of the Wix range (low=×0.90, high=×1.20, mid=×1.05)
+  const price=r50(base*1.05);
+  const painters=Math.round(price*0.40);
+  const mats=Math.round(price*0.10);
+  const net=Math.round(price*0.50);
+  const coats=S.coat==='major'?3:S.coat==='change'?2:1;
+  const litres=Math.ceil((sqft/106)*coats);
+  const paintCost=Math.round(litres*13);
+
+  document.getElementById('rClient').textContent=client+(phone?' · '+phone:'')+(email?' · '+email:'');
+  document.getElementById('rPrice').textContent=fmt(price);
+  document.getElementById('rAddr').textContent=addr||projType;
+
+  let bd='';
+  rows.forEach(r=>{
+    if(r.coat){
+      const valStr=r.v!==null?fmt(r.v):'included';
+      bd+=`<div class="bdr coat-row"><span>${r.l}</span><span>${valStr}</span></div>`;
+    } else {
+      bd+=`<div class="bdr"><span>${r.l}</span><span>${fmt(r.v)}</span></div>`;
+    }
+  });
+  bd+=`<div class="bdr tot"><span>Total</span><span>${fmt(price)}</span></div>`;
+  document.getElementById('bdArea').innerHTML=bd;
+
+  document.getElementById('mgArea').innerHTML=`
+    <div class="mc hl"><div class="mcv">${fmt(net)}</div><div class="mcl">Your net</div></div>
+    <div class="mc"><div class="mcv">${fmt(painters)}</div><div class="mcl">Painters 40%</div></div>
+    <div class="mc"><div class="mcv">${fmt(mats)}</div><div class="mcl">Materials ~10%</div></div>`;
+
+  document.getElementById('matArea').innerHTML=
+    `<span class="ptag">~${litres}L Sherwin-Williams (${coats} coat${coats>1?'s':''} · ~${fmt(paintCost)} est. cost)</span>`;
+
+  const wEl=document.getElementById('warnBox');
+  if(warns.length){wEl.style.display='block';wEl.innerHTML=warns.map(w=>'⚠ '+w).join('<br><br>');}
+  else wEl.style.display='none';
+
+  window._qs={client,phone,email,addr,projType,sqft,ceilH,doors,
+    bathSm,bathMd,bathLg,kitchen,laundry,closets,stairSm,stairLg,
+    beds,halls,offices,scope:S.scope.join(', '),coat:S.coat,
+    cond:S.cond,occ:S.occ,wp:S.wp,notes,price,net,litres,paintCost};
+  goStep(5);
+}
+
+function shareQuote(){
+  const q=window._qs;if(!q)return;
+  const text=
+`TEN BELL PAINTING — QUOTE SUMMARY
+===================================
+Client:   ${q.client}
+Phone:    ${q.phone||'—'}
+Email:    ${q.email||'—'}
+Address:  ${q.addr||'—'}
+Type:     ${q.projType}
+
+Scope:    ${q.scope}
+Coat:     ${q.coat==='major'?'Major/primer (3 coats)':q.coat==='change'?'Color change (2 coats)':'Same color (1 coat)'}
+Condition:${q.cond}
+Sqft:     ${q.sqft} | Ceiling: ${q.ceilH}ft
+Occupied: ${q.occ==='yes'?'Yes':'No'}
+
+QUOTED PRICE: ${fmt(q.price)}
+Your net: ${fmt(q.net)}
+Paint needed: ~${q.litres}L (~${fmt(q.paintCost)})
+
+Notes: ${q.notes||'none'}`;
+
+  if(navigator.share){
+    navigator.share({ title:'Ten Bell Quote', text }).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>{
+      document.getElementById('shareBtn').textContent='✅ Copied!';
+      setTimeout(()=>{document.getElementById('shareBtn').textContent='📋 Copy quote summary';},2000);
+    });
+  }
+}
+</script>
+</body>
+</html>
