@@ -81,6 +81,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .share-btn{width:100%;padding:15px;font-size:15px;font-weight:600;border-radius:var(--radius);cursor:pointer;border:1.5px solid var(--border2);background:var(--bg2);color:var(--text);touch-action:manipulation;margin-top:8px;text-align:center}
 .share-btn:active{opacity:.8}
+.finish-opt{border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;cursor:pointer;user-select:none;touch-action:manipulation}
+.finish-opt.on{border-color:var(--teal);background:var(--teal-lt)}
+.fo-top{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.fo-cb{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.finish-opt.on .fo-cb{background:var(--teal);border-color:var(--teal)}
+.finish-opt.on .fo-cb::after{content:'';display:block;width:5px;height:9px;border-right:2px solid white;border-bottom:2px solid white;transform:rotate(45deg) translate(-1px,-1px)}
+.fo-name{font-size:14px;font-weight:600;color:var(--text)}
+.fo-desc{font-size:12px;color:var(--text2);line-height:1.5;padding-left:28px}
+.tier-opt{border:1.5px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;cursor:pointer;user-select:none;touch-action:manipulation}
+.tier-opt.on{border-color:var(--teal);background:var(--teal-lt)}
+.tier-top{display:flex;align-items:center;gap:10px}
+.tier-cb{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.tier-opt.on .tier-cb{background:var(--teal);border-color:var(--teal)}
+.tier-opt.on .tier-cb::after{content:'';display:block;width:8px;height:8px;background:white;border-radius:50%}
+.tier-name{font-size:15px;font-weight:600;color:var(--text)}
+.tier-badge{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;margin-left:auto}
+.good-badge{background:#e8f0fe;color:#3b5bdb}
+.better-badge{background:#fff3e0;color:#e67700}
+.best-badge{background:#f3e8ff;color:#7c3aed}
+.mat-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:8px;user-select:none;touch-action:manipulation}
+.mat-row.on{background:var(--teal-lt);border-color:var(--teal)}
+.mat-cb{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center}
+.mat-row.on .mat-cb{background:var(--teal);border-color:var(--teal)}
+.mat-row.on .mat-cb::after{content:'';display:block;width:5px;height:9px;border-right:2px solid white;border-bottom:2px solid white;transform:rotate(45deg) translate(-1px,-1px)}
+.cm-toggle{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);margin-bottom:10px;cursor:pointer;user-select:none;touch-action:manipulation}
+.cm-toggle.on{border-color:var(--teal);background:var(--teal-lt)}
+.cm-toggle .cm-cb{width:20px;height:20px;border:1.5px solid var(--border2);border-radius:5px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center}
+.cm-toggle.on .cm-cb{background:var(--teal);border-color:var(--teal)}
+.cm-toggle.on .cm-cb::after{content:'';display:block;width:5px;height:9px;border-right:2.5px solid white;border-bottom:2.5px solid white;transform:rotate(45deg) translate(-1px,-1px)}
+.color-fields{transition:opacity .2s}
+.color-fields.dimmed{opacity:.35;pointer-events:none}
+.fo-badge{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;margin-left:auto}
+.fo-ceil{background:#e8f0fe;color:#1a3a8a}
+.fo-walls{background:var(--teal-lt);color:var(--teal-dk)}
+.fo-pop{background:#eaf3de;color:#2a5c0a}
+.fo-wet{background:#fff3e0;color:#9a5000}
+.fo-trim{background:var(--blue-lt);color:#1a6a8a}
+.fo-acc{background:#f3e8ff;color:#5a1a9a}
+.tier-opt .fld input{width:100%;padding:8px 10px;font-size:14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text)}
+.tier-opt .fld input:focus{outline:none;border-color:var(--teal)}
 </style>
 </head>
 <body>
@@ -89,7 +129,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="logo"><svg viewBox="0 0 24 24"><path d="M8 2h8v3H8zm-1 3h10v2H7zm-1 2h12l-1 14H6L5 7zm3 2v10h1V9zm2 0v10h1V9zm2 0v10h1V9z"/></svg></div>
   <div><h1>Ten Bell Painting</h1><p>On-site quote tool</p></div>
 </div>
-<div class="prog"><div class="pd done" id="pd0"></div><div class="pd" id="pd1"></div><div class="pd" id="pd2"></div><div class="pd" id="pd3"></div><div class="pd" id="pd4"></div></div>
+<div class="prog"><div class="pd done" id="pd0"></div><div class="pd" id="pd1"></div><div class="pd" id="pd2"></div><div class="pd" id="pd3"></div><div class="pd" id="pd4"></div><div class="pd" id="pd5"></div></div>
 
 <!-- STEP 0 -->
 <div class="step active" id="step0">
@@ -202,7 +242,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- STEP 4 -->
 <div class="step" id="step4">
-  <div class="slbl">Step 5 of 5 — Checklist & quote</div>
+  <div class="slbl">Step 5 of 6 — Checklist</div>
   <div class="stitle">Site walkthrough checklist</div>
   <div class="crow"><div class="cb"></div><div><div class="ct">Walls clean — no grease, mold, or water damage</div></div></div>
   <div class="crow"><div class="cb"></div><div><div class="ct">Access confirmed</div><div class="cs">Elevator booked, parking arranged</div></div></div>
@@ -218,12 +258,96 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="btnrow">
     <button class="btn bk" id="s4back">← Back</button>
+    <button class="btn pri" id="s4next">Next →</button>
+  </div>
+</div>
+
+<!-- STEP 5 — PAINT & MATERIALS -->
+<div class="step" id="step5">
+  <div class="slbl">Step 6 of 6 — Paint & materials</div>
+
+  <div class="stitle">Paint color</div>
+  <div class="cm-toggle" id="cmToggle">
+    <div class="cm-cb"></div>
+    <div>
+      <div class="ct">Color match existing paint</div>
+      <div class="cs">Client wants to match their current color exactly</div>
+    </div>
+  </div>
+  <div class="color-fields" id="colorFields">
+    <div class="r2">
+      <div class="fld"><label>Color name</label><input type="text" id="paintColorName" placeholder="e.g. Accessible Beige" autocomplete="off"></div>
+      <div class="fld"><label>SW color code</label><input type="text" id="paintColorCode" placeholder="e.g. SW 7036" autocomplete="off"></div>
+    </div>
+  </div>
+
+  <div class="stitle">Paint finish</div>
+  <div class="note" style="margin-bottom:.75rem"><strong>Use this to guide your client.</strong> Most condo walls get eggshell. Trim always gets semi-gloss.</div>
+  <div id="finishArea">
+    <div class="finish-opt" data-val="flat">
+      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Flat</span><span class="fo-badge fo-ceil">Ceilings</span></div>
+      <div class="fo-desc">Zero sheen. Best for ceilings and feature walls. Hides surface imperfections. Not washable.</div>
+    </div>
+    <div class="finish-opt" data-val="matte">
+      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Matte</span><span class="fo-badge fo-walls">Walls</span></div>
+      <div class="fo-desc">Very low sheen. Good for bedrooms and low-traffic rooms. Slightly more washable than flat.</div>
+    </div>
+    <div class="finish-opt" data-val="eggshell">
+      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Eggshell</span><span class="fo-badge fo-pop">Most popular</span></div>
+      <div class="fo-desc">Soft subtle sheen. The go-to for condo and apartment walls. Washable, durable, looks great.</div>
+    </div>
+    <div class="finish-opt" data-val="satin">
+      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Satin</span><span class="fo-badge fo-wet">Kitchen / bath</span></div>
+      <div class="fo-desc">Pearl-like sheen. Great for kitchens, bathrooms, and hallways. Easy to wipe clean.</div>
+    </div>
+    <div class="finish-opt" data-val="semi-gloss">
+      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Semi-gloss</span><span class="fo-badge fo-trim">Trim / doors</span></div>
+      <div class="fo-desc">Noticeable sheen. Standard for all trim, doors, and baseboards. Very durable and washable.</div>
+    </div>
+    <div class="finish-opt" data-val="gloss">
+      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Gloss</span><span class="fo-badge fo-acc">Accents</span></div>
+      <div class="fo-desc">High shine. Used for accents, furniture, and feature walls. Walls must be very smooth.</div>
+    </div>
+  </div>
+
+  <div class="stitle">Paint product tier</div>
+  <div id="tierArea">
+    <div class="tier-opt" data-val="good">
+      <div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Good</span><span class="tier-badge good-badge">Entry level</span></div>
+      <div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tierGoodProduct" placeholder="Product name (e.g. ProMar 200)" autocomplete="off"></div>
+    </div>
+    <div class="tier-opt" data-val="better">
+      <div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Better</span><span class="tier-badge better-badge">Mid range</span></div>
+      <div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tierBetterProduct" placeholder="Product name (e.g. SuperPaint)" autocomplete="off"></div>
+    </div>
+    <div class="tier-opt" data-val="best">
+      <div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Best</span><span class="tier-badge best-badge">Premium</span></div>
+      <div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tierBestProduct" placeholder="Product name (e.g. Emerald)" autocomplete="off"></div>
+    </div>
+  </div>
+
+  <div class="stitle">Drywall & prep materials needed</div>
+  <div id="matsArea">
+    <div class="mat-row" data-mat="mud"><div class="mat-cb"></div><div><div class="ct">Drywall compound (mud)</div><div class="cs">Filling holes, cracks, skim coating</div></div></div>
+    <div class="mat-row" data-mat="mesh-tape"><div class="mat-cb"></div><div><div class="ct">Mesh tape</div><div class="cs">Reinforcing seams and cracks</div></div></div>
+    <div class="mat-row" data-mat="paper-tape"><div class="mat-cb"></div><div><div class="ct">Paper tape</div><div class="cs">Finishing joints and corners</div></div></div>
+    <div class="mat-row" data-mat="primer"><div class="mat-cb"></div><div><div class="ct">Primer</div><div class="cs">New drywall, heavy repairs, major color changes</div></div></div>
+    <div class="mat-row" data-mat="sandpaper"><div class="mat-cb"></div><div><div class="ct">Sandpaper / sanding sponge</div><div class="cs">Smoothing repairs before painting</div></div></div>
+    <div class="mat-row" data-mat="caulk"><div class="mat-cb"></div><div><div class="ct">Caulk</div><div class="cs">Gaps between trim, baseboards, and walls</div></div></div>
+    <div class="mat-row" data-mat="putty"><div class="mat-cb"></div><div><div class="ct">Spackling / wall putty</div><div class="cs">Small nail holes and minor surface repairs</div></div></div>
+    <div class="mat-row" data-mat="corner-bead"><div class="mat-cb"></div><div><div class="ct">Corner bead</div><div class="cs">Protecting and finishing drywall corners</div></div></div>
+    <div class="mat-row" data-mat="drop-sheets"><div class="mat-cb"></div><div><div class="ct">Drop sheets / plastic sheeting</div><div class="cs">Protecting floors and furniture</div></div></div>
+    <div class="mat-row" data-mat="painters-tape"><div class="mat-cb"></div><div><div class="ct">Painter's tape</div><div class="cs">Masking trim, edges, and fixtures</div></div></div>
+  </div>
+
+  <div class="btnrow" style="margin-top:1.5rem">
+    <button class="btn bk" id="s5back">← Back</button>
     <button class="btn pri" id="calcBtn">Generate quote →</button>
   </div>
 </div>
 
-<!-- STEP 5 -->
-<div class="step" id="step5">
+<!-- STEP 6 — RESULT -->
+<div class="step" id="step6">
   <div class="slbl">Your quote</div>
   <div id="warnBox" class="warn" style="display:none"></div>
   <div class="res-hdr">
@@ -237,27 +361,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="card"><div class="clbl">Materials needed</div><div id="matArea"></div></div>
   <button class="share-btn" id="shareBtn">📋 Copy quote summary</button>
   <div class="btnrow" style="margin-top:1rem">
-    <button class="btn bk" id="s5back">← Adjust</button>
+    <button class="btn bk" id="s6back">← Adjust</button>
     <button class="btn pri" id="newBtn">New quote →</button>
   </div>
 </div>
 </div>
 
 <script>
-const S={coat:'match',cond:'good',occ:'no',wp:'no',scope:['walls']};
+const S={coat:'match',cond:'good',occ:'no',wp:'no',scope:['walls'],finish:'',tier:'',mats:[],colorMatch:false};
 
 function goStep(n){
   document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
   document.getElementById('step'+n).classList.add('active');
-  for(let i=0;i<5;i++){const d=document.getElementById('pd'+i);if(d)d.classList.toggle('done',i<=Math.min(n,4));}
+  for(let i=0;i<6;i++){const d=document.getElementById('pd'+i);if(d)d.classList.toggle('done',i<=Math.min(n,5));}
   window.scrollTo(0,0);
 }
 
 function resetAll(){
-  // Reset state
-  S.coat='match';S.cond='good';S.occ='no';S.wp='no';S.scope=['walls'];
-  // Reset inputs
-  ['clientName','jobAddress','clientPhone','clientEmail','extraNotes'].forEach(id=>{
+  S.coat='match';S.cond='good';S.occ='no';S.wp='no';S.scope=['walls'];S.finish='';S.tier='';S.mats=[];S.colorMatch=false;
+  ['clientName','jobAddress','clientPhone','clientEmail','extraNotes',
+   'paintColorName','paintColorCode','tierGoodProduct','tierBetterProduct','tierBestProduct'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
   ['sLiving','sBed','sOffice','sHall','sBathSm','sBathMd','sBathLg',
@@ -267,17 +390,17 @@ function resetAll(){
   const sqft=document.getElementById('floorSqft');if(sqft)sqft.value='';
   const ceil=document.getElementById('ceilHeight');if(ceil)ceil.value='8';
   document.getElementById('projectType').value='condo';
-  // Reset toggles
   document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
   document.querySelectorAll('.tb[data-val="no"]').forEach(b=>b.classList.add('on'));
   document.querySelectorAll('.tb[data-val="match"]').forEach(b=>b.classList.add('on'));
   document.querySelectorAll('.tb[data-val="good"]').forEach(b=>b.classList.add('on'));
-  // Reset scope checkboxes
-  document.querySelectorAll('.chk[data-scope]').forEach(el=>{
-    el.classList.toggle('on',el.dataset.scope==='walls');
-  });
-  // Reset checklist
+  document.querySelectorAll('.chk[data-scope]').forEach(el=>{el.classList.toggle('on',el.dataset.scope==='walls');});
   document.querySelectorAll('.crow').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('.finish-opt').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('.tier-opt').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('.mat-row').forEach(el=>el.classList.remove('on'));
+  const cm=document.getElementById('cmToggle');if(cm)cm.classList.remove('on');
+  const cf=document.getElementById('colorFields');if(cf)cf.classList.remove('dimmed');
   goStep(0);
 }
 
@@ -289,10 +412,50 @@ document.getElementById('s2next').addEventListener('click',()=>goStep(3));
 document.getElementById('s3back').addEventListener('click',()=>goStep(2));
 document.getElementById('s3next').addEventListener('click',()=>goStep(4));
 document.getElementById('s4back').addEventListener('click',()=>goStep(3));
+document.getElementById('s4next').addEventListener('click',()=>goStep(5));
 document.getElementById('s5back').addEventListener('click',()=>goStep(4));
+document.getElementById('s6back').addEventListener('click',()=>goStep(5));
 document.getElementById('calcBtn').addEventListener('click',calculate);
 document.getElementById('newBtn').addEventListener('click',resetAll);
 document.getElementById('shareBtn').addEventListener('click',shareQuote);
+
+// Color match toggle
+document.getElementById('cmToggle').addEventListener('click',function(){
+  S.colorMatch=!S.colorMatch;
+  this.classList.toggle('on',S.colorMatch);
+  document.getElementById('colorFields').classList.toggle('dimmed',S.colorMatch);
+  if(S.colorMatch){
+    document.getElementById('paintColorName').value='';
+    document.getElementById('paintColorCode').value='';
+  }
+});
+
+// Finish selector
+document.querySelectorAll('.finish-opt').forEach(el=>{
+  el.addEventListener('click',function(){
+    document.querySelectorAll('.finish-opt').forEach(e=>e.classList.remove('on'));
+    this.classList.add('on');S.finish=this.dataset.val;
+  });
+});
+
+// Tier selector — skip if clicking inside input
+document.querySelectorAll('.tier-opt').forEach(el=>{
+  el.addEventListener('click',function(e){
+    if(e.target.tagName==='INPUT')return;
+    document.querySelectorAll('.tier-opt').forEach(e=>e.classList.remove('on'));
+    this.classList.add('on');S.tier=this.dataset.val;
+  });
+});
+
+// Materials checklist
+document.querySelectorAll('.mat-row').forEach(el=>{
+  el.addEventListener('click',function(){
+    this.classList.toggle('on');
+    const mat=this.dataset.mat;
+    const idx=S.mats.indexOf(mat);
+    if(idx>-1)S.mats.splice(idx,1);else S.mats.push(mat);
+  });
+});
 
 document.querySelectorAll('.tb').forEach(btn=>{
   btn.addEventListener('click',function(){
@@ -461,8 +624,14 @@ function calculate(){
   window._qs={client,phone,email,addr,projType,sqft,ceilH,doors,
     bathSm,bathMd,bathLg,kitchen,laundry,closets,stairSm,stairLg,
     beds,halls,offices,scope:S.scope.join(', '),coat:S.coat,
-    cond:S.cond,occ:S.occ,wp:S.wp,notes,price,net,litres,paintCost};
-  goStep(5);
+    cond:S.cond,occ:S.occ,wp:S.wp,notes,price,net,litres,paintCost,
+    paintColor:S.colorMatch?'Color match existing':document.getElementById('paintColorName').value||'—',
+    paintCode:S.colorMatch?'':document.getElementById('paintColorCode').value||'—',
+    finish:S.finish||'—',
+    tier:S.tier||'—',
+    tierProduct:(S.tier==='good'?document.getElementById('tierGoodProduct').value:S.tier==='better'?document.getElementById('tierBetterProduct').value:S.tier==='best'?document.getElementById('tierBestProduct').value:'')||'—',
+    mats:S.mats.length?S.mats.join(', '):'none'};
+  goStep(6);
 }
 
 function shareQuote(){
@@ -476,11 +645,20 @@ Email:    ${q.email||'—'}
 Address:  ${q.addr||'—'}
 Type:     ${q.projType}
 
+SCOPE & PRICING
 Scope:    ${q.scope}
 Coat:     ${q.coat==='major'?'Major/primer (3 coats)':q.coat==='change'?'Color change (2 coats)':'Same color (1 coat)'}
 Condition:${q.cond}
 Sqft:     ${q.sqft} | Ceiling: ${q.ceilH}ft
 Occupied: ${q.occ==='yes'?'Yes':'No'}
+
+PAINT SELECTION
+Color:    ${q.paintColor} ${q.paintCode!=='—'?'('+q.paintCode+')':''}
+Finish:   ${q.finish}
+Product:  ${q.tier!=='—'?q.tier.toUpperCase()+' tier':''} ${q.tierProduct!=='—'?'— '+q.tierProduct:''}
+
+MATERIALS NEEDED
+${q.mats}
 
 QUOTED PRICE: ${fmt(q.price)}
 Your net: ${fmt(q.net)}
