@@ -487,49 +487,55 @@ app.post("/jobber/quote", async (req, res) => {
     const clientId = clientResult?.data?.clientCreate?.client?.id;
     if (!clientId) throw new Error("Failed to create client: " + JSON.stringify(clientErrors));
 
-    // 2. Build line items — quantity must be a number, unitPrice must be a number
-    const lineItems = [];
+    // 2. Create property for client
+    const propertyMutation = `
+      mutation CreateProperty($clientId: EncodedId!, $street: String!) {
+        propertyCreate(clientId: $clientId, property: {
+          address: { street: $street, city: "Toronto", province: "ON", country: "CA" }
+        }) {
+          property { id }
+          userErrors { message path }
+        }
+      }
+    `;
+    const propertyResult = await jobberQuery(propertyMutation, {
+      clientId,
+      street: q.addr || "Address not provided",
+    });
+    console.log("Property result:", JSON.stringify(propertyResult?.data?.propertyCreate?.userErrors));
+    const propertyId = propertyResult?.data?.propertyCreate?.property?.id;
+    if (!propertyId) throw new Error("Failed to create property: " + JSON.stringify(propertyResult?.data?.propertyCreate?.userErrors));
 
+    // 3. Build line items
+    const lineItems = [];
     lineItems.push({
       name: `Interior painting — ${q.projType || "condo"}`,
       description: `Scope: ${q.scope || "walls"} | ${q.coat === "major" ? "3 coats/major change" : q.coat === "change" ? "2 coats/color change" : "1 coat/same color"} | Condition: ${q.cond} | ${q.sqft} sqft | ${q.ceilH}ft ceilings`,
       quantity: 1,
       unitPrice: parseFloat(q.price) || 0,
     });
-
-    const paintName = q.paintSummary ? null : (q.paintColor && q.paintColor !== "—" ? q.paintColor : null);
     if (q.paintSummary) {
-      lineItems.push({
-        name: "Paint selection",
-        description: String(q.paintSummary),
-        quantity: 1,
-        unitPrice: 0,
-      });
-    } else if (paintName) {
-      lineItems.push({
-        name: `Paint: ${paintName}${q.paintCode && q.paintCode !== "—" ? " (" + q.paintCode + ")" : ""}`,
-        description: `Finish: ${q.finish || "—"} | Tier: ${q.tier || "—"}${q.tierProduct ? " — " + q.tierProduct : ""} | ~${q.litres || 0}L needed`,
-        quantity: 1,
-        unitPrice: 0,
-      });
+      lineItems.push({ name: "Paint selection", description: String(q.paintSummary), quantity: 1, unitPrice: 0 });
     }
-
     if (q.mats && q.mats !== "none") {
-      lineItems.push({
-        name: "Materials & prep supplies",
-        description: String(q.mats),
-        quantity: 1,
-        unitPrice: 0,
-      });
+      lineItems.push({ name: "Materials & prep supplies", description: String(q.mats), quantity: 1, unitPrice: 0 });
     }
 
-    // 3. Create quote with correct Jobber API format
+    // 4. Create quote with propertyId and lineItems (both required)
     const quoteMutation = `
-      mutation CreateQuote($clientId: EncodedId!, $title: String!, $message: String) {
+      mutation CreateQuote(
+        $clientId: EncodedId!
+        $propertyId: EncodedId!
+        $title: String!
+        $message: String!
+        $lineItems: [QuoteCreateLineItemAttributes!]!
+      ) {
         quoteCreate(attributes: {
           clientId: $clientId
+          propertyId: $propertyId
           title: $title
           message: $message
+          lineItems: $lineItems
         }) {
           quote { id quoteNumber jobberWebUri }
           userErrors { message path }
@@ -537,16 +543,12 @@ app.post("/jobber/quote", async (req, res) => {
       }
     `;
 
-    const quoteInput = {
-      clientId,
-      title: `Painting Quote — ${q.addr || q.projType || "Ten Bell"}`,
-      message: `Ten Bell Painting — on-site quote\n\nClient: ${q.client}\nAddress: ${q.addr || "—"}\nPhone: ${q.phone || "—"}\nEmail: ${q.email || "—"}\n\nScope: ${q.scope}\nSqft: ${q.sqft} | Ceiling: ${q.ceilH}ft\nCoat: ${q.coat} | Condition: ${q.cond}\nOccupied: ${q.occ === "yes" ? "Yes" : "No"}\n\nPaint:\n${q.paintSummary || "—"}\n\nMaterials: ${q.mats || "none"}\n\nNotes: ${q.notes || "none"}`,
-    };
-
     const quoteResult = await jobberQuery(quoteMutation, {
       clientId,
-      title: quoteInput.title,
-      message: quoteInput.message,
+      propertyId,
+      title: `Painting Quote — ${q.addr || q.projType || "Ten Bell"}`,
+      message: `Ten Bell Painting — on-site quote\n\nClient: ${q.client}\nAddress: ${q.addr || "—"}\nPhone: ${q.phone || "—"}\nEmail: ${q.email || "—"}\n\nScope: ${q.scope}\nSqft: ${q.sqft} | Ceiling: ${q.ceilH}ft\nCoat: ${q.coat} | Condition: ${q.cond}\nOccupied: ${q.occ === "yes" ? "Yes" : "No"}\n\nPaint:\n${q.paintSummary || "—"}\n\nMaterials: ${q.mats || "none"}\n\nNotes: ${q.notes || "none"}`,
+      lineItems,
     });
     console.log("Quote result:", JSON.stringify(quoteResult, null, 2));
 
@@ -555,36 +557,6 @@ app.post("/jobber/quote", async (req, res) => {
 
     const quote = quoteResult?.data?.quoteCreate?.quote;
     if (!quote) throw new Error("Quote not returned from Jobber");
-
-    // 4. Add line items to the quote
-    const lineItemMutation = `
-      mutation AddLineItem($quoteId: EncodedId!, $name: String!, $description: String, $quantity: Float!, $unitPrice: Float!) {
-        quoteAddLineItem(quoteId: $quoteId, lineItem: {
-          name: $name
-          description: $description
-          quantity: $quantity
-          unitPrice: $unitPrice
-        }) {
-          lineItem { id name }
-          userErrors { message path }
-        }
-      }
-    `;
-
-    for (const item of lineItems) {
-      try {
-        const liResult = await jobberQuery(lineItemMutation, {
-          quoteId: quote.id,
-          name: item.name,
-          description: item.description || "",
-          quantity: parseFloat(item.quantity) || 1,
-          unitPrice: parseFloat(item.unitPrice) || 0,
-        });
-        console.log("Line item result:", JSON.stringify(liResult?.data?.quoteAddLineItem?.userErrors));
-      } catch (liErr) {
-        console.error("Line item error (non-fatal):", liErr.message);
-      }
-    }
 
     res.json({
       success: true,
