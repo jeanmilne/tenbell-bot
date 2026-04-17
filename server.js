@@ -319,4 +319,219 @@ app.get("/quote", (_req, res) => {
   res.sendFile(path.join(__dirname, "quote.html"));
 });
 
+// ─── Jobber OAuth Integration ─────────────────────────────────────────────────
+const JOBBER_CLIENT_ID     = process.env.JOBBER_CLIENT_ID;
+const JOBBER_CLIENT_SECRET = process.env.JOBBER_CLIENT_SECRET;
+const JOBBER_CALLBACK_URL  = "https://tenbell-bot.onrender.com/jobber/callback";
+const JOBBER_API_URL       = "https://api.getjobber.com/api/graphql";
+
+// In-memory token store (persists as long as server is running)
+let jobberTokens = {
+  access_token:  process.env.JOBBER_ACCESS_TOKEN  || null,
+  refresh_token: process.env.JOBBER_REFRESH_TOKEN || null,
+  expires_at:    0,
+};
+
+// Step 1 — redirect to Jobber to authorize
+app.get("/jobber/connect", (_req, res) => {
+  const url = `https://api.getjobber.com/api/oauth/authorize?response_type=code&client_id=${JOBBER_CLIENT_ID}&redirect_uri=${encodeURIComponent(JOBBER_CALLBACK_URL)}`;
+  res.redirect(url);
+});
+
+// Step 2 — Jobber redirects back here with a code
+app.get("/jobber/callback", async (req, res) => {
+  const { code } = req.query;
+  if (!code) return res.send("No code received from Jobber.");
+
+  try {
+    const resp = await fetch("https://api.getjobber.com/api/oauth/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id:     JOBBER_CLIENT_ID,
+        client_secret: JOBBER_CLIENT_SECRET,
+        grant_type:    "authorization_code",
+        code,
+        redirect_uri:  JOBBER_CALLBACK_URL,
+      }),
+    });
+
+    const data = await resp.json();
+    if (!data.access_token) {
+      console.error("Jobber token error:", data);
+      return res.send("Failed to get token from Jobber. Check server logs.");
+    }
+
+    jobberTokens.access_token  = data.access_token;
+    jobberTokens.refresh_token = data.refresh_token;
+    jobberTokens.expires_at    = Date.now() + (data.expires_in * 1000);
+
+    console.log("Jobber connected successfully.");
+    res.send(`
+      <html><body style="font-family:sans-serif;padding:2rem;max-width:480px;margin:0 auto">
+        <h2 style="color:#73C7AA">Jobber connected!</h2>
+        <p>Ten Bell Painting is now connected to Jobber. You can close this tab and go back to the quote app.</p>
+        <p style="color:#666;font-size:13px">Access token received and stored. Your on-site quotes will now create jobs in Jobber automatically.</p>
+      </body></html>
+    `);
+  } catch (err) {
+    console.error("Jobber callback error:", err.message);
+    res.send("Error connecting to Jobber: " + err.message);
+  }
+});
+
+// Refresh access token when expired
+async function getValidToken() {
+  if (jobberTokens.access_token && Date.now() < jobberTokens.expires_at - 60000) {
+    return jobberTokens.access_token;
+  }
+  if (!jobberTokens.refresh_token) return null;
+
+  const resp = await fetch("https://api.getjobber.com/api/oauth/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id:     JOBBER_CLIENT_ID,
+      client_secret: JOBBER_CLIENT_SECRET,
+      grant_type:    "refresh_token",
+      refresh_token: jobberTokens.refresh_token,
+    }),
+  });
+
+  const data = await resp.json();
+  if (data.access_token) {
+    jobberTokens.access_token  = data.access_token;
+    jobberTokens.refresh_token = data.refresh_token || jobberTokens.refresh_token;
+    jobberTokens.expires_at    = Date.now() + (data.expires_in * 1000);
+    return jobberTokens.access_token;
+  }
+  return null;
+}
+
+// GraphQL helper
+async function jobberQuery(query, variables = {}) {
+  const token = await getValidToken();
+  if (!token) throw new Error("Jobber not connected. Visit /jobber/connect first.");
+
+  const resp = await fetch(JOBBER_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type":  "application/json",
+      "Authorization": `Bearer ${token}`,
+      "X-JOBBER-GRAPHQL-VERSION": "2024-01-05",
+    },
+    body: JSON.stringify({ query, variables }),
+  });
+  return resp.json();
+}
+
+// Step 3 — Create quote in Jobber from on-site app
+app.post("/jobber/quote", async (req, res) => {
+  try {
+    const q = req.body;
+
+    // 1. Create or find client
+    const clientMutation = `
+      mutation CreateClient($input: ClientCreateInput!) {
+        clientCreate(input: $input) {
+          client { id name }
+          userErrors { message }
+        }
+      }
+    `;
+
+    const nameParts = (q.client || "Client").trim().split(" ");
+    const firstName = nameParts[0] || "Client";
+    const lastName  = nameParts.slice(1).join(" ") || ".";
+
+    const clientInput = {
+      firstName,
+      lastName,
+      ...(q.phone && { phones: [{ number: q.phone, primary: true }] }),
+      ...(q.email && { emails: [{ address: q.email, primary: true }] }),
+      ...(q.addr  && { billingAddress: { street: q.addr, city: "Toronto", province: "ON", country: "CA" } }),
+    };
+
+    const clientResult = await jobberQuery(clientMutation, { input: clientInput });
+    const clientErrors = clientResult?.data?.clientCreate?.userErrors;
+    if (clientErrors?.length) {
+      console.error("Client create errors:", clientErrors);
+    }
+    const clientId = clientResult?.data?.clientCreate?.client?.id;
+    if (!clientId) throw new Error("Failed to create client in Jobber");
+
+    // 2. Build line items
+    const lineItems = [];
+
+    if (q.scope && q.scope.includes("walls")) {
+      lineItems.push({
+        name: `Walls — ${q.sqft} sqft (${q.projType})`,
+        description: `${q.coat === "major" ? "3 coats / major color change" : q.coat === "change" ? "2 coats / color change" : "1 coat / same color"} · Condition: ${q.cond}`,
+        quantity: 1,
+        unitPrice: parseFloat(q.price) || 0,
+        taxable: false,
+      });
+    }
+
+    if (q.paintColor && q.paintColor !== "—") {
+      lineItems.push({
+        name: `Paint: ${q.paintColor}${q.paintCode && q.paintCode !== "—" ? " (" + q.paintCode + ")" : ""}`,
+        description: `Finish: ${q.finish || "—"} · Tier: ${q.tier || "—"}${q.tierProduct ? " — " + q.tierProduct : ""} · ~${q.litres}L needed`,
+        quantity: 1,
+        unitPrice: 0,
+        taxable: false,
+      });
+    }
+
+    if (q.mats && q.mats !== "none") {
+      lineItems.push({
+        name: "Materials & prep",
+        description: q.mats,
+        quantity: 1,
+        unitPrice: 0,
+        taxable: false,
+      });
+    }
+
+    // 3. Create quote
+    const quoteMutation = `
+      mutation CreateQuote($input: QuoteCreateInput!) {
+        quoteCreate(input: $input) {
+          quote { id quoteNumber jobberWebUri }
+          userErrors { message }
+        }
+      }
+    `;
+
+    const quoteInput = {
+      clientId,
+      title: `Painting Quote — ${q.addr || q.projType || "Ten Bell"}`,
+      message: `Quote generated by Ten Bell on-site quote tool.\n\nScope: ${q.scope}\nSqft: ${q.sqft} | Ceiling: ${q.ceilH}ft\nCoat: ${q.coat} | Condition: ${q.cond}\nOccupied: ${q.occ === "yes" ? "Yes" : "No"}\nNotes: ${q.notes || "none"}`,
+      lineItems,
+    };
+
+    const quoteResult = await jobberQuery(quoteMutation, { input: quoteInput });
+    const quoteErrors = quoteResult?.data?.quoteCreate?.userErrors;
+    if (quoteErrors?.length) throw new Error(quoteErrors.map(e => e.message).join(", "));
+
+    const quote = quoteResult?.data?.quoteCreate?.quote;
+    if (!quote) throw new Error("Failed to create quote in Jobber");
+
+    res.json({
+      success: true,
+      quoteNumber: quote.quoteNumber,
+      jobberUrl: quote.jobberWebUri,
+    });
+
+  } catch (err) {
+    console.error("Jobber quote error:", err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Check if Jobber is connected
+app.get("/jobber/status", (_req, res) => {
+  res.json({ connected: !!jobberTokens.access_token });
+});
+
 app.listen(process.env.PORT || 3000, () => console.log("Server running"));
