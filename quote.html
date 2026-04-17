@@ -360,6 +360,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="card"><div class="clbl">Your margin</div><div class="mg" id="mgArea"></div></div>
   <div class="card"><div class="clbl">Materials needed</div><div id="matArea"></div></div>
   <button class="share-btn" id="shareBtn">📋 Copy quote summary</button>
+  <button class="share-btn" id="jobberBtn" style="margin-top:8px;background:#73C7AA;color:white;border-color:#73C7AA">Save to Jobber →</button>
+  <div id="jobberStatus" style="font-size:13px;text-align:center;margin-top:8px;color:#6b7280"></div>
   <div class="btnrow" style="margin-top:1rem">
     <button class="btn bk" id="s6back">← Adjust</button>
     <button class="btn pri" id="newBtn">New quote →</button>
@@ -417,7 +419,41 @@ document.getElementById('s5back').addEventListener('click',()=>goStep(4));
 document.getElementById('s6back').addEventListener('click',()=>goStep(5));
 document.getElementById('calcBtn').addEventListener('click',calculate);
 document.getElementById('newBtn').addEventListener('click',resetAll);
-document.getElementById('shareBtn').addEventListener('click',shareQuote);
+document.getElementById('jobberBtn').addEventListener('click', saveToJobber);
+
+async function saveToJobber(){
+  const q=window._qs;if(!q)return;
+  const btn=document.getElementById('jobberBtn');
+  const status=document.getElementById('jobberStatus');
+  btn.textContent='Saving...';
+  btn.style.opacity='.7';
+  status.textContent='';
+  try{
+    const resp=await fetch('/jobber/quote',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(q)
+    });
+    const data=await resp.json();
+    if(data.success){
+      btn.textContent='Saved to Jobber ✓';
+      btn.style.background='#4fa88a';
+      status.textContent=`Quote #${data.quoteNumber} created — open Jobber to review and send.`;
+      status.style.color='#4fa88a';
+    } else {
+      throw new Error(data.error||'Unknown error');
+    }
+  }catch(err){
+    btn.textContent='Save to Jobber →';
+    btn.style.opacity='1';
+    if(err.message.includes('not connected')){
+      status.innerHTML='Jobber not connected. <a href="/jobber/connect" target="_blank" style="color:#73C7AA">Connect Jobber →</a>';
+    } else {
+      status.textContent='Error: '+err.message;
+      status.style.color='#e24b4a';
+    }
+  }
+}
 
 // Color match toggle
 document.getElementById('cmToggle').addEventListener('click',function(){
