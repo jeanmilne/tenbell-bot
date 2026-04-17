@@ -429,67 +429,68 @@ async function jobberQuery(query, variables = {}) {
 app.post("/jobber/quote", async (req, res) => {
   try {
     const q = req.body;
+    console.log("Jobber quote request:", JSON.stringify(q, null, 2));
 
-    // 1. Create or find client
-    const clientMutation = `
-      mutation CreateClient($input: ClientCreateInput!) {
-        clientCreate(input: $input) {
-          client { id name }
-          userErrors { message }
-        }
-      }
-    `;
-
+    // 1. Create client
     const nameParts = (q.client || "Client").trim().split(" ");
     const firstName = nameParts[0] || "Client";
     const lastName  = nameParts.slice(1).join(" ") || ".";
 
-    const clientInput = {
-      firstName,
-      lastName,
-      ...(q.phone && { phones: [{ number: q.phone, primary: true }] }),
-      ...(q.email && { emails: [{ address: q.email, primary: true }] }),
-      ...(q.addr  && { billingAddress: { street: q.addr, city: "Toronto", province: "ON", country: "CA" } }),
-    };
+    const clientInput = { firstName, lastName };
+    if (q.email) clientInput.emails = [{ description: "MAIN", primary: true, address: q.email }];
+    if (q.phone) clientInput.phones = [{ number: String(q.phone), primary: true, description: "MAIN" }];
+
+    const clientMutation = `
+      mutation CreateClient($input: ClientCreateInput!) {
+        clientCreate(input: $input) {
+          client { id }
+          userErrors { message path }
+        }
+      }
+    `;
 
     const clientResult = await jobberQuery(clientMutation, { input: clientInput });
-    const clientErrors = clientResult?.data?.clientCreate?.userErrors;
-    if (clientErrors?.length) {
-      console.error("Client create errors:", clientErrors);
-    }
-    const clientId = clientResult?.data?.clientCreate?.client?.id;
-    if (!clientId) throw new Error("Failed to create client in Jobber");
+    console.log("Client result:", JSON.stringify(clientResult, null, 2));
 
-    // 2. Build line items
+    const clientErrors = clientResult?.data?.clientCreate?.userErrors || [];
+    if (clientErrors.length) console.warn("Client warnings:", clientErrors);
+
+    const clientId = clientResult?.data?.clientCreate?.client?.id;
+    if (!clientId) throw new Error("Failed to create client: " + JSON.stringify(clientErrors));
+
+    // 2. Build line items — quantity must be a number, unitPrice must be a number
     const lineItems = [];
 
-    if (q.scope && q.scope.includes("walls")) {
-      lineItems.push({
-        name: `Walls — ${q.sqft} sqft (${q.projType})`,
-        description: `${q.coat === "major" ? "3 coats / major color change" : q.coat === "change" ? "2 coats / color change" : "1 coat / same color"} · Condition: ${q.cond}`,
-        quantity: 1,
-        unitPrice: parseFloat(q.price) || 0,
-        taxable: false,
-      });
-    }
+    lineItems.push({
+      name: `Interior painting — ${q.projType || "condo"}`,
+      description: `Scope: ${q.scope || "walls"} | ${q.coat === "major" ? "3 coats/major change" : q.coat === "change" ? "2 coats/color change" : "1 coat/same color"} | Condition: ${q.cond} | ${q.sqft} sqft | ${q.ceilH}ft ceilings`,
+      quantity: 1,
+      unitPrice: parseFloat(q.price) || 0,
+    });
 
-    if (q.paintColor && q.paintColor !== "—") {
+    const paintName = q.paintSummary ? null : (q.paintColor && q.paintColor !== "—" ? q.paintColor : null);
+    if (q.paintSummary) {
       lineItems.push({
-        name: `Paint: ${q.paintColor}${q.paintCode && q.paintCode !== "—" ? " (" + q.paintCode + ")" : ""}`,
-        description: `Finish: ${q.finish || "—"} · Tier: ${q.tier || "—"}${q.tierProduct ? " — " + q.tierProduct : ""} · ~${q.litres}L needed`,
+        name: "Paint selection",
+        description: String(q.paintSummary),
         quantity: 1,
         unitPrice: 0,
-        taxable: false,
+      });
+    } else if (paintName) {
+      lineItems.push({
+        name: `Paint: ${paintName}${q.paintCode && q.paintCode !== "—" ? " (" + q.paintCode + ")" : ""}`,
+        description: `Finish: ${q.finish || "—"} | Tier: ${q.tier || "—"}${q.tierProduct ? " — " + q.tierProduct : ""} | ~${q.litres || 0}L needed`,
+        quantity: 1,
+        unitPrice: 0,
       });
     }
 
     if (q.mats && q.mats !== "none") {
       lineItems.push({
-        name: "Materials & prep",
-        description: q.mats,
+        name: "Materials & prep supplies",
+        description: String(q.mats),
         quantity: 1,
         unitPrice: 0,
-        taxable: false,
       });
     }
 
@@ -498,7 +499,7 @@ app.post("/jobber/quote", async (req, res) => {
       mutation CreateQuote($input: QuoteCreateInput!) {
         quoteCreate(input: $input) {
           quote { id quoteNumber jobberWebUri }
-          userErrors { message }
+          userErrors { message path }
         }
       }
     `;
@@ -506,16 +507,18 @@ app.post("/jobber/quote", async (req, res) => {
     const quoteInput = {
       clientId,
       title: `Painting Quote — ${q.addr || q.projType || "Ten Bell"}`,
-      message: `Quote generated by Ten Bell on-site quote tool.\n\nScope: ${q.scope}\nSqft: ${q.sqft} | Ceiling: ${q.ceilH}ft\nCoat: ${q.coat} | Condition: ${q.cond}\nOccupied: ${q.occ === "yes" ? "Yes" : "No"}\nNotes: ${q.notes || "none"}`,
+      message: `Ten Bell Painting — on-site quote\n\nClient: ${q.client}\nAddress: ${q.addr || "—"}\nPhone: ${q.phone || "—"}\nEmail: ${q.email || "—"}\n\nScope: ${q.scope}\nSqft: ${q.sqft} | Ceiling: ${q.ceilH}ft\nCoat: ${q.coat} | Condition: ${q.cond}\nOccupied: ${q.occ === "yes" ? "Yes" : "No"}\nNotes: ${q.notes || "none"}`,
       lineItems,
     };
 
     const quoteResult = await jobberQuery(quoteMutation, { input: quoteInput });
-    const quoteErrors = quoteResult?.data?.quoteCreate?.userErrors;
-    if (quoteErrors?.length) throw new Error(quoteErrors.map(e => e.message).join(", "));
+    console.log("Quote result:", JSON.stringify(quoteResult, null, 2));
+
+    const quoteErrors = quoteResult?.data?.quoteCreate?.userErrors || [];
+    if (quoteErrors.length) throw new Error(quoteErrors.map(e => e.message).join(", "));
 
     const quote = quoteResult?.data?.quoteCreate?.quote;
-    if (!quote) throw new Error("Failed to create quote in Jobber");
+    if (!quote) throw new Error("Quote not returned from Jobber");
 
     res.json({
       success: true,
