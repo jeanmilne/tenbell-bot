@@ -487,20 +487,31 @@ app.post("/jobber/quote", async (req, res) => {
     const clientId = clientResult?.data?.clientCreate?.client?.id;
     if (!clientId) throw new Error("Failed to create client: " + JSON.stringify(clientErrors));
 
-    // 2. Get the client's default property (auto-created with client)
-    const propertyQuery = `
-      query GetClientProperty($clientId: EncodedId!) {
-        client(id: $clientId) {
-          clientProperties(first: 1) {
-            nodes { id }
-          }
+    // 2. Create property for client
+    const propertyMutation = `
+      mutation CreateProperty($clientId: EncodedId!, $street1: String!) {
+        propertyCreate(clientId: $clientId, input: {
+          properties: [{
+            address: {
+              street1: $street1
+              city: "Toronto"
+              province: "ON"
+              country: "CA"
+            }
+          }]
+        }) {
+          property { id }
+          userErrors { message path }
         }
       }
     `;
-    const propertyResult = await jobberQuery(propertyQuery, { clientId });
+    const propertyResult = await jobberQuery(propertyMutation, {
+      clientId,
+      street1: q.addr || "Address not provided",
+    });
     console.log("Property result:", JSON.stringify(propertyResult, null, 2));
-    const propertyId = propertyResult?.data?.client?.clientProperties?.nodes?.[0]?.id;
-    if (!propertyId) throw new Error("No property found for client");
+    const propertyId = propertyResult?.data?.propertyCreate?.property?.id;
+    if (!propertyId) throw new Error("Failed to create property: " + JSON.stringify(propertyResult?.data?.propertyCreate?.userErrors));
 
     // 3. Build line items
     const lineItems = [];
