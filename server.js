@@ -441,7 +441,14 @@ async function jobberQuery(query, variables = {}) {
     },
     body: JSON.stringify({ query, variables }),
   });
-  return resp.json();
+
+  const text = await resp.text();
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    console.error("Jobber non-JSON response:", text.substring(0, 200));
+    throw new Error("Jobber returned an unexpected response. Token may be expired — visit /jobber/connect to reconnect.");
+  }
 }
 
 // Step 3 — Create quote in Jobber from on-site app
@@ -456,7 +463,10 @@ app.post("/jobber/quote", async (req, res) => {
     const lastName  = nameParts.slice(1).join(" ") || ".";
 
     const clientInput = { firstName, lastName };
-    if (q.email) clientInput.emails = [{ description: "MAIN", primary: true, address: q.email }];
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (q.email && emailRegex.test(q.email)) {
+      clientInput.emails = [{ description: "MAIN", primary: true, address: q.email }];
+    }
     if (q.phone) clientInput.phones = [{ number: String(q.phone), primary: true, description: "MAIN" }];
 
     const clientMutation = `
