@@ -520,12 +520,13 @@ app.post("/jobber/quote", async (req, res) => {
       description: `Scope: ${q.scope || "walls"} | ${q.coat === "major" ? "3 coats/major change" : q.coat === "change" ? "2 coats/color change" : "1 coat/same color"} | Condition: ${q.cond} | ${q.sqft} sqft | ${q.ceilH}ft ceilings`,
       quantity: 1,
       unitPrice: parseFloat(q.price) || 0,
+      saveToProductsAndServices: false,
     });
     if (q.paintSummary) {
-      lineItems.push({ name: "Paint selection", description: String(q.paintSummary), quantity: 1, unitPrice: 0 });
+      lineItems.push({ name: "Paint selection", description: String(q.paintSummary), quantity: 1, unitPrice: 0, saveToProductsAndServices: false });
     }
     if (q.mats && q.mats !== "none") {
-      lineItems.push({ name: "Materials & prep supplies", description: String(q.mats), quantity: 1, unitPrice: 0 });
+      lineItems.push({ name: "Materials & prep supplies", description: String(q.mats), quantity: 1, unitPrice: 0, saveToProductsAndServices: false });
     }
 
     // 4. Create quote with propertyId and lineItems (both required)
