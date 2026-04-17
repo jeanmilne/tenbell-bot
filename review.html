@@ -1,3 +1,118 @@
-app.get("/review", (_req, res) => {
-  res.sendFile(path.join(__dirname, "review.html"));
-});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="TBP Review">
+<title>Ten Bell — Review Request</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--teal:#73C7AA;--teal-dk:#4fa88a;--teal-lt:#eaf8f3;--bg:#ffffff;--bg2:#f7f8fa;--text:#1a1a1a;--text2:#6b7280;--border:#e5e7eb}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+.app{max-width:480px;margin:0 auto;padding:0 1.25rem 3rem}
+.hdr{padding:1.25rem 0 1rem;display:flex;align-items:center;gap:14px;border-bottom:2.5px solid var(--teal);margin-bottom:1.5rem}
+.logo{width:42px;height:42px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo svg{width:24px;height:24px;fill:white}
+.hdr h1{font-size:18px;font-weight:600;color:var(--text)}
+.hdr p{font-size:12px;color:var(--text2);margin-top:2px}
+.stitle{font-size:16px;font-weight:600;color:var(--text);margin-bottom:.75rem}
+.fld{margin-bottom:1rem}
+.fld label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:500}
+.fld input{width:100%;padding:13px 14px;font-size:16px;border:1.5px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);appearance:none;-webkit-appearance:none}
+.fld input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(115,199,170,.15)}
+.preview{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.5rem;font-size:14px;color:var(--text2);line-height:1.7;min-height:120px}
+.preview strong{color:var(--text);font-weight:600}
+.preview .link{color:var(--teal-dk);word-break:break-all}
+.btn{width:100%;padding:16px;font-size:17px;font-weight:600;border-radius:12px;cursor:pointer;border:none;background:var(--teal);color:white;touch-action:manipulation;margin-bottom:10px}
+.btn:active{opacity:.85;transform:scale(.98)}
+.btn.sec{background:var(--bg2);color:var(--text);border:1.5px solid var(--border);font-size:15px;padding:13px}
+.note{font-size:12px;color:var(--text2);text-align:center;line-height:1.6;margin-top:1rem}
+.stars{font-size:28px;text-align:center;margin-bottom:1.25rem;letter-spacing:4px}
+.divider{height:1px;background:var(--border);margin:1.5rem 0}
+.tip{background:var(--teal-lt);border:1px solid rgba(115,199,170,.3);border-radius:10px;padding:10px 13px;font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:1.25rem}
+.tip strong{color:var(--text);font-weight:600}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="hdr">
+  <div class="logo">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+  <div>
+    <h1>Ten Bell Painting</h1>
+    <p>Google review request tool</p>
+  </div>
+</div>
+
+<div class="stars">⭐⭐⭐⭐⭐</div>
+
+<div class="tip"><strong>Best time to ask:</strong> Right after the job is done while the client is happy and standing in their freshly painted space. A text converts 3× better than asking in person.</div>
+
+<div class="stitle">Client details</div>
+<div class="fld">
+  <label>Client first name</label>
+  <input type="text" id="clientName" placeholder="e.g. Sarah" autocomplete="off" oninput="updatePreview()">
+</div>
+<div class="fld">
+  <label>Client phone number</label>
+  <input type="tel" id="clientPhone" placeholder="416-555-0100" autocomplete="off">
+</div>
+
+<div class="stitle">Message preview</div>
+<div class="preview" id="preview">
+  Hi <strong>[name]</strong> — it was great working with you! If you're happy with how everything turned out, a quick Google review would mean the world to us 🙏<br><br>
+  Takes less than a minute:<br>
+  <span class="link">https://g.page/r/CaaQBODvkBIvEAI/review</span><br><br>
+  — Adam, Ten Bell Painting
+</div>
+
+<button class="btn" onclick="sendText()">📱 Open text message →</button>
+<button class="btn sec" onclick="copyMsg()">📋 Copy message</button>
+
+<div class="note" id="statusNote"></div>
+
+<div class="divider"></div>
+
+<div class="stitle">Quick scripts</div>
+<div class="tip"><strong>After the walkthrough:</strong> "I'll send you a quick text — if you love it, a Google review helps us out more than you know."</div>
+<div class="tip"><strong>If they say yes in person:</strong> Send the text right then while you're still there — don't wait until later.</div>
+<div class="tip"><strong>If no response after 2 days:</strong> One follow-up is fine. After that, let it go.</div>
+
+</div>
+
+<script>
+const REVIEW_LINK = "https://g.page/r/CaaQBODvkBIvEAI/review";
+
+function getMessage(){
+  const name = document.getElementById('clientName').value.trim() || '[name]';
+  return `Hi ${name} — it was great working with you! If you're happy with how everything turned out, a quick Google review would mean the world to us 🙏\n\nTakes less than a minute:\n${REVIEW_LINK}\n\n— Adam, Ten Bell Painting`;
+}
+
+function updatePreview(){
+  const name = document.getElementById('clientName').value.trim() || '[name]';
+  document.getElementById('preview').innerHTML =
+    `Hi <strong>${name}</strong> — it was great working with you! If you're happy with how everything turned out, a quick Google review would mean the world to us 🙏<br><br>Takes less than a minute:<br><span class="link">${REVIEW_LINK}</span><br><br>— Adam, Ten Bell Painting`;
+}
+
+function sendText(){
+  const phone = document.getElementById('clientPhone').value.trim().replace(/\D/g,'');
+  const msg = getMessage();
+  const url = `sms:${phone ? '+1'+phone : ''}${/iPhone|iPad|iPod/i.test(navigator.userAgent) ? '&' : '?'}body=${encodeURIComponent(msg)}`;
+  window.location.href = url;
+}
+
+function copyMsg(){
+  const msg = getMessage();
+  navigator.clipboard.writeText(msg).then(()=>{
+    const n = document.getElementById('statusNote');
+    n.textContent = '✅ Copied to clipboard — paste into any message app';
+    setTimeout(()=>n.textContent='', 3000);
+  });
+}
+</script>
+</body>
+</html>
