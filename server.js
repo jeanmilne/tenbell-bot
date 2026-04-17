@@ -500,7 +500,7 @@ app.post("/jobber/quote", async (req, res) => {
             }
           }]
         }) {
-          property { id }
+          properties { id }
           userErrors { message path }
         }
       }
@@ -510,7 +510,7 @@ app.post("/jobber/quote", async (req, res) => {
       street1: q.addr || "Address not provided",
     });
     console.log("Property result:", JSON.stringify(propertyResult, null, 2));
-    const propertyId = propertyResult?.data?.propertyCreate?.property?.id;
+    const propertyId = propertyResult?.data?.propertyCreate?.properties?.[0]?.id;
     if (!propertyId) throw new Error("Failed to create property: " + JSON.stringify(propertyResult?.data?.propertyCreate?.userErrors));
 
     // 3. Build line items
