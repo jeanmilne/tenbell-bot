@@ -494,7 +494,7 @@ app.post("/jobber/quote", async (req, res) => {
       });
     }
 
-    // 3. Create quote
+    // 3. Create quote — no lineItems in initial creation
     const quoteMutation = `
       mutation CreateQuote($input: QuoteCreateInput!) {
         quoteCreate(input: $input) {
@@ -507,8 +507,7 @@ app.post("/jobber/quote", async (req, res) => {
     const quoteInput = {
       clientId,
       title: `Painting Quote — ${q.addr || q.projType || "Ten Bell"}`,
-      message: `Ten Bell Painting — on-site quote\n\nClient: ${q.client}\nAddress: ${q.addr || "—"}\nPhone: ${q.phone || "—"}\nEmail: ${q.email || "—"}\n\nScope: ${q.scope}\nSqft: ${q.sqft} | Ceiling: ${q.ceilH}ft\nCoat: ${q.coat} | Condition: ${q.cond}\nOccupied: ${q.occ === "yes" ? "Yes" : "No"}\nNotes: ${q.notes || "none"}`,
-      lineItems,
+      message: `Ten Bell Painting — on-site quote\n\nClient: ${q.client}\nAddress: ${q.addr || "—"}\nPhone: ${q.phone || "—"}\nEmail: ${q.email || "—"}\n\nScope: ${q.scope}\nSqft: ${q.sqft} | Ceiling: ${q.ceilH}ft\nCoat: ${q.coat} | Condition: ${q.cond}\nOccupied: ${q.occ === "yes" ? "Yes" : "No"}\n\nPaint:\n${q.paintSummary || "—"}\n\nMaterials: ${q.mats || "none"}\n\nNotes: ${q.notes || "none"}`,
     };
 
     const quoteResult = await jobberQuery(quoteMutation, { input: quoteInput });
@@ -519,6 +518,33 @@ app.post("/jobber/quote", async (req, res) => {
 
     const quote = quoteResult?.data?.quoteCreate?.quote;
     if (!quote) throw new Error("Quote not returned from Jobber");
+
+    // 4. Add line items to the quote
+    const lineItemMutation = `
+      mutation AddLineItem($quoteId: EncodedId!, $lineItem: LineItemCreateAttributes!) {
+        quoteAddLineItem(quoteId: $quoteId, lineItem: $lineItem) {
+          lineItem { id name }
+          userErrors { message path }
+        }
+      }
+    `;
+
+    for (const item of lineItems) {
+      try {
+        const liResult = await jobberQuery(lineItemMutation, {
+          quoteId: quote.id,
+          lineItem: {
+            name: item.name,
+            description: item.description || "",
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+          }
+        });
+        console.log("Line item result:", JSON.stringify(liResult?.data?.quoteAddLineItem?.userErrors));
+      } catch (liErr) {
+        console.error("Line item error (non-fatal):", liErr.message);
+      }
+    }
 
     res.json({
       success: true,
