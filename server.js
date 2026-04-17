@@ -328,6 +328,10 @@ app.get("/quote", (_req, res) => {
   res.sendFile(path.join(__dirname, "quote.html"));
 });
 
+app.get("/review", (_req, res) => {
+  res.sendFile(path.join(__dirname, "review.html"));
+});
+
 // ─── Jobber OAuth Integration ─────────────────────────────────────────────────
 const JOBBER_CLIENT_ID     = process.env.JOBBER_CLIENT_ID;
 const JOBBER_CLIENT_SECRET = process.env.JOBBER_CLIENT_SECRET;
