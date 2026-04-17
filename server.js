@@ -367,11 +367,21 @@ app.get("/jobber/callback", async (req, res) => {
     jobberTokens.expires_at    = Date.now() + (data.expires_in * 1000);
 
     console.log("Jobber connected successfully.");
+    console.log("=== SAVE THESE TO RENDER ENV VARS ===");
+    console.log("JOBBER_ACCESS_TOKEN=" + data.access_token);
+    console.log("JOBBER_REFRESH_TOKEN=" + data.refresh_token);
+    console.log("=====================================");
+
     res.send(`
       <html><body style="font-family:sans-serif;padding:2rem;max-width:480px;margin:0 auto">
         <h2 style="color:#73C7AA">Jobber connected!</h2>
-        <p>Ten Bell Painting is now connected to Jobber. You can close this tab and go back to the quote app.</p>
-        <p style="color:#666;font-size:13px">Access token received and stored. Your on-site quotes will now create jobs in Jobber automatically.</p>
+        <p>Ten Bell Painting is now connected to Jobber.</p>
+        <p style="color:#666;font-size:13px">Important: Go to Render → Environment and add these two variables to make the connection permanent:</p>
+        <div style="background:#f4f4f4;padding:12px;border-radius:8px;font-family:monospace;font-size:12px;word-break:break-all;margin-top:12px">
+          <p><strong>JOBBER_ACCESS_TOKEN</strong><br>${data.access_token}</p>
+          <p style="margin-top:8px"><strong>JOBBER_REFRESH_TOKEN</strong><br>${data.refresh_token}</p>
+        </div>
+        <p style="color:#666;font-size:12px;margin-top:12px">Copy both values into Render → tenbell-bot → Environment → Add Variable, then redeploy. You only need to do this once.</p>
       </body></html>
     `);
   } catch (err) {
@@ -418,7 +428,7 @@ async function jobberQuery(query, variables = {}) {
     headers: {
       "Content-Type":  "application/json",
       "Authorization": `Bearer ${token}`,
-      "X-JOBBER-GRAPHQL-VERSION": "2024-01-05",
+      "X-JOBBER-GRAPHQL-VERSION": "2026-04-13",
     },
     body: JSON.stringify({ query, variables }),
   });
@@ -494,10 +504,14 @@ app.post("/jobber/quote", async (req, res) => {
       });
     }
 
-    // 3. Create quote — no lineItems in initial creation
+    // 3. Create quote with correct Jobber API format
     const quoteMutation = `
-      mutation CreateQuote($input: QuoteCreateInput!) {
-        quoteCreate(input: $input) {
+      mutation CreateQuote($clientId: EncodedId!, $title: String!, $message: String) {
+        quoteCreate(attributes: {
+          clientId: $clientId
+          title: $title
+          message: $message
+        }) {
           quote { id quoteNumber jobberWebUri }
           userErrors { message path }
         }
@@ -510,7 +524,11 @@ app.post("/jobber/quote", async (req, res) => {
       message: `Ten Bell Painting — on-site quote\n\nClient: ${q.client}\nAddress: ${q.addr || "—"}\nPhone: ${q.phone || "—"}\nEmail: ${q.email || "—"}\n\nScope: ${q.scope}\nSqft: ${q.sqft} | Ceiling: ${q.ceilH}ft\nCoat: ${q.coat} | Condition: ${q.cond}\nOccupied: ${q.occ === "yes" ? "Yes" : "No"}\n\nPaint:\n${q.paintSummary || "—"}\n\nMaterials: ${q.mats || "none"}\n\nNotes: ${q.notes || "none"}`,
     };
 
-    const quoteResult = await jobberQuery(quoteMutation, { input: quoteInput });
+    const quoteResult = await jobberQuery(quoteMutation, {
+      clientId,
+      title: quoteInput.title,
+      message: quoteInput.message,
+    });
     console.log("Quote result:", JSON.stringify(quoteResult, null, 2));
 
     const quoteErrors = quoteResult?.data?.quoteCreate?.userErrors || [];
@@ -521,8 +539,13 @@ app.post("/jobber/quote", async (req, res) => {
 
     // 4. Add line items to the quote
     const lineItemMutation = `
-      mutation AddLineItem($quoteId: EncodedId!, $lineItem: LineItemCreateAttributes!) {
-        quoteAddLineItem(quoteId: $quoteId, lineItem: $lineItem) {
+      mutation AddLineItem($quoteId: EncodedId!, $name: String!, $description: String, $quantity: Float!, $unitPrice: Float!) {
+        quoteAddLineItem(quoteId: $quoteId, lineItem: {
+          name: $name
+          description: $description
+          quantity: $quantity
+          unitPrice: $unitPrice
+        }) {
           lineItem { id name }
           userErrors { message path }
         }
@@ -533,12 +556,10 @@ app.post("/jobber/quote", async (req, res) => {
       try {
         const liResult = await jobberQuery(lineItemMutation, {
           quoteId: quote.id,
-          lineItem: {
-            name: item.name,
-            description: item.description || "",
-            quantity: item.quantity,
-            unitPrice: item.unitPrice,
-          }
+          name: item.name,
+          description: item.description || "",
+          quantity: parseFloat(item.quantity) || 1,
+          unitPrice: parseFloat(item.unitPrice) || 0,
         });
         console.log("Line item result:", JSON.stringify(liResult?.data?.quoteAddLineItem?.userErrors));
       } catch (liErr) {
