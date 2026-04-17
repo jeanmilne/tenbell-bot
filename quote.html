@@ -121,6 +121,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .fo-acc{background:#f3e8ff;color:#5a1a9a}
 .tier-opt .fld input{width:100%;padding:8px 10px;font-size:14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text)}
 .tier-opt .fld input:focus{outline:none;border-color:var(--teal)}
+.paint-card{border:2px solid var(--teal);border-radius:var(--radius-lg);padding:1rem 1.1rem;margin-bottom:1rem;background:var(--bg)}
+.paint-card-title{font-size:13px;font-weight:600;color:var(--teal-dk);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.875rem}
+.paint-card .fld input{background:var(--bg)}
 </style>
 </head>
 <body>
@@ -198,6 +201,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="fld"><label>Ceiling height (ft)</label><input type="number" id="ceilHeight" value="8"></div>
   </div>
   <div class="fld"><label>Number of doors being painted</label><input type="number" id="numDoors" value="0"></div>
+  <div class="stitle">Windows being painted (trim only)</div>
+  <div class="note" style="margin-bottom:.75rem"><strong>Count windows by size</strong> — used to calculate trim linear footage accurately.</div>
+  <div class="sgrid">
+    <div class="sc"><label>Small windows</label><input type="number" id="winSm" value="0" min="0"><div class="ss">~10ft trim each</div></div>
+    <div class="sc"><label>Medium windows</label><input type="number" id="winMd" value="0" min="0"><div class="ss">~14ft trim each</div></div>
+    <div class="sc"><label>Large windows</label><input type="number" id="winLg" value="0" min="0"><div class="ss">~18ft trim each</div></div>
+  </div>
   <div class="stitle">Occupied / furnished?</div>
   <div class="tgrp">
     <div class="tb on" data-grp="occ" data-val="no">No — vacant</div>
@@ -265,66 +275,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- STEP 5 — PAINT & MATERIALS -->
 <div class="step" id="step5">
   <div class="slbl">Step 6 of 6 — Paint & materials</div>
-
-  <div class="stitle">Paint color</div>
-  <div class="cm-toggle" id="cmToggle">
-    <div class="cm-cb"></div>
-    <div>
-      <div class="ct">Color match existing paint</div>
-      <div class="cs">Client wants to match their current color exactly</div>
-    </div>
-  </div>
-  <div class="color-fields" id="colorFields">
-    <div class="r2">
-      <div class="fld"><label>Color name</label><input type="text" id="paintColorName" placeholder="e.g. Accessible Beige" autocomplete="off"></div>
-      <div class="fld"><label>SW color code</label><input type="text" id="paintColorCode" placeholder="e.g. SW 7036" autocomplete="off"></div>
-    </div>
-  </div>
-
-  <div class="stitle">Paint finish</div>
-  <div class="note" style="margin-bottom:.75rem"><strong>Use this to guide your client.</strong> Most condo walls get eggshell. Trim always gets semi-gloss.</div>
-  <div id="finishArea">
-    <div class="finish-opt" data-val="flat">
-      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Flat</span><span class="fo-badge fo-ceil">Ceilings</span></div>
-      <div class="fo-desc">Zero sheen. Best for ceilings and feature walls. Hides surface imperfections. Not washable.</div>
-    </div>
-    <div class="finish-opt" data-val="matte">
-      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Matte</span><span class="fo-badge fo-walls">Walls</span></div>
-      <div class="fo-desc">Very low sheen. Good for bedrooms and low-traffic rooms. Slightly more washable than flat.</div>
-    </div>
-    <div class="finish-opt" data-val="eggshell">
-      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Eggshell</span><span class="fo-badge fo-pop">Most popular</span></div>
-      <div class="fo-desc">Soft subtle sheen. The go-to for condo and apartment walls. Washable, durable, looks great.</div>
-    </div>
-    <div class="finish-opt" data-val="satin">
-      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Satin</span><span class="fo-badge fo-wet">Kitchen / bath</span></div>
-      <div class="fo-desc">Pearl-like sheen. Great for kitchens, bathrooms, and hallways. Easy to wipe clean.</div>
-    </div>
-    <div class="finish-opt" data-val="semi-gloss">
-      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Semi-gloss</span><span class="fo-badge fo-trim">Trim / doors</span></div>
-      <div class="fo-desc">Noticeable sheen. Standard for all trim, doors, and baseboards. Very durable and washable.</div>
-    </div>
-    <div class="finish-opt" data-val="gloss">
-      <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">Gloss</span><span class="fo-badge fo-acc">Accents</span></div>
-      <div class="fo-desc">High shine. Used for accents, furniture, and feature walls. Walls must be very smooth.</div>
-    </div>
-  </div>
-
-  <div class="stitle">Paint product tier</div>
-  <div id="tierArea">
-    <div class="tier-opt" data-val="good">
-      <div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Good</span><span class="tier-badge good-badge">Entry level</span></div>
-      <div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tierGoodProduct" placeholder="Product name (e.g. ProMar 200)" autocomplete="off"></div>
-    </div>
-    <div class="tier-opt" data-val="better">
-      <div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Better</span><span class="tier-badge better-badge">Mid range</span></div>
-      <div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tierBetterProduct" placeholder="Product name (e.g. SuperPaint)" autocomplete="off"></div>
-    </div>
-    <div class="tier-opt" data-val="best">
-      <div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Best</span><span class="tier-badge best-badge">Premium</span></div>
-      <div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tierBestProduct" placeholder="Product name (e.g. Emerald)" autocomplete="off"></div>
-    </div>
-  </div>
+  <div id="paintCardsArea"></div>
 
   <div class="stitle">Drywall & prep materials needed</div>
   <div id="matsArea">
@@ -370,7 +321,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <script>
-const S={coat:'match',cond:'good',occ:'no',wp:'no',scope:['walls'],finish:'',tier:'',mats:[],colorMatch:false};
+const S={coat:'match',cond:'good',occ:'no',wp:'no',scope:['walls'],mats:[],paintData:{}};
 
 function goStep(n){
   document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
@@ -380,13 +331,13 @@ function goStep(n){
 }
 
 function resetAll(){
-  S.coat='match';S.cond='good';S.occ='no';S.wp='no';S.scope=['walls'];S.finish='';S.tier='';S.mats=[];S.colorMatch=false;
-  ['clientName','jobAddress','clientPhone','clientEmail','extraNotes',
-   'paintColorName','paintColorCode','tierGoodProduct','tierBetterProduct','tierBestProduct'].forEach(id=>{
+  S.coat='match';S.cond='good';S.occ='no';S.wp='no';S.scope=['walls'];S.mats=[];S.paintData={};
+  ['clientName','jobAddress','clientPhone','clientEmail','extraNotes'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
   ['sLiving','sBed','sOffice','sHall','sBathSm','sBathMd','sBathLg',
-   'sKitchen','sLaundry','sCloset','sStairSm','sStairLg','numDoors'].forEach(id=>{
+   'sKitchen','sLaundry','sCloset','sStairSm','sStairLg','numDoors',
+   'winSm','winMd','winLg'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='0';
   });
   const sqft=document.getElementById('floorSqft');if(sqft)sqft.value='';
@@ -398,11 +349,8 @@ function resetAll(){
   document.querySelectorAll('.tb[data-val="good"]').forEach(b=>b.classList.add('on'));
   document.querySelectorAll('.chk[data-scope]').forEach(el=>{el.classList.toggle('on',el.dataset.scope==='walls');});
   document.querySelectorAll('.crow').forEach(el=>el.classList.remove('on'));
-  document.querySelectorAll('.finish-opt').forEach(el=>el.classList.remove('on'));
-  document.querySelectorAll('.tier-opt').forEach(el=>el.classList.remove('on'));
   document.querySelectorAll('.mat-row').forEach(el=>el.classList.remove('on'));
-  const cm=document.getElementById('cmToggle');if(cm)cm.classList.remove('on');
-  const cf=document.getElementById('colorFields');if(cf)cf.classList.remove('dimmed');
+  document.getElementById('paintCardsArea').innerHTML='';
   goStep(0);
 }
 
@@ -414,7 +362,128 @@ document.getElementById('s2next').addEventListener('click',()=>goStep(3));
 document.getElementById('s3back').addEventListener('click',()=>goStep(2));
 document.getElementById('s3next').addEventListener('click',()=>goStep(4));
 document.getElementById('s4back').addEventListener('click',()=>goStep(3));
-document.getElementById('s4next').addEventListener('click',()=>goStep(5));
+document.getElementById('s4next').addEventListener('click',()=>{buildPaintCards();goStep(5);});
+
+// Materials checklist
+document.querySelectorAll('.mat-row').forEach(el=>{
+  el.addEventListener('click',function(){
+    this.classList.toggle('on');
+    const mat=this.dataset.mat;
+    const idx=S.mats.indexOf(mat);
+    if(idx>-1)S.mats.splice(idx,1);else S.mats.push(mat);
+  });
+});
+
+// Default finishes per surface
+const defaultFinish={walls:'eggshell',trim:'semi-gloss',doors:'semi-gloss',ceiling:'flat'};
+const surfaceLabel={walls:'Walls',trim:'Trim & baseboards',doors:'Doors',ceiling:'Ceilings'};
+const finishOptions=[
+  {val:'flat',label:'Flat',desc:'Zero sheen. Best for ceilings. Hides imperfections. Not washable.'},
+  {val:'matte',label:'Matte',desc:'Very low sheen. Good for bedrooms and low-traffic rooms.'},
+  {val:'eggshell',label:'Eggshell',desc:'Soft subtle sheen. Most popular for condo walls. Washable.'},
+  {val:'satin',label:'Satin',desc:'Pearl-like sheen. Great for kitchens and bathrooms.'},
+  {val:'semi-gloss',label:'Semi-gloss',desc:'Standard for trim, doors, and baseboards. Very durable.'},
+  {val:'gloss',label:'Gloss',desc:'High shine. Accents and feature walls. Walls must be smooth.'},
+];
+
+function buildPaintCards(){
+  const area=document.getElementById('paintCardsArea');
+  area.innerHTML='';
+  S.paintData={};
+
+  // Combine trim+doors into one card since same paint is used
+  const surfaces=[];
+  if(S.scope.includes('walls')) surfaces.push('walls');
+  if(S.scope.includes('trim')||S.scope.includes('doors')) surfaces.push('trim');
+  if(S.scope.includes('ceiling')) surfaces.push('ceiling');
+
+  surfaces.forEach(surf=>{
+    S.paintData[surf]={colorMatch:false,colorName:'',colorCode:'',finish:defaultFinish[surf]||'eggshell',tier:'',product:''};
+    const label=surf==='trim'?(S.scope.includes('trim')&&S.scope.includes('doors')?'Trim, baseboards & doors':S.scope.includes('trim')?'Trim & baseboards':'Doors'):surfaceLabel[surf];
+
+    const card=document.createElement('div');
+    card.className='paint-card';
+    card.dataset.surf=surf;
+
+    // Build finish options HTML
+    const finOpts=finishOptions.map(f=>`
+      <div class="finish-opt${f.val===defaultFinish[surf]?' on':''}" data-surf="${surf}" data-finish="${f.val}" style="margin-bottom:6px">
+        <div class="fo-top"><div class="fo-cb"></div><span class="fo-name">${f.label}</span></div>
+        <div class="fo-desc">${f.desc}</div>
+      </div>`).join('');
+
+    card.innerHTML=`
+      <div class="paint-card-title">${label}</div>
+      <div class="cm-toggle" id="cm-${surf}" style="margin-bottom:10px">
+        <div class="cm-cb"></div>
+        <div><div class="ct">Color match existing</div><div class="cs">Match current color exactly</div></div>
+      </div>
+      <div class="color-fields" id="cf-${surf}">
+        <div class="r2" style="margin-bottom:.875rem">
+          <div class="fld"><label>Color name</label><input type="text" id="cn-${surf}" placeholder="e.g. Accessible Beige" autocomplete="off"></div>
+          <div class="fld"><label>SW color code</label><input type="text" id="cc-${surf}" placeholder="e.g. SW 7036" autocomplete="off"></div>
+        </div>
+      </div>
+      <div class="stitle" style="margin-top:.5rem">Finish</div>
+      <div id="fo-${surf}">${finOpts}</div>
+      <div class="stitle">Product tier</div>
+      <div id="to-${surf}">
+        <div class="tier-opt" data-surf="${surf}" data-tier="good" style="margin-bottom:8px">
+          <div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Good</span><span class="tier-badge good-badge">Entry level</span></div>
+          <div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tp-${surf}-good" placeholder="Product name (e.g. ProMar 200)" autocomplete="off"></div>
+        </div>
+        <div class="tier-opt" data-surf="${surf}" data-tier="better" style="margin-bottom:8px">
+          <div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Better</span><span class="tier-badge better-badge">Mid range</span></div>
+          <div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tp-${surf}-better" placeholder="Product name (e.g. SuperPaint)" autocomplete="off"></div>
+        </div>
+        <div class="tier-opt" data-surf="${surf}" data-tier="best" style="margin-bottom:8px">
+          <div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Best</span><span class="tier-badge best-badge">Premium</span></div>
+          <div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tp-${surf}-best" placeholder="Product name (e.g. Emerald)" autocomplete="off"></div>
+        </div>
+      </div>`;
+
+    area.appendChild(card);
+
+    // Wire color match toggle
+    document.getElementById('cm-'+surf).addEventListener('click',function(){
+      S.paintData[surf].colorMatch=!S.paintData[surf].colorMatch;
+      this.classList.toggle('on',S.paintData[surf].colorMatch);
+      document.getElementById('cf-'+surf).classList.toggle('dimmed',S.paintData[surf].colorMatch);
+    });
+
+    // Wire color name/code inputs
+    document.getElementById('cn-'+surf).addEventListener('input',function(){S.paintData[surf].colorName=this.value;});
+    document.getElementById('cc-'+surf).addEventListener('input',function(){S.paintData[surf].colorCode=this.value;});
+
+    // Wire finish options
+    document.querySelectorAll(`.finish-opt[data-surf="${surf}"]`).forEach(el=>{
+      el.addEventListener('click',function(){
+        document.querySelectorAll(`.finish-opt[data-surf="${surf}"]`).forEach(e=>e.classList.remove('on'));
+        this.classList.add('on');
+        S.paintData[surf].finish=this.dataset.finish;
+      });
+    });
+
+    // Wire tier options
+    document.querySelectorAll(`.tier-opt[data-surf="${surf}"]`).forEach(el=>{
+      el.addEventListener('click',function(e){
+        if(e.target.tagName==='INPUT')return;
+        document.querySelectorAll(`.tier-opt[data-surf="${surf}"]`).forEach(e=>e.classList.remove('on'));
+        this.classList.add('on');
+        S.paintData[surf].tier=this.dataset.tier;
+        S.paintData[surf].product=document.getElementById('tp-'+surf+'-'+this.dataset.tier).value;
+      });
+    });
+
+    // Wire product name inputs
+    ['good','better','best'].forEach(t=>{
+      const inp=document.getElementById('tp-'+surf+'-'+t);
+      if(inp) inp.addEventListener('input',function(){
+        if(S.paintData[surf].tier===t) S.paintData[surf].product=this.value;
+      });
+    });
+  });
+}
 document.getElementById('s5back').addEventListener('click',()=>goStep(4));
 document.getElementById('s6back').addEventListener('click',()=>goStep(5));
 document.getElementById('calcBtn').addEventListener('click',calculate);
@@ -454,34 +523,6 @@ async function saveToJobber(){
     }
   }
 }
-
-// Color match toggle
-document.getElementById('cmToggle').addEventListener('click',function(){
-  S.colorMatch=!S.colorMatch;
-  this.classList.toggle('on',S.colorMatch);
-  document.getElementById('colorFields').classList.toggle('dimmed',S.colorMatch);
-  if(S.colorMatch){
-    document.getElementById('paintColorName').value='';
-    document.getElementById('paintColorCode').value='';
-  }
-});
-
-// Finish selector
-document.querySelectorAll('.finish-opt').forEach(el=>{
-  el.addEventListener('click',function(){
-    document.querySelectorAll('.finish-opt').forEach(e=>e.classList.remove('on'));
-    this.classList.add('on');S.finish=this.dataset.val;
-  });
-});
-
-// Tier selector — skip if clicking inside input
-document.querySelectorAll('.tier-opt').forEach(el=>{
-  el.addEventListener('click',function(e){
-    if(e.target.tagName==='INPUT')return;
-    document.querySelectorAll('.tier-opt').forEach(e=>e.classList.remove('on'));
-    this.classList.add('on');S.tier=this.dataset.val;
-  });
-});
 
 // Materials checklist
 document.querySelectorAll('.mat-row').forEach(el=>{
@@ -568,9 +609,13 @@ function calculate(){
     rows.push({l:`Walls — ${sqft} sqft × $${rate.toFixed(2)}/sqft`,v:wallBase});
   }
   if(S.scope.includes('trim')){
-    const ft=Math.max(40,Math.round(sqft*0.15));
-    const c=ft*2;base+=c;
-    rows.push({l:`Trim — ~${ft}ft × $2/ft`,v:c});
+    const winSm=gi('winSm'),winMd=gi('winMd'),winLg=gi('winLg');
+    const doorTrimFt=doors*20;
+    const winTrimFt=winSm*10+winMd*14+winLg*18;
+    const baseFt=Math.max(40,Math.round(sqft*0.15));
+    const totalTrimFt=baseFt+doorTrimFt+winTrimFt;
+    const c=totalTrimFt*2;base+=c;
+    rows.push({l:`Trim — ~${totalTrimFt}ft × $2/ft (base ${baseFt}ft + ${doors} doors + ${winSm+winMd+winLg} windows)`,v:c});
   }
   if(S.scope.includes('doors')&&doors>0){
     const c=doors*100;base+=c;
@@ -619,15 +664,49 @@ function calculate(){
   if(S.wp==='yes')warns.push('Wallpaper removal is a separate scope — quote it separately.');
   if(base<500)base=500;
 
-  // Concrete price = base × 1.05 rounded to $50
-  // This lands at the midpoint of the Wix range (low=×0.90, high=×1.20, mid=×1.05)
+  // Concrete price = base × 1.05 rounded to $50 — midpoint of Wix range
   const price=r50(base*1.05);
   const painters=Math.round(price*0.40);
-  const mats=Math.round(price*0.10);
+  const matsAmt=Math.round(price*0.10);
   const net=Math.round(price*0.50);
   const coats=S.coat==='major'?3:S.coat==='change'?2:1;
-  const litres=Math.ceil((sqft/106)*coats);
-  const paintCost=Math.round(litres*13);
+
+  // Build per-surface paint materials summary
+  let matHTML='';
+  const paintSummaryLines=[];
+
+  Object.keys(S.paintData).forEach(surf=>{
+    const pd=S.paintData[surf];
+    const surfLabel={walls:'Walls',trim:'Trim & doors',ceiling:'Ceilings'}[surf]||surf;
+    let litres=0;
+    if(surf==='walls') litres=Math.ceil((sqft/106)*coats);
+    else if(surf==='trim'){
+      const winSm=gi('winSm'),winMd=gi('winMd'),winLg=gi('winLg');
+      const totalTrimFt=Math.max(40,Math.round(sqft*0.15))+doors*20+winSm*10+winMd*14+winLg*18;
+      litres=Math.ceil((totalTrimFt*0.1)*coats);
+    }
+    else if(surf==='ceiling') litres=Math.ceil((sqft/106)*coats);
+    const paintCostSurf=Math.round(litres*13);
+    const colorStr=pd.colorMatch?'Color match':((pd.colorName||'')+(pd.colorCode?' ('+pd.colorCode+')':''))||'Not specified';
+    const productStr=pd.tier?(pd.tier.charAt(0).toUpperCase()+pd.tier.slice(1))+(pd.product?' — '+pd.product:''):'Not selected';
+    paintSummaryLines.push(`${surfLabel}: ${colorStr} · ${pd.finish||'—'} · ${productStr} · ~${litres}L (~$${paintCostSurf})`);
+    matHTML+=`<div style="font-size:13px;padding:6px 0;border-bottom:.5px solid var(--border);color:var(--text2)"><strong style="color:var(--text)">${surfLabel}</strong><br>${colorStr} · ${pd.finish||'—'} finish · ${productStr}<br><span style="color:var(--teal-dk)">~${litres}L Sherwin-Williams · ~$${paintCostSurf} est.</span></div>`;
+  });
+
+  if(!matHTML){
+    const litres=Math.ceil((sqft/106)*coats);
+    const paintCost=Math.round(litres*13);
+    matHTML=`<span class="ptag">~${litres}L Sherwin-Williams (${coats} coat${coats>1?'s':''} · ~$${paintCost} est. cost)</span>`;
+  }
+
+  document.getElementById('matArea').innerHTML=matHTML;
+
+  window._qs={client,phone,email,addr,projType,sqft,ceilH,doors,
+    bathSm,bathMd,bathLg,kitchen,laundry,closets,stairSm,stairLg,
+    beds,halls,offices,scope:S.scope.join(', '),coat:S.coat,
+    cond:S.cond,occ:S.occ,wp:S.wp,notes,price,net,
+    paintData:S.paintData,paintSummary:paintSummaryLines.join('\n'),
+    mats:S.mats.length?S.mats.join(', '):'none'};
 
   document.getElementById('rClient').textContent=client+(phone?' · '+phone:'')+(email?' · '+email:'');
   document.getElementById('rPrice').textContent=fmt(price);
@@ -648,25 +727,12 @@ function calculate(){
   document.getElementById('mgArea').innerHTML=`
     <div class="mc hl"><div class="mcv">${fmt(net)}</div><div class="mcl">Your net</div></div>
     <div class="mc"><div class="mcv">${fmt(painters)}</div><div class="mcl">Painters 40%</div></div>
-    <div class="mc"><div class="mcv">${fmt(mats)}</div><div class="mcl">Materials ~10%</div></div>`;
-
-  document.getElementById('matArea').innerHTML=
-    `<span class="ptag">~${litres}L Sherwin-Williams (${coats} coat${coats>1?'s':''} · ~${fmt(paintCost)} est. cost)</span>`;
+    <div class="mc"><div class="mcv">${fmt(matsAmt)}</div><div class="mcl">Materials ~10%</div></div>`;
 
   const wEl=document.getElementById('warnBox');
   if(warns.length){wEl.style.display='block';wEl.innerHTML=warns.map(w=>'⚠ '+w).join('<br><br>');}
   else wEl.style.display='none';
 
-  window._qs={client,phone,email,addr,projType,sqft,ceilH,doors,
-    bathSm,bathMd,bathLg,kitchen,laundry,closets,stairSm,stairLg,
-    beds,halls,offices,scope:S.scope.join(', '),coat:S.coat,
-    cond:S.cond,occ:S.occ,wp:S.wp,notes,price,net,litres,paintCost,
-    paintColor:S.colorMatch?'Color match existing':document.getElementById('paintColorName').value||'—',
-    paintCode:S.colorMatch?'':document.getElementById('paintColorCode').value||'—',
-    finish:S.finish||'—',
-    tier:S.tier||'—',
-    tierProduct:(S.tier==='good'?document.getElementById('tierGoodProduct').value:S.tier==='better'?document.getElementById('tierBetterProduct').value:S.tier==='best'?document.getElementById('tierBestProduct').value:'')||'—',
-    mats:S.mats.length?S.mats.join(', '):'none'};
   goStep(6);
 }
 
@@ -689,16 +755,13 @@ Sqft:     ${q.sqft} | Ceiling: ${q.ceilH}ft
 Occupied: ${q.occ==='yes'?'Yes':'No'}
 
 PAINT SELECTION
-Color:    ${q.paintColor} ${q.paintCode!=='—'?'('+q.paintCode+')':''}
-Finish:   ${q.finish}
-Product:  ${q.tier!=='—'?q.tier.toUpperCase()+' tier':''} ${q.tierProduct!=='—'?'— '+q.tierProduct:''}
+${q.paintSummary||'Not specified'}
 
 MATERIALS NEEDED
 ${q.mats}
 
 QUOTED PRICE: ${fmt(q.price)}
 Your net: ${fmt(q.net)}
-Paint needed: ~${q.litres}L (~${fmt(q.paintCost)})
 
 Notes: ${q.notes||'none'}`;
 
