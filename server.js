@@ -336,6 +336,82 @@ app.get("/kijiji", (_req, res) => {
   res.sendFile(path.join(__dirname, "kijiji.html"));
 });
 
+app.get("/facebook", (_req, res) => {
+  res.sendFile(path.join(__dirname, "facebook.html"));
+});
+
+app.get("/instagram", (_req, res) => {
+  res.sendFile(path.join(__dirname, "instagram.html"));
+});
+
+app.get("/estimator", (_req, res) => {
+  res.sendFile(path.join(__dirname, "estimator.html"));
+});
+
+// ─── Website estimator lead handler ──────────────────────────────────────────
+app.post("/website-lead", async (req, res) => {
+  res.sendStatus(200);
+  const q = req.body;
+  const name = q.name || "Website visitor";
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  try {
+    // Email to Adam
+    await transporter.sendMail({
+      from: process.env.GMAIL_USER,
+      to: process.env.GMAIL_USER,
+      subject: `New Website Lead: ${name}`,
+      text:
+`New lead from website estimator
+
+Name:     ${name}
+Phone:    ${q.phone || "—"}
+Email:    ${q.email || "—"}
+Address:  ${q.addr || "—"}
+
+Project:  ${q.type} — ${q.sqft} sqft
+Scope:    ${q.scope}
+Condition:${q.cond}
+Coat:     ${q.coat}
+Notes:    ${q.notes || "none"}
+
+Estimate range: $${q.low} – $${q.high}`,
+    });
+
+    // Email to customer if they provided email
+    if (q.email && emailRegex.test(q.email)) {
+      await transporter.sendMail({
+        from: process.env.GMAIL_USER,
+        to: q.email,
+        subject: "Your Ten Bell Painting Estimate",
+        text:
+`Hi ${name},
+
+Thanks for using our estimator! Here's a summary of your project estimate:
+
+Project:  ${q.type} — ${q.sqft} sqft
+Scope:    ${q.scope}
+Estimated range: $${q.low} – $${q.high}
+
+This is a preliminary range based on what you've shared. Final pricing is confirmed after a free on-site visit.
+
+We'll be in touch shortly — or feel free to reach out anytime:
+
+📱 905-536-6799
+✉️  tenbellpainting@gmail.com
+🌐 tenbellpainting.com
+
+Thanks,
+Adam — Ten Bell Painting
+Painting worth cheering for!`,
+      });
+    }
+
+  } catch(err) {
+    console.error("Website lead error:", err.message);
+  }
+});
+
 // ─── Jobber OAuth Integration ─────────────────────────────────────────────────
 const JOBBER_CLIENT_ID     = process.env.JOBBER_CLIENT_ID;
 const JOBBER_CLIENT_SECRET = process.env.JOBBER_CLIENT_SECRET;
