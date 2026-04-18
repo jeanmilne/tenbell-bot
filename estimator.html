@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ten Bell Painting — Get an Estimate</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --teal:#73C7AA;--teal-dk:#63CCF5;--teal-lt:rgba(99,204,245,.1);
+  --dark:#061428;--dark2:#0a1f3d;--dark3:#0f2d5a;
+  --text:#f0faf5;--text2:#8fbaa8;--border:rgba(99,204,245,.2);
+  --radius:14px;--radius-lg:20px;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--dark);color:var(--text);
+  min-height:100vh;overflow-x:hidden;
+}
+
+/* Progress bar */
+.progress-bar{
+  position:fixed;top:0;left:0;height:3px;
+  background:var(--teal);transition:width .4s ease;
+  z-index:100;box-shadow:0 0 12px rgba(99,204,245,.5);
+}
+
+/* Steps container */
+.screen{
+  display:none;min-height:100vh;
+  flex-direction:column;justify-content:center;
+  padding:2rem 1.5rem 4rem;max-width:600px;margin:0 auto;
+}
+.screen.active{display:flex;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* Step label */
+.step-label{
+  font-size:11px;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:#63CCF5;margin-bottom:.75rem;
+  display:flex;align-items:center;gap:8px;
+}
+.step-label::before{
+  content:'';display:block;width:24px;height:2px;
+  background:var(--teal);border-radius:2px;
+}
+
+/* Headline */
+.headline{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(28px,6vw,42px);
+  line-height:1.15;color:var(--text);
+  margin-bottom:.75rem;
+}
+.subline{font-size:15px;color:var(--text2);margin-bottom:2rem;line-height:1.6}
+
+/* Big visual choice cards */
+.choice-grid{
+  display:grid;gap:12px;margin-bottom:1.5rem;
+}
+.choice-grid.cols-2{grid-template-columns:1fr 1fr}
+.choice-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+.choice-card{
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.25rem 1rem;
+  cursor:pointer;user-select:none;touch-action:manipulation;
+  background:var(--dark2);
+  transition:all .2s ease;
+  text-align:center;position:relative;overflow:hidden;
+}
+.choice-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(99,204,245,.08),transparent 70%);
+  opacity:0;transition:opacity .2s;
+}
+.choice-card:active{transform:scale(.97)}
+.choice-card.on{
+  border-color:var(--teal);
+  background:var(--dark3);
+}
+.choice-card.on::before{opacity:1}
+.choice-card .icon{font-size:32px;margin-bottom:10px;display:block}
+.choice-card .label{font-size:14px;font-weight:600;color:var(--text)}
+.choice-card .sub{font-size:11px;color:var(--text2);margin-top:4px}
+.choice-card.on .label{color:#63CCF5}
+.choice-card .check{
+  position:absolute;top:10px;right:10px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--teal);
+  display:none;align-items:center;justify-content:center;
+}
+.choice-card.on .check{display:flex}
+.choice-card .check::after{
+  content:'';display:block;width:5px;height:8px;
+  border-right:2px solid white;border-bottom:2px solid white;
+  transform:rotate(45deg) translate(-1px,-1px);
+}
+
+/* Toggle pill buttons */
+.pill-group{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.pill{
+  padding:10px 18px;font-size:13px;font-weight:500;
+  border:1.5px solid var(--border);border-radius:30px;
+  background:var(--dark2);color:var(--text2);
+  cursor:pointer;user-select:none;touch-action:manipulation;
+  transition:all .2s;
+}
+.pill:active{transform:scale(.97)}
+.pill.on{background:#0f75bc;border-color:#63CCF5;color:#ffffff;font-weight:600}
+
+/* Input fields */
+.field{margin-bottom:1rem}
+.field label{
+  display:block;font-size:12px;font-weight:600;
+  color:var(--text2);letter-spacing:.05em;
+  text-transform:uppercase;margin-bottom:8px;
+}
+.field input,.field select{
+  width:100%;padding:14px 16px;font-size:16px;
+  border:1.5px solid var(--border);border-radius:var(--radius);
+  background:var(--dark2);color:var(--text);
+  appearance:none;-webkit-appearance:none;
+  transition:border-color .2s;
+}
+.field input:focus,.field select:focus{
+  outline:none;border-color:var(--teal);
+  box-shadow:0 0 0 3px rgba(99,204,245,.1);
+}
+.field input::placeholder{color:var(--text2);opacity:.5}
+.field select option{background:var(--dark2);color:var(--text)}
+.req{color:#ff6b6b;margin-left:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* Space counter cards */
+.space-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.space-card{
+  background:var(--dark2);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:12px;
+}
+.space-card label{font-size:12px;color:var(--text2);display:block;margin-bottom:8px;font-weight:500}
+.space-card .counter{display:flex;align-items:center;gap:8px}
+.space-card .cnt-btn{
+  width:32px;height:32px;border-radius:8px;
+  border:1.5px solid var(--border);background:var(--dark3);
+  color:var(--teal);font-size:18px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;touch-action:manipulation;user-select:none;
+}
+.space-card .cnt-btn:active{transform:scale(.9)}
+.space-card .cnt-val{
+  flex:1;text-align:center;font-size:18px;font-weight:700;
+  color:var(--text);
+}
+.space-card .sub{font-size:10px;color:var(--text2);margin-top:4px}
+.sdiv{
+  font-size:11px;font-weight:600;color:var(--text2);
+  text-transform:uppercase;letter-spacing:.08em;
+  margin:1.25rem 0 .75rem;
+  display:flex;align-items:center;gap:10px;
+}
+.sdiv::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Error */
+.err{font-size:13px;color:#ff6b6b;margin-top:6px;display:none}
+
+/* Nav buttons */
+.nav{display:flex;gap:10px;margin-top:1.5rem}
+.nav-btn{
+  flex:1;padding:16px;font-size:16px;font-weight:600;
+  border-radius:var(--radius);cursor:pointer;
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--text2);touch-action:manipulation;
+  transition:all .2s;
+}
+.nav-btn.pri{background:var(--teal);color:var(--dark);border-color:var(--teal);font-weight:700}
+.nav-btn.pri:hover{background:var(--teal-dk)}
+.nav-btn.bk{flex:0 0 80px;font-size:14px}
+.nav-btn:active{transform:scale(.98)}
+
+/* Result screen */
+.result-hero{
+  background:linear-gradient(135deg,#0f75bc,#63CCF5);
+  border-radius:var(--radius-lg);padding:2rem 1.5rem;
+  text-align:center;margin-bottom:1.25rem;
+  position:relative;overflow:hidden;
+}
+.result-hero::before{
+  content:'🎨';position:absolute;
+  right:-10px;bottom:-20px;font-size:100px;opacity:.1;
+}
+.result-hero .who{font-size:14px;opacity:.85;margin-bottom:6px;font-family:'DM Sans',sans-serif}
+.result-hero .lbl{font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.result-hero .range{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(36px,8vw,52px);color:var(--dark);
+  margin-bottom:8px;letter-spacing:-.02em;
+}
+.result-hero .note{font-size:12px;opacity:.75;line-height:1.5;color:var(--dark)}
+
+.summary-card{
+  background:var(--dark2);border:1.5px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem;
+}
+.summary-card .clbl{
+  font-size:11px;font-weight:700;color:var(--teal);
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;
+}
+.sum-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  font-size:13px;padding:6px 0;
+  border-bottom:1px solid var(--border);color:var(--text2);
+}
+.sum-row:last-child{border-bottom:none}
+.sum-row span:last-child{color:var(--text);font-weight:500;text-align:right;max-width:55%;line-height:1.4}
+
+.cta-card{
+  background:var(--dark2);border:1.5px solid var(--teal);
+  border-radius:var(--radius-lg);padding:1.5rem;
+  margin-bottom:1rem;text-align:center;
+}
+.cta-card h3{
+  font-family:'DM Serif Display',serif;font-size:22px;
+  color:var(--text);margin-bottom:8px;
+}
+.cta-card p{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:1.25rem}
+.cta-a{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:15px;font-size:15px;font-weight:700;
+  border-radius:var(--radius);cursor:pointer;
+  border:none;text-decoration:none;margin-bottom:10px;
+  transition:all .2s;
+}
+.cta-a.pri{background:var(--teal);color:var(--dark)}
+.cta-a.pri:hover{background:var(--teal-dk)}
+.cta-a.sec{background:transparent;color:var(--teal);border:1.5px solid var(--teal)}
+.disclaimer{font-size:11px;color:var(--text2);text-align:center;line-height:1.6;padding:0 1rem;margin-top:.5rem}
+
+/* Spinner */
+.spin-screen{
+  display:none;min-height:100vh;
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:1rem;
+}
+.spin-screen.active{display:flex;animation:fadeUp .3s ease}
+.paint-drop{font-size:60px;animation:drip 1s ease-in-out infinite alternate}
+@keyframes drip{from{transform:translateY(0) scale(1)}to{transform:translateY(12px) scale(.95)}}
+.spin-screen p{font-size:16px;color:var(--text2)}
+.spin-screen strong{color:var(--teal)}
+
+/* ── Responsive ── */
+@media(max-width:480px){
+  .choice-grid.cols-2{grid-template-columns:1fr 1fr}
+  .choice-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+  .choice-card .icon{font-size:24px}
+  .choice-card .label{font-size:12px}
+  .headline{font-size:clamp(24px,7vw,36px)}
+  .space-grid{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr 1fr}
+}
+@media(min-width:768px){
+  .screen{padding:3rem 2rem 5rem}
+  .choice-grid.cols-2{grid-template-columns:repeat(2,1fr)}
+  .choice-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+  .space-grid{grid-template-columns:repeat(4,1fr)}
+  .grid2{grid-template-columns:1fr 1fr}
+  .choice-card{padding:1.5rem 1rem}
+  .choice-card .icon{font-size:38px}
+  .headline{font-size:48px}
+  .result-hero .range{font-size:58px}
+}
+@media(min-width:1024px){
+  .screen{max-width:680px}
+  .space-grid{grid-template-columns:repeat(4,1fr)}
+}
+/* Wix embed fix — no fixed positioning issues */
+.progress-bar{position:sticky;top:0;z-index:100}
+body{padding-top:0}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar" style="width:0%"></div>
+
+<!-- SCREEN 0 — Project type -->
+<div class="screen active" id="s0">
+  <div class="step-label">Step 1 of 4</div>
+  <h1 class="headline">What are we painting today?</h1>
+  <p class="subline">Pick the type of space and we'll dial in the right pricing for you.</p>
+  <div class="choice-grid cols-2" id="typeGrid">
+    <div class="choice-card" data-val="condo"><div class="check"></div><span class="icon">🏢</span><div class="label">Condo</div><div class="sub">Apartment or unit</div></div>
+    <div class="choice-card" data-val="house"><div class="check"></div><span class="icon">🏠</span><div class="label">House</div><div class="sub">Detached or semi</div></div>
+    <div class="choice-card" data-val="apartment"><div class="check"></div><span class="icon">🏙️</span><div class="label">Apartment</div><div class="sub">Rental unit</div></div>
+    <div class="choice-card" data-val="rental"><div class="check"></div><span class="icon">🔑</span><div class="label">Rental Property</div><div class="sub">Investment unit</div></div>
+    <div class="choice-card" data-val="commercial" style="grid-column:span 2"><div class="check"></div><span class="icon">💼</span><div class="label">Small Commercial</div><div class="sub">Office, retail, studio</div></div>
+  </div>
+  <div class="err" id="typeErr">Please select a project type to continue</div>
+  <div class="nav"><button class="nav-btn pri" onclick="goNext(0)">Let's go →</button></div>
+</div>
+
+<!-- SCREEN 1 — Spaces -->
+<div class="screen" id="s1">
+  <div class="step-label">Step 3 of 4</div>
+  <h1 class="headline">Tell us about the spaces.</h1>
+  <p class="subline">Count each room being painted. Approximate is totally fine — this helps us factor in complexity.</p>
+
+  <div class="sdiv">Living spaces</div>
+  <div class="space-grid">
+    <div class="space-card"><label>Living / Dining</label><div class="counter"><button class="cnt-btn" onclick="adj('sLiving',-1)">−</button><div class="cnt-val" id="sLiving">0</div><button class="cnt-btn" onclick="adj('sLiving',1)">+</button></div></div>
+    <div class="space-card"><label>Bedrooms</label><div class="counter"><button class="cnt-btn" onclick="adj('sBed',-1)">−</button><div class="cnt-val" id="sBed">0</div><button class="cnt-btn" onclick="adj('sBed',1)">+</button></div></div>
+    <div class="space-card"><label>Office / Den</label><div class="counter"><button class="cnt-btn" onclick="adj('sOffice',-1)">−</button><div class="cnt-val" id="sOffice">0</div><button class="cnt-btn" onclick="adj('sOffice',1)">+</button></div></div>
+    <div class="space-card"><label>Hallways</label><div class="counter"><button class="cnt-btn" onclick="adj('sHall',-1)">−</button><div class="cnt-val" id="sHall">0</div><button class="cnt-btn" onclick="adj('sHall',1)">+</button></div></div>
+  </div>
+  <div class="sdiv">Bathrooms</div>
+  <div class="space-grid">
+    <div class="space-card"><label>Small / Powder</label><div class="counter"><button class="cnt-btn" onclick="adj('sBathSm',-1)">−</button><div class="cnt-val" id="sBathSm">0</div><button class="cnt-btn" onclick="adj('sBathSm',1)">+</button></div></div>
+    <div class="space-card"><label>Standard Bath</label><div class="counter"><button class="cnt-btn" onclick="adj('sBathMd',-1)">−</button><div class="cnt-val" id="sBathMd">0</div><button class="cnt-btn" onclick="adj('sBathMd',1)">+</button></div></div>
+    <div class="space-card"><label>Large / Ensuite</label><div class="counter"><button class="cnt-btn" onclick="adj('sBathLg',-1)">−</button><div class="cnt-val" id="sBathLg">0</div><button class="cnt-btn" onclick="adj('sBathLg',1)">+</button></div></div>
+    <div class="space-card"><label>Kitchen</label><div class="counter"><button class="cnt-btn" onclick="adj('sKitchen',-1)">−</button><div class="cnt-val" id="sKitchen">0</div><button class="cnt-btn" onclick="adj('sKitchen',1)">+</button></div></div>
+  </div>
+  <div class="sdiv">Other</div>
+  <div class="space-grid">
+    <div class="space-card"><label>Laundry Room</label><div class="counter"><button class="cnt-btn" onclick="adj('sLaundry',-1)">−</button><div class="cnt-val" id="sLaundry">0</div><button class="cnt-btn" onclick="adj('sLaundry',1)">+</button></div></div>
+    <div class="space-card"><label>Closets</label><div class="counter"><button class="cnt-btn" onclick="adj('sCloset',-1)">−</button><div class="cnt-val" id="sCloset">0</div><button class="cnt-btn" onclick="adj('sCloset',1)">+</button></div></div>
+    <div class="space-card"><label>Stairwell</label><div class="counter"><button class="cnt-btn" onclick="adj('sStairSm',-1)">−</button><div class="cnt-val" id="sStairSm">0</div><button class="cnt-btn" onclick="adj('sStairSm',1)">+</button></div></div>
+    <div class="space-card"><label>Large Stairwell</label><div class="counter"><button class="cnt-btn" onclick="adj('sStairLg',-1)">−</button><div class="cnt-val" id="sStairLg">0</div><button class="cnt-btn" onclick="adj('sStairLg',1)">+</button></div></div>
+  </div>
+  <div class="nav">
+    <button class="nav-btn bk" onclick="goScreen(0)">← Back</button>
+    <button class="nav-btn pri" onclick="goNext(1)">Next →</button>
+  </div>
+</div>
+
+<!-- SCREEN 2 — Scope + details -->
+<div class="screen" id="s3">
+  <div class="step-label">Step 4 of 4</div>
+  <h1 class="headline">Scope & details.</h1>
+  <p class="subline">A few more specifics and we'll have everything we need.</p>
+
+  <div class="grid2">
+    <div class="field"><label>Floor area (sqft) <span class="req">*</span></label><input type="number" id="sqft" placeholder="750" min="50"><div class="err" id="sqftErr">Required</div></div>
+    <div class="field"><label>Ceiling height (ft)</label><input type="number" id="ceilH" value="8" min="7" max="20"></div>
+  </div>
+
+  <div class="sdiv">What's being painted?</div>
+  <div class="choice-grid cols-2" id="scopeGrid">
+    <div class="choice-card on" data-scope="walls"><div class="check"></div><span class="icon">🧱</span><div class="label">Walls</div></div>
+    <div class="choice-card" data-scope="ceiling"><div class="check"></div><span class="icon">⬆️</span><div class="label">Ceilings</div></div>
+    <div class="choice-card" data-scope="trim"><div class="check"></div><span class="icon">🪟</span><div class="label">Trim & Baseboards</div></div>
+    <div class="choice-card" data-scope="doors"><div class="check"></div><span class="icon">🚪</span><div class="label">Doors</div></div>
+  </div>
+
+  <div class="sdiv">Color situation</div>
+  <div class="pill-group" id="coatGrp">
+    <div class="pill on" data-val="match">Same color (1 coat)</div>
+    <div class="pill" data-val="change">Color change (2 coats)</div>
+    <div class="pill" data-val="major">Major color change (may require primer, 2-3 coats)</div>
+  </div>
+
+  <div class="sdiv">Wall condition</div>
+  <div class="choice-grid cols-3" id="condGrp" style="margin-bottom:1.5rem">
+    <div class="choice-card on" data-val="good" style="padding:1rem .75rem">
+      <div class="check"></div>
+      <span class="icon" style="font-size:26px">✅</span>
+      <div class="label" style="font-size:13px">Good</div>
+      <div class="sub" style="display:block;font-size:11px;color:var(--text2);margin-top:5px;line-height:1.4">Walls are smooth, no damage — just need a fresh coat</div>
+    </div>
+    <div class="choice-card" data-val="minor" style="padding:1rem .75rem">
+      <div class="check"></div>
+      <span class="icon" style="font-size:26px">🔧</span>
+      <div class="label" style="font-size:13px">Minor repairs</div>
+      <div class="sub" style="display:block;font-size:11px;color:var(--text2);margin-top:5px;line-height:1.4">Small nail holes, hairline cracks, scuffs or minor dents</div>
+    </div>
+    <div class="choice-card" data-val="heavy" style="padding:1rem .75rem">
+      <div class="check"></div>
+      <span class="icon" style="font-size:26px">🛠️</span>
+      <div class="label" style="font-size:13px">Heavy repairs</div>
+      <div class="sub" style="display:block;font-size:11px;color:var(--text2);margin-top:5px;line-height:1.4">Large holes, water damage, gouges or significant patching needed</div>
+    </div>
+  </div>
+
+  <div class="sdiv">Occupied?</div>
+  <div class="pill-group" id="occGrp">
+    <div class="pill on" data-val="no">No — vacant</div>
+    <div class="pill" data-val="yes">Yes — furniture present (+$75)</div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn bk" onclick="goScreen(1)">← Back</button>
+    <button class="nav-btn pri" onclick="goNext(2)">Next →</button>
+  </div>
+</div>
+
+<!-- SCREEN 3 — Contact -->
+<div class="screen" id="s2">
+  <div class="step-label">Step 2 of 4</div>
+  <h1 class="headline">Almost there.</h1>
+  <p class="subline">Fill in your details below and we'll follow up within a few hours to confirm and get you booked in.</p>
+  <div class="field"><label>Full name</label><input type="text" id="cName" placeholder="Sarah Chen" autocomplete="name"></div>
+  <div class="field"><label>Phone number <span class="req">*</span></label><input type="tel" id="cPhone" placeholder="416-555-0100" autocomplete="tel"><div class="err" id="phoneErr">Phone number is required</div></div>
+  <div class="field"><label>Email address</label><input type="email" id="cEmail" placeholder="you@email.com" autocomplete="email"></div>
+  <div class="field"><label>Project address</label><input type="text" id="cAddr" placeholder="123 King St W, Toronto" autocomplete="street-address"></div>
+  <div class="nav">
+    <button class="nav-btn bk" onclick="goScreen(3)">← Back</button>
+    <button class="nav-btn pri" onclick="goNext(3)">See my estimate →</button>
+  </div>
+</div>
+
+<!-- SPINNER -->
+<div class="spin-screen" id="spinner">
+  <div class="paint-drop">🎨</div>
+  <p>Crunching the numbers...<br><strong>Your estimate is almost ready.</strong></p>
+</div>
+
+<!-- SCREEN 4 — Result -->
+<div class="screen" id="s4">
+  <div class="result-hero">
+    <div class="who" id="rName"></div>
+    <div class="lbl">Estimated price range</div>
+    <div class="range" id="rRange"></div>
+    <div class="note">Based on your project details. Final price confirmed after your free on-site visit.</div>
+  </div>
+
+  <div class="summary-card">
+    <div class="clbl">Your project</div>
+    <div id="sumRows"></div>
+  </div>
+
+  <div class="cta-card">
+    <h3>What happens next?</h3>
+    <p>Adam will call or text you within a few hours to answer questions and schedule your free on-site visit. That's where we lock in the final price — no surprises, no obligation.</p>
+    <a class="cta-a pri" href="tel:9055366799">📞 Call or text — 905-536-6799</a>
+    <a class="cta-a sec" href="https://tenbellpainting.com" target="_blank">🌐 tenbellpainting.com</a>
+  </div>
+
+  <p class="disclaimer">Preliminary estimate only. Final pricing depends on prep required, layout complexity, and confirmed scope. Estimates are always free and non-binding.</p>
+
+  <div class="nav" style="margin-top:1.5rem">
+    <button class="nav-btn bk" onclick="goScreen(2)">← Adjust</button>
+    <button class="nav-btn pri" onclick="resetAll()">New estimate</button>
+  </div>
+</div>
+
+<script>
+const S={type:'',scope:['walls'],coat:'match',cond:'good',occ:'no'};
+const counts={sLiving:0,sBed:0,sOffice:0,sHall:0,sBathSm:0,sBathMd:0,sBathLg:0,sKitchen:0,sLaundry:0,sCloset:0,sStairSm:0,sStairLg:0};
+
+function updateProgress(step){
+  const pct=[5,30,55,80,100][step]||0;
+  document.getElementById('progressBar').style.width=pct+'%';
+}
+
+function goScreen(n){
+  document.querySelectorAll('.screen,.spin-screen').forEach(s=>{s.classList.remove('active');});
+  const el=document.getElementById('s'+n);
+  if(el){el.classList.add('active');}
+  updateProgress(n);
+  window.scrollTo(0,0);
+}
+
+function showSpinner(){
+  document.querySelectorAll('.screen,.spin-screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('spinner').classList.add('active');
+  updateProgress(4);
+  window.scrollTo(0,0);
+}
+
+function adj(id,delta){
+  counts[id]=Math.max(0,counts[id]+delta);
+  document.getElementById(id).textContent=counts[id];
+}
+
+// Type selection
+document.querySelectorAll('#typeGrid .choice-card').forEach(el=>{
+  el.addEventListener('click',function(){
+    document.querySelectorAll('#typeGrid .choice-card').forEach(e=>e.classList.remove('on'));
+    this.classList.add('on');S.type=this.dataset.val;
+    document.getElementById('typeErr').style.display='none';
+  });
+});
+
+// Scope multi-select
+document.querySelectorAll('#scopeGrid .choice-card').forEach(el=>{
+  el.addEventListener('click',function(){
+    this.classList.toggle('on');
+    const val=this.dataset.scope;
+    const idx=S.scope.indexOf(val);
+    if(idx>-1)S.scope.splice(idx,1);else S.scope.push(val);
+    if(!S.scope.length){S.scope.push('walls');document.querySelector('#scopeGrid .choice-card[data-scope="walls"]').classList.add('on');}
+  });
+});
+
+// Condition cards
+document.querySelectorAll('#condGrp .choice-card').forEach(el=>{
+  el.addEventListener('click',function(){
+    document.querySelectorAll('#condGrp .choice-card').forEach(e=>e.classList.remove('on'));
+    this.classList.add('on');S.cond=this.dataset.val;
+  });
+});
+
+// Pill groups
+[['coatGrp','coat'],['occGrp','occ']].forEach(([g,k])=>{
+  document.querySelectorAll('#'+g+' .pill').forEach(el=>{
+    el.addEventListener('click',function(){
+      document.querySelectorAll('#'+g+' .pill').forEach(e=>e.classList.remove('on'));
+      this.classList.add('on');S[k]=this.dataset.val;
+    });
+  });
+});
+
+function goNext(from){
+  if(from===0){
+    if(!S.type){document.getElementById('typeErr').style.display='block';return;}
+    goScreen(1);
+  } else if(from===1){
+    goScreen(2);
+  } else if(from===3){
+    const sq=parseFloat(document.getElementById('sqft').value);
+    if(!sq||sq<50){document.getElementById('sqftErr').style.display='block';return;}
+    document.getElementById('sqftErr').style.display='none';
+    goScreen(3);
+  } else if(from===2){
+    const ph=document.getElementById('cPhone').value.trim();
+    if(!ph){document.getElementById('phoneErr').style.display='block';return;}
+    document.getElementById('phoneErr').style.display='none';
+    submitAndShow();
+  }
+}
+
+function gn(id){return counts[id]||0;}
+function gf(id,fb=0){const v=parseFloat(document.getElementById(id)?.value);return isNaN(v)?fb:v;}
+function r50(n){return Math.round(n/50)*50;}
+function fmt(n){return '$'+Math.round(n).toLocaleString();}
+
+function getWallsRate(sqft,type){
+  if(type==='house'){if(sqft<=1000)return 2.75;if(sqft<=1500)return 2.55;if(sqft<=2000)return 2.35;return 2.10;}
+  if(type==='commercial')return getWallsRate(sqft,'condo')*1.20;
+  if(sqft<=300)return 3.75;if(sqft<=450)return 2.90;if(sqft<=700)return 2.55;
+  if(sqft<=900)return 2.50;if(sqft<=1300)return 2.40;if(sqft<=2000)return 2.15;return 1.85;
+}
+function getCeilRate(sqft){
+  if(sqft<=600)return 1.50;if(sqft<=800)return 1.35;if(sqft<=1100)return 1.20;
+  if(sqft<=1500)return 1.05;if(sqft<=2000)return 0.90;return 0.75;
+}
+
+function calcPrice(){
+  const sqft=gf('sqft'),ceilH=gf('ceilH',8);
+  let base=0,wallBase=0;
+  if(S.scope.includes('walls')){wallBase=sqft*getWallsRate(sqft,S.type);base+=wallBase;}
+  if(S.scope.includes('trim'))base+=Math.max(40,Math.round(sqft*0.15))*2;
+  if(S.scope.includes('doors'))base+=2*100;
+  if(S.scope.includes('ceiling'))base+=sqft*getCeilRate(sqft);
+  if(ceilH>=10){const pct=ceilH>=12?0.18:ceilH>=11?0.12:0.10;base+=base*pct;}
+  let p=0;
+  p+=gn('sBed')*25;p+=gn('sOffice')*25;p+=gn('sHall')*50;
+  p+=gn('sBathSm')*75;p+=gn('sBathMd')*125;p+=gn('sBathLg')*150;
+  p+=gn('sKitchen')*75;p+=gn('sLaundry')*50;
+  const cl=gn('sCloset');if(cl===1)p+=50;else if(cl===2)p+=75;else if(cl>=3)p+=100;
+  p+=gn('sStairSm')*200;p+=gn('sStairLg')*350;
+  if(wallBase>0)p=Math.min(p,wallBase*0.15);
+  base+=p;
+  if(S.cond==='minor')base*=1.12;else if(S.cond==='heavy')base*=1.30;
+  if(S.coat==='major')base*=1.30;else if(S.coat==='change')base*=1.15;
+  if(S.occ==='yes')base+=75;
+  if(base<500)base=500;
+  const mid=r50(base*1.05);
+  return{low:r50(mid*0.90),high:r50(mid*1.20),mid};
+}
+
+async function submitAndShow(){
+  showSpinner();
+  const name=document.getElementById('cName').value.trim();
+  const phone=document.getElementById('cPhone').value.trim();
+  const email=document.getElementById('cEmail').value.trim();
+  const addr=document.getElementById('cAddr').value.trim();
+  const sqft=gf('sqft'),ceilH=gf('ceilH',8);
+  const{low,high,mid}=calcPrice();
+
+  document.getElementById('rName').textContent=name?(name+"'s estimate"):'Your estimate';
+  document.getElementById('rRange').textContent=fmt(low)+' – '+fmt(high);
+
+  const tl={condo:'Condo',house:'House',apartment:'Apartment',rental:'Rental property',commercial:'Commercial'};
+  const cl={good:'Good — just repaint',minor:'Minor repairs needed',heavy:'Heavy repairs needed'};
+  const ctl={match:'Same color (1 coat)',change:'Color change (2 coats)',major:'Major color change (2-3 coats)'};
+  const ol={no:'No — vacant',yes:'Yes — furniture present'};
+  const rows=[
+    ['Project type',tl[S.type]||S.type],
+    ['Floor area',sqft+' sqft'],
+    ['Scope',S.scope.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(', ')],
+    ...(addr?[['Address',addr]]:[]),
+    ...(name?[['Name',name]]:[]),
+    ...(phone?[['Phone',phone]]:[]),
+  ];
+  document.getElementById('sumRows').innerHTML=rows.map(r=>`<div class="sum-row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');
+
+  try{
+    await fetch('https://tenbell-bot.onrender.com/website-lead',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        name:name||'Website visitor',phone,email,addr,
+        type:S.type,sqft,ceilH,scope:S.scope.join(', '),
+        coat:S.coat,cond:S.cond,occ:S.occ,
+        beds:gn('sBed'),halls:gn('sHall'),
+        bathSm:gn('sBathSm'),bathMd:gn('sBathMd'),bathLg:gn('sBathLg'),
+        kitchen:gn('sKitchen'),laundry:gn('sLaundry'),closets:gn('sCloset'),
+        stairSm:gn('sStairSm'),stairLg:gn('sStairLg'),low,high,mid
+      })
+    });
+  }catch(e){console.log('lead err',e);}
+
+  setTimeout(()=>goScreen(4),1800);
+}
+
+function resetAll(){
+  S.type='';S.scope=['walls'];S.coat='match';S.cond='good';S.occ='no';
+  Object.keys(counts).forEach(k=>{counts[k]=0;const el=document.getElementById(k);if(el)el.textContent='0';});
+  document.getElementById('sqft').value='';
+  document.getElementById('ceilH').value='8';
+  document.querySelectorAll('#typeGrid .choice-card').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('#scopeGrid .choice-card').forEach(e=>e.classList.toggle('on',e.dataset.scope==='walls'));
+  document.querySelectorAll('#coatGrp .pill').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('#condGrp .choice-card').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('#condGrp .choice-card').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('#occGrp .pill').forEach((e,i)=>e.classList.toggle('on',i===0));
+  ['cName','cPhone','cEmail','cAddr'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  goScreen(0);
+}
+
+updateProgress(0);
+</script>
+</body>
+</html>
