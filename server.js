@@ -357,6 +357,10 @@ app.post("/website-lead", async (req, res) => {
 
   try {
     // Email to Adam
+    const coatLabel = {match:'Same color (1 coat)', change:'Color change (2 coats)', major:'Major color change (2-3 coats)'};
+    const condLabel = {good:'Good — just repaint', minor:'Minor repairs needed', heavy:'Heavy repairs needed'};
+    const occLabel  = {yes:'Yes — furniture present', no:'No — vacant'};
+
     await transporter.sendMail({
       from: process.env.GMAIL_USER,
       to: process.env.GMAIL_USER,
@@ -364,18 +368,37 @@ app.post("/website-lead", async (req, res) => {
       text:
 `New lead from website estimator
 
-Name:     ${name}
-Phone:    ${q.phone || "—"}
-Email:    ${q.email || "—"}
-Address:  ${q.addr || "—"}
+── Contact ──────────────────────
+Name:        ${name || "n/a"}
+Phone:       ${q.phone || "n/a"}
+Email:       ${q.email || "n/a"}
+Address:     ${q.addr || "n/a"}
 
-Project:  ${q.type} — ${q.sqft} sqft
-Scope:    ${q.scope}
-Condition:${q.cond}
-Coat:     ${q.coat}
-Notes:    ${q.notes || "none"}
+── Project ──────────────────────
+Type:        ${q.type || "n/a"}
+Floor area:  ${q.sqft || "n/a"} sqft
+Ceil height: ${q.ceilH || 8} ft
+Scope:       ${q.scope || "n/a"}
+Color:       ${coatLabel[q.coat] || q.coat || "n/a"}
+Condition:   ${condLabel[q.cond] || q.cond || "n/a"}
+Occupied:    ${occLabel[q.occ] || q.occ || "n/a"}
 
-Estimate range: $${q.low} – $${q.high}`,
+── Spaces ───────────────────────
+Living/Dining:  ${q.living || 0}
+Bedrooms:       ${q.beds || 0}
+Office/Den:     ${q.offices || 0}
+Hallways:       ${q.halls || 0}
+Small bath:     ${q.bathSm || 0}
+Std bath:       ${q.bathMd || 0}
+Ensuite:        ${q.bathLg || 0}
+Kitchen:        ${q.kitchen || 0}
+Laundry:        ${q.laundry || 0}
+Closets:        ${q.closets || 0}
+Stairwell:      ${q.stairSm || 0}
+Large stairwell:${q.stairLg || 0}
+
+── Estimate ─────────────────────
+Range:       $${q.low} – $${q.high}`,
     });
 
     // Email to customer if they provided email
