@@ -136,7 +136,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- STEP 0 -->
 <div class="step active" id="step0">
-  <div class="slbl">Step 1 of 5 — Job info</div>
+  <div class="slbl">Step 1 of 6 — Job info</div>
   <div class="stitle">Client details</div>
   <div class="fld"><label>Client name</label><input type="text" id="clientName" placeholder="e.g. Sarah Chen" autocomplete="off"></div>
   <div class="fld"><label>Address</label><input type="text" id="jobAddress" placeholder="123 King St W, Toronto" autocomplete="off"></div>
@@ -144,16 +144,149 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="fld"><label>Phone</label><input type="tel" id="clientPhone" placeholder="416-555-0100"></div>
     <div class="fld"><label>Email</label><input type="email" id="clientEmail" placeholder="email@email.com"></div>
   </div>
-  <div class="fld"><label>Project type</label>
-    <select id="projectType">
-      <option value="condo">Condo</option>
-      <option value="apartment">Apartment</option>
-      <option value="house">House</option>
-      <option value="rental">Rental property</option>
-      <option value="commercial">Small commercial</option>
-    </select>
+  <div class="stitle">Job type</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="mode" data-val="interior">🏠 Interior</div>
+    <div class="tb" data-grp="mode" data-val="exterior">🏡 Exterior</div>
+    <div class="tb" data-grp="mode" data-val="mural">🎨 Mural</div>
+  </div>
+  <div id="intTypeRow">
+    <div class="fld"><label>Property type</label>
+      <select id="projectType">
+        <option value="condo">Condo</option>
+        <option value="apartment">Apartment</option>
+        <option value="house">House</option>
+        <option value="rental">Rental property</option>
+        <option value="commercial">Small commercial</option>
+      </select>
+    </div>
   </div>
   <div class="btnrow"><button class="btn pri" id="s0next">Next →</button></div>
+</div>
+
+<!-- STEP EXT-A — Exterior: surface + elements -->
+<div class="step" id="stepExtA">
+  <div class="slbl">Exterior — Step 2 of 6</div>
+  <div class="stitle">Main surface material</div>
+  <div class="tgrp" id="extSurfGrp">
+    <div class="tb on" data-grp="extSurf" data-val="vinyl">Vinyl / Aluminum</div>
+    <div class="tb" data-grp="extSurf" data-val="wood">Wood</div>
+    <div class="tb" data-grp="extSurf" data-val="brick">Brick / Masonry</div>
+    <div class="tb" data-grp="extSurf" data-val="stucco">Stucco</div>
+    <div class="tb" data-grp="extSurf" data-val="fiberCement">Fiber Cement</div>
+    <div class="tb" data-grp="extSurf" data-val="metal">Metal / Steel</div>
+    <div class="tb" data-grp="extSurf" data-val="noWalls">Trim & elements only</div>
+  </div>
+  <div class="stitle">Additional elements being painted</div>
+  <div class="note">Select all that apply — leave unselected if not included.</div>
+  <div class="sdiv">Roof trim</div>
+  <div class="chk" data-ext="soffit"><div class="cb"></div><span>Soffits</span><small>per sqft</small></div>
+  <div class="chk" data-ext="fascia"><div class="cb"></div><span>Fascia</span><small>per lft</small></div>
+  <div class="chk" data-ext="gutters"><div class="cb"></div><span>Gutters & downspouts</span><small>per lft</small></div>
+  <div class="chk" data-ext="shutters"><div class="cb"></div><span>Window frames & shutters</span><small>per window</small></div>
+  <div class="sdiv">Doors</div>
+  <div class="chk" data-ext="entryDoor"><div class="cb"></div><span>Entry door(s)</span><small>single or double</small></div>
+  <div class="chk" data-ext="garageDoor"><div class="cb"></div><span>Garage door(s)</span><small>single or double</small></div>
+  <div class="chk" data-ext="frenchDoor"><div class="cb"></div><span>Patio / french doors</span><small>per unit</small></div>
+  <div class="sdiv">Outdoor structures</div>
+  <div class="chk" data-ext="fence"><div class="cb"></div><span>Fence</span><small>per lft</small></div>
+  <div class="chk" data-ext="deck"><div class="cb"></div><span>Deck / porch floor</span><small>per sqft</small></div>
+  <div class="chk" data-ext="porch"><div class="cb"></div><span>Porch ceiling</span><small>per sqft</small></div>
+  <div class="chk" data-ext="columns"><div class="cb"></div><span>Columns / posts</span><small>per post</small></div>
+  <div class="chk" data-ext="railing"><div class="cb"></div><span>Railings</span><small>per lft</small></div>
+  <div class="chk" data-ext="pergola"><div class="cb"></div><span>Pergola / gazebo</span><small>per sqft</small></div>
+  <div class="chk" data-ext="foundation"><div class="cb"></div><span>Foundation / parging</span><small>per sqft</small></div>
+  <div class="chk" data-ext="retaining"><div class="cb"></div><span>Retaining wall</span><small>per sqft</small></div>
+  <div class="btnrow">
+    <button class="btn bk" onclick="goStep(0)">← Back</button>
+    <button class="btn pri" onclick="goStep('ExtB')">Next →</button>
+  </div>
+</div>
+
+<!-- STEP EXT-B — Exterior: condition, storeys, color, power wash -->
+<div class="step" id="stepExtB">
+  <div class="slbl">Exterior — Step 3 of 6</div>
+  <div class="stitle">Surface condition</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="extCond" data-val="good">✅ Good — ready to paint</div>
+    <div class="tb" data-grp="extCond" data-val="fair">⚠️ Fair — light peeling / chalking</div>
+    <div class="tb" data-grp="extCond" data-val="poor">🛠️ Poor — heavy peeling / bare wood</div>
+  </div>
+  <div class="stitle">Number of storeys</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="extStoreys" data-val="1">1 storey</div>
+    <div class="tb" data-grp="extStoreys" data-val="2">2 storeys (+20%)</div>
+    <div class="tb" data-grp="extStoreys" data-val="3">3 storeys / awkward (+35%)</div>
+  </div>
+  <div class="stitle">Color situation</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="extCoat" data-val="match">Same / similar color</div>
+    <div class="tb" data-grp="extCoat" data-val="change">Color change (2 coats)</div>
+    <div class="tb" data-grp="extCoat" data-val="major">Major change / primer (3 coats)</div>
+  </div>
+  <div class="stitle">Power wash needed?</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="extWash" data-val="no">Not needed</div>
+    <div class="tb" data-grp="extWash" data-val="yes">Yes — needed (+$200–400)</div>
+    <div class="tb" data-grp="extWash" data-val="unsure">Unsure — assess on-site</div>
+  </div>
+  <div class="stitle">Caulking / sealing needed?</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="extCaulk" data-val="no">No</div>
+    <div class="tb" data-grp="extCaulk" data-val="minor">Minor (+$75)</div>
+    <div class="tb" data-grp="extCaulk" data-val="extensive">Extensive (+$200)</div>
+  </div>
+  <div class="btnrow">
+    <button class="btn bk" onclick="goStep('ExtA')">← Back</button>
+    <button class="btn pri" onclick="goStep('ExtC')">Next →</button>
+  </div>
+</div>
+
+<!-- STEP EXT-C — Exterior: measurements -->
+<div class="step" id="stepExtC">
+  <div class="slbl">Exterior — Step 4 of 6</div>
+  <div class="stitle">Measurements</div>
+  <div class="note"><strong>Measure only what's being painted.</strong> Leave at 0 if not included in scope.</div>
+  <div class="sdiv">Main walls</div>
+  <div class="note"><strong>Vertical wall surface only</strong> — do not include soffits, fascia, or below-grade foundation in this measurement. Those are entered separately below.<br><br>Enter wall sqft directly if measured, or enter perimeter + height to auto-calculate.</div>
+  <div class="r2">
+    <div class="fld"><label>Wall sqft (measured directly)</label><input type="number" min="0" id="extWallSqft" placeholder="0 — or use perimeter below" value="0" oninput="autoCalcWall()"></div>
+    <div class="fld"><label>Wall height (ft)</label><input type="number" min="0" id="extWallHeight" placeholder="9" value="9" oninput="autoCalcWall()"></div>
+    <div class="fld"><label>Perimeter (lft) — gauge only</label><input type="number" min="0" id="extPerimeter" placeholder="e.g. 160" value="0" oninput="autoCalcWall()"></div>
+    <div class="fld"><label>→ Calculated wall sqft</label><input type="number" min="0" id="extWallCalc" placeholder="auto" value="0" readonly style="background:#f7f8fa;color:#6b7280;font-weight:600"></div>
+  </div>
+  <div class="sdiv">Roof trim — priced separately from main walls</div>
+  <div class="r2">
+    <div class="fld"><label>Soffit (sqft)</label><input type="number" id="extSoffitSqft" value="0" min="0"></div>
+    <div class="fld"><label>Fascia (lft)</label><input type="number" id="extFasciaLft" value="0" min="0"></div>
+    <div class="fld"><label>Gutters (lft)</label><input type="number" id="extGuttersLft" value="0" min="0"></div>
+    <div class="fld"><label>Downspouts (lft)</label><input type="number" id="extDownspoutsLft" value="0" min="0"></div>
+    <div class="fld"><label>Windows / shutters (count)</label><input type="number" id="extWindowCount" value="0" min="0"></div>
+  </div>
+  <div class="sdiv">Doors</div>
+  <div class="r2">
+    <div class="fld"><label>Entry doors</label><input type="number" id="extEntryDoorCount" value="0" min="0"></div>
+    <div class="fld"><label>Single garage doors</label><input type="number" id="extGarSingle" value="0" min="0"></div>
+    <div class="fld"><label>Double garage doors</label><input type="number" id="extGarDouble" value="0" min="0"></div>
+    <div class="fld"><label>French / patio doors</label><input type="number" id="extFrenchDoors" value="0" min="0"></div>
+  </div>
+  <div class="sdiv">Outdoor structures</div>
+  <div class="r2">
+    <div class="fld"><label>Fence (lft)</label><input type="number" id="extFenceLft" value="0" min="0"></div>
+    <div class="fld"><label>Deck / porch floor (sqft)</label><input type="number" id="extDeckSqft" value="0" min="0"></div>
+    <div class="fld"><label>Porch ceiling (sqft)</label><input type="number" id="extPorchCeilSqft" value="0" min="0"></div>
+    <div class="fld"><label>Columns / posts (count)</label><input type="number" id="extColumnCount" value="0" min="0"></div>
+    <div class="fld"><label>Railing (lft)</label><input type="number" id="extRailingLft" value="0" min="0"></div>
+    <div class="fld"><label>Pergola / gazebo (sqft)</label><input type="number" id="extPergolasSqft" value="0" min="0"></div>
+    <div class="fld"><label>Foundation / parging (sqft) — below-grade only</label><input type="number" id="extFoundationSqft" value="0" min="0"></div>
+    <div class="fld"><label>Retaining wall (sqft)</label><input type="number" id="extRetainingSqft" value="0" min="0"></div>
+  </div>
+  <div class="stitle">Additional notes / flags</div>
+  <div class="fld"><input type="text" id="extNotes" placeholder="e.g. rotted wood on south side, needs replacement" autocomplete="off"></div>
+  <div class="btnrow">
+    <button class="btn bk" onclick="goStep('ExtB')">← Back</button>
+    <button class="btn pri" onclick="calcExterior()">Generate quote →</button>
+  </div>
 </div>
 
 <!-- STEP 1 -->
@@ -197,10 +330,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="stitle">Exact measurements</div>
   <div class="note"><strong>Measure total floor area</strong> — length × width of each room added together.</div>
   <div class="r2">
-    <div class="fld"><label>Total floor area (sqft)</label><input type="number" id="floorSqft" placeholder="e.g. 750"></div>
-    <div class="fld"><label>Ceiling height (ft)</label><input type="number" id="ceilHeight" value="8"></div>
+    <div class="fld"><label>Total floor area (sqft)</label><input type="number" min="0" id="floorSqft" placeholder="e.g. 750"></div>
+    <div class="fld"><label>Ceiling height (ft)</label><input type="number" min="0" id="ceilHeight" value="8"></div>
   </div>
-  <div class="fld"><label>Number of doors being painted</label><input type="number" id="numDoors" value="0"></div>
+  <div class="fld"><label>Number of doors being painted</label><input type="number" min="0" id="numDoors" value="0"></div>
   <div class="stitle">Windows being painted (trim only)</div>
   <div class="note" style="margin-bottom:.75rem"><strong>Count windows by size</strong> — used to calculate trim linear footage accurately.</div>
   <div class="sgrid">
@@ -297,6 +430,78 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
+
+<!-- STEP MURAL — Mural quote -->
+<div class="step" id="stepMural">
+  <div class="slbl">Mural quote</div>
+  <div class="stitle">Wall & surface details</div>
+  <div class="tgrp" id="muralSurfGrp">
+    <div class="tb on" data-grp="muralSurf" data-val="drywall">⬜ Drywall</div>
+    <div class="tb" data-grp="muralSurf" data-val="brick">🧱 Brick / Concrete</div>
+    <div class="tb" data-grp="muralSurf" data-val="wood">🪵 Wood</div>
+    <div class="tb" data-grp="muralSurf" data-val="plaster">🏚️ Plaster / Stucco</div>
+    <div class="tb" data-grp="muralSurf" data-val="glass">🪟 Glass</div>
+    <div class="tb" data-grp="muralSurf" data-val="other">❓ Other</div>
+  </div>
+  <div class="stitle">Surface condition</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="muralCond" data-val="good">✅ Good — ready to paint</div>
+    <div class="tb" data-grp="muralCond" data-val="prep">🔧 Needs prep / patching</div>
+    <div class="tb" data-grp="muralCond" data-val="rough">🛠️ Rough / heavily textured</div>
+  </div>
+  <div class="stitle">Wall dimensions</div>
+  <div class="r2">
+    <div class="fld"><label>Width (ft)</label><input type="number" id="muralW" placeholder="e.g. 12" min="0" oninput="calcMuralSqft()"></div>
+    <div class="fld"><label>Height (ft)</label><input type="number" id="muralH" placeholder="e.g. 9" min="0" oninput="calcMuralSqft()"></div>
+    <div class="fld"><label>Wall sqft (auto)</label><input type="number" min="0" id="muralSqftApp" placeholder="auto" readonly style="background:var(--bg2);color:var(--text2);font-weight:600"></div>
+  </div>
+  <div class="stitle">Pricing</div>
+  <div class="note">Set your rate for this job. Use sqft rate for standard murals or flat rate for unique/complex projects.</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="muralPriceMode" data-val="sqft">Price per sqft</div>
+    <div class="tb" data-grp="muralPriceMode" data-val="flat">Flat rate</div>
+  </div>
+  <div id="muralSqftRow">
+    <div class="r2">
+      <div class="fld"><label>Rate per sqft ($)</label><input type="number" id="muralRate" placeholder="8–12" value="10" step="0.5" min="0"></div>
+      <div class="fld"><label>Complexity multiplier</label>
+        <select id="muralComplexity">
+          <option value="1.0">Simple — solid colors, basic shapes (×1.0)</option>
+          <option value="1.25">Moderate — some detail, shading (×1.25)</option>
+          <option value="1.5">Detailed — fine detail, gradients (×1.5)</option>
+          <option value="2.0">Complex — photorealistic, intricate (×2.0)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div id="muralFlatRow" style="display:none">
+    <div class="fld"><label>Flat rate ($)</label><input type="number" id="muralFlat" placeholder="e.g. 2500" min="0"></div>
+  </div>
+  <div class="stitle">Materials</div>
+  <div class="r2">
+    <div class="fld"><label>Paint & materials cost ($)</label><input type="number" id="muralMats" placeholder="e.g. 150" value="0" min="0"></div>
+    <div class="fld"><label>Primer needed?</label>
+      <select id="muralPrimer">
+        <option value="0">No primer needed</option>
+        <option value="75">Light primer (+$75)</option>
+        <option value="150">Full prime coat (+$150)</option>
+        <option value="250">Masonry/specialty primer (+$250)</option>
+      </select>
+    </div>
+  </div>
+  <div class="stitle">Prep & extras</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="muralPrep" data-val="none">No extra prep</div>
+    <div class="tb" data-grp="muralPrep" data-val="light">Light prep (+$75)</div>
+    <div class="tb" data-grp="muralPrep" data-val="heavy">Heavy prep (+$200)</div>
+  </div>
+  <div class="fld"><label>Notes / description</label><input type="text" id="muralNotes" placeholder="e.g. abstract floral, geometric, logo, outdoor scene..." autocomplete="off"></div>
+  <div class="btnrow">
+    <button class="btn bk" onclick="goStep(0)">← Back</button>
+    <button class="btn pri" onclick="calcMural()">Generate quote →</button>
+  </div>
+</div>
+
 <!-- STEP 6 — RESULT -->
 <div class="step" id="step6">
   <div class="slbl">Your quote</div>
@@ -321,18 +526,328 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <script>
-const S={coat:'match',cond:'good',occ:'no',wp:'no',scope:['walls'],mats:[],paintData:{}};
+const S={coat:'match',cond:'good',occ:'no',wp:'no',scope:['walls'],mats:[],paintData:{},mode:'interior'};
+const EXT={surf:'vinyl',cond:'good',storeys:'1',coat:'match',wash:'no',caulk:'no',elements:new Set()};
+
+// Extend goStep to handle string step IDs for exterior
+
 
 function goStep(n){
   document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
-  document.getElementById('step'+n).classList.add('active');
-  for(let i=0;i<6;i++){const d=document.getElementById('pd'+i);if(d)d.classList.toggle('done',i<=Math.min(n,5));}
+  if(typeof n==='number'){
+    document.getElementById('step'+n)?.classList.add('active');
+    for(let i=0;i<6;i++){const d=document.getElementById('pd'+i);if(d)d.classList.toggle('done',i<=Math.min(n,5));}
+  } else {
+    // String step IDs: ExtA, ExtB, ExtC, Mural
+    document.getElementById('step'+n)?.classList.add('active');
+    const stepPcts={ExtA:1,ExtB:2,ExtC:3,Mural:2};
+    const prog=stepPcts[n]||0;
+    for(let i=0;i<6;i++){const d=document.getElementById('pd'+i);if(d)d.classList.toggle('done',i<=prog);}
+  }
   window.scrollTo(0,0);
 }
 
+
+// Exterior element checkboxes
+document.querySelectorAll('.chk[data-ext]').forEach(el=>{
+  el.addEventListener('click',function(){
+    this.classList.toggle('on');
+    const v=this.dataset.ext;
+    if(EXT.elements.has(v))EXT.elements.delete(v);else EXT.elements.add(v);
+  });
+});
+
+// Exterior toggle groups
+document.querySelectorAll('.tb[data-grp^="ext"]').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const grp=this.dataset.grp,val=this.dataset.val;
+    document.querySelectorAll(`.tb[data-grp="${grp}"]`).forEach(b=>b.classList.remove('on'));
+    this.classList.add('on');
+    const map={extSurf:'surf',extCond:'cond',extStoreys:'storeys',extCoat:'coat',extWash:'wash',extCaulk:'caulk'};
+    if(map[grp])EXT[map[grp]]=val;
+  });
+});
+
+// Mode toggle
+document.querySelectorAll('.tb[data-grp="mode"]').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    S.mode=this.dataset.val;
+    document.getElementById('intTypeRow').style.display=S.mode==='interior'?'':'none';
+  });
+});
+
+// Override s0next to route by mode
+document.getElementById('s0next').removeEventListener('click',null);
+document.getElementById('s0next').addEventListener('click',()=>{
+  if(S.mode==='exterior') goStep('ExtA');
+  else if(S.mode==='mural') goStep('Mural');
+  else goStep(1);
+});
+
+function autoCalcWall(){
+  const direct=parseFloat(document.getElementById('extWallSqft').value)||0;
+  const perim=parseFloat(document.getElementById('extPerimeter').value)||0;
+  const h=parseFloat(document.getElementById('extWallHeight').value)||9;
+  // If direct sqft entered use it, else calculate from perimeter
+  const calc=direct>0?direct:Math.round(perim*h*0.85); // 0.85 accounts for windows/doors
+  document.getElementById('extWallCalc').value=calc||0;
+}
+
+function gext(id,fb=0){const v=parseFloat(document.getElementById(id)?.value);return isNaN(v)?fb:v;}
+
+function calcExterior(){
+  const client=document.getElementById('clientName').value||'Client';
+  const addr=document.getElementById('jobAddress').value||'';
+  const phone=document.getElementById('clientPhone').value||'';
+  const email=document.getElementById('clientEmail').value||'';
+  const notes=document.getElementById('extNotes').value||'';
+  const wallRates={vinyl:1.95,wood:2.75,brick:3.25,stucco:3.00,fiberCement:2.25,metal:2.40,noWalls:0};
+  const condMult={good:1.00,fair:1.20,poor:1.45};
+  const storeyMult={'1':1.00,'2':1.20,'3':1.35};
+  const coatMult={match:1.00,change:1.15,major:1.30};
+  let base=0;
+  const rows=[],warns=[];
+  const cond=condMult[EXT.cond]||1;
+  const stor=storeyMult[EXT.storeys]||1;
+  const coat=coatMult[EXT.coat]||1;
+  const surfRate=wallRates[EXT.surf]||0;
+  // Use direct wall sqft, or fall back to calculated from perimeter
+  const directSqft=gext('extWallSqft');
+  const calcSqft=gext('extWallCalc');
+  const wallSqft=directSqft>0?directSqft:calcSqft;
+  if(wallSqft>0&&surfRate>0){
+    const src=directSqft>0?'measured':'calculated from perimeter';
+    const c=wallSqft*surfRate*cond*stor*coat;base+=c;
+    rows.push({l:`Walls — ${wallSqft} sqft (${src}) × $${surfRate.toFixed(2)}/sqft`,v:c});
+  }
+  const soffit=gext('extSoffitSqft');if(soffit>0){const c=soffit*3.00*cond;base+=c;rows.push({l:`Soffits — ${soffit} sqft`,v:c});}
+  const fascia=gext('extFasciaLft');if(fascia>0){const c=fascia*4.25*cond;base+=c;rows.push({l:`Fascia — ${fascia} lft`,v:c});}
+  const gutters=gext('extGuttersLft');if(gutters>0){const c=gutters*3.25*cond;base+=c;rows.push({l:`Gutters — ${gutters} lft`,v:c});}
+  const downspouts=gext('extDownspoutsLft');if(downspouts>0){const c=downspouts*2.50*cond;base+=c;rows.push({l:`Downspouts — ${downspouts} lft`,v:c});}
+  const windows=gext('extWindowCount');if(windows>0){const c=windows*100;base+=c;rows.push({l:`Window frames / shutters — ${windows} × $100`,v:c});}
+  const entryDoors=gext('extEntryDoorCount');if(entryDoors>0){const c=entryDoors*212;base+=c;rows.push({l:`Entry doors — ${entryDoors} × $212`,v:c});}
+  const garSingle=gext('extGarSingle');if(garSingle>0){const c=garSingle*237;base+=c;rows.push({l:`Single garage doors — ${garSingle} × $237`,v:c});}
+  const garDouble=gext('extGarDouble');if(garDouble>0){const c=garDouble*375;base+=c;rows.push({l:`Double garage doors — ${garDouble} × $375`,v:c});}
+  const frenchDoors=gext('extFrenchDoors');if(frenchDoors>0){const c=frenchDoors*262;base+=c;rows.push({l:`French / patio doors — ${frenchDoors} × $262`,v:c});}
+  const fenceLft=gext('extFenceLft');if(fenceLft>0){const c=fenceLft*5.50*cond;base+=c;rows.push({l:`Fence — ${fenceLft} lft`,v:c});}
+  const deckSqft=gext('extDeckSqft');if(deckSqft>0){const c=deckSqft*3.25*cond;base+=c;rows.push({l:`Deck / porch floor — ${deckSqft} sqft`,v:c});}
+  const porchCeil=gext('extPorchCeilSqft');if(porchCeil>0){const c=porchCeil*2.875*cond;base+=c;rows.push({l:`Porch ceiling — ${porchCeil} sqft`,v:c});}
+  const columns=gext('extColumnCount');if(columns>0){const c=columns*100*cond;base+=c;rows.push({l:`Columns / posts — ${columns} × $100`,v:c});}
+  const railing=gext('extRailingLft');if(railing>0){const c=railing*6.50*cond;base+=c;rows.push({l:`Railings — ${railing} lft`,v:c});}
+  const pergola=gext('extPergolasSqft');if(pergola>0){const c=pergola*3.25*cond;base+=c;rows.push({l:`Pergola / gazebo — ${pergola} sqft`,v:c});}
+  const foundation=gext('extFoundationSqft');if(foundation>0){const c=foundation*4.00*cond;base+=c;rows.push({l:`Foundation / parging — ${foundation} sqft`,v:c});}
+  const retaining=gext('extRetainingSqft');if(retaining>0){const c=retaining*3.25*cond;base+=c;rows.push({l:`Retaining wall — ${retaining} sqft`,v:c});}
+  if(EXT.wash==='yes'){base+=300;rows.push({l:'Power wash',v:300});warns.push('Power wash at $300 flat — adjust if larger home.');}
+  else if(EXT.wash==='unsure') warns.push('Power wash not priced — assess on-site.');
+  if(EXT.caulk==='minor'){base+=75;rows.push({l:'Caulking — minor',v:75});}
+  else if(EXT.caulk==='extensive'){base+=200;rows.push({l:'Caulking — extensive',v:200});}
+  if(EXT.cond==='poor') warns.push('Poor condition — confirm full scope of prep before finalising.');
+  if(EXT.surf==='wood'&&EXT.cond!=='good') warns.push('Wood in less-than-good condition — check for rot or bare wood before quoting.');
+  if(EXT.surf==='brick') warns.push('Brick — confirm if previously painted. Unpainted brick needs masonry primer (not included).');
+  if(base<572) base=572;
+  const price=Math.round(base*1.05/50)*50;
+  const painters=Math.round(price*0.40);
+  const matsAmt=Math.round(price*0.12);
+  const net=Math.round(price*0.48);
+  const surfLabels={vinyl:'Vinyl / Aluminum',wood:'Wood',brick:'Brick / Masonry',stucco:'Stucco',fiberCement:'Fiber Cement',metal:'Metal / Steel',noWalls:'Trim & elements only'};
+  const condLabels={good:'Good',fair:'Fair — light peeling',poor:'Poor — heavy peeling'};
+  const coatLabels={match:'Same/similar color',change:'Color change (2 coats)',major:'Major change / primer (3 coats)'};
+  document.getElementById('rClient').textContent=client+(phone?' · '+phone:'')+(email?' · '+email:'');
+  document.getElementById('rPrice').textContent=fmt(price);
+  document.getElementById('rAddr').textContent=addr||'Exterior job';
+  let bd='';
+  rows.forEach(r=>{bd+=`<div class="bdr"><span>${r.l}</span><span>${fmt(r.v)}</span></div>`;});
+  bd+=`<div class="bdr"><span>${surfLabels[EXT.surf]} · ${condLabels[EXT.cond]} · ${EXT.storeys} storey</span><span></span></div>`;
+  bd+=`<div class="bdr coat-row"><span>${coatLabels[EXT.coat]}</span><span>included</span></div>`;
+  bd+=`<div class="bdr tot"><span>Total</span><span>${fmt(price)}</span></div>`;
+  document.getElementById('bdArea').innerHTML=bd;
+  document.getElementById('mgArea').innerHTML=`
+    <div class="mc hl"><div class="mcv">${fmt(net)}</div><div class="mcl">Your net</div></div>
+    <div class="mc"><div class="mcv">${fmt(painters)}</div><div class="mcl">Labour 40%</div></div>
+    <div class="mc"><div class="mcv">${fmt(matsAmt)}</div><div class="mcl">Materials ~12%</div></div>`;
+  document.getElementById('matArea').innerHTML=`<div style="font-size:13px;color:var(--text2);line-height:1.9">
+    <div>🖌 Exterior paint — weather-resistant, 2 coat min</div>
+    ${EXT.surf==='wood'?'<div>🪵 Wood primer / sealer if bare wood present</div>':''}
+    ${EXT.surf==='brick'?'<div>🧱 Masonry primer / bonding primer</div>':''}
+    ${EXT.surf==='stucco'?'<div>🏗️ Elastomeric or masonry paint recommended</div>':''}
+    ${EXT.caulk!=='no'?'<div>🔒 Exterior caulk / sealant</div>':''}
+    ${EXT.wash==='yes'?'<div>💧 Power washer / cleaning agent</div>':''}
+    <div>🪣 Painter tape, drop sheets, plastic sheeting</div>
+    ${EXT.cond==='poor'?'<div>🛠️ Scraper, sandpaper, spot primer for prep</div>':''}
+    ${notes?`<div style="margin-top:.5rem;color:var(--text)">⚑ Notes: ${notes}</div>`:''}
+  </div>`;
+  const wEl=document.getElementById('warnBox');
+  if(warns.length){wEl.style.display='block';wEl.innerHTML=warns.map(w=>'⚠ '+w).join('<br><br>');}
+  else wEl.style.display='none';
+  window._qs={client,phone,email,addr,projType:'exterior',scope:Array.from(EXT.elements).join(', ')||'walls',coat:EXT.coat,cond:EXT.cond,occ:'no',wp:'no',notes,price,net,paintData:{},paintSummary:`Exterior — ${EXT.surf} | ${EXT.storeys} storey | ${EXT.cond} condition`,mats:'exterior materials',extSurf:EXT.surf,storeys:EXT.storeys,wallSqft:gext('extWallSqft')||0};
+  goStep(6);
+}
+
+
+// Mural state
+const MURAL_APP={surf:'drywall',cond:'good',priceMode:'sqft',prep:'none'};
+
+document.querySelectorAll('.tb[data-grp^="mural"]').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const grp=this.dataset.grp,val=this.dataset.val;
+    // Handle mural groups — write to MURAL_APP
+    document.querySelectorAll(`.tb[data-grp="${grp}"]`).forEach(b=>b.classList.remove('on'));
+    this.classList.add('on');
+    const map={muralSurf:'surf',muralCond:'cond',muralPriceMode:'priceMode',muralPrep:'prep'};
+    if(map[grp]){
+      MURAL_APP[map[grp]]=val;
+      if(grp==='muralPriceMode'){
+        document.getElementById('muralSqftRow').style.display=val==='sqft'?'':'none';
+        document.getElementById('muralFlatRow').style.display=val==='flat'?'':'none';
+      }
+    }
+  });
+});
+
+function calcMuralSqft(){
+  const w=parseFloat(document.getElementById('muralW').value)||0;
+  const h=parseFloat(document.getElementById('muralH').value)||0;
+  const el=document.getElementById('muralSqftApp');
+  if(el)el.value=w>0&&h>0?Math.round(w*h):0;
+}
+
+function calcMural(){
+  const client=document.getElementById('clientName').value||'Client';
+  const addr=document.getElementById('jobAddress').value||'';
+  const phone=document.getElementById('clientPhone').value||'';
+  const email=document.getElementById('clientEmail').value||'';
+  const notes=document.getElementById('muralNotes').value||'';
+  const w=parseFloat(document.getElementById('muralW').value)||0;
+  const h=parseFloat(document.getElementById('muralH').value)||0;
+  const sqft=parseFloat(document.getElementById('muralSqftApp').value)||Math.round(w*h);
+  const mats=parseFloat(document.getElementById('muralMats').value)||0;
+  const primer=parseFloat(document.getElementById('muralPrimer').value)||0;
+
+  let price=0;
+  if(MURAL_APP.priceMode==='flat'){
+    price=parseFloat(document.getElementById('muralFlat').value)||0;
+  } else {
+    const rate=parseFloat(document.getElementById('muralRate').value)||10;
+    const complexity=parseFloat(document.getElementById('muralComplexity').value)||1.0;
+    price=sqft*rate*complexity;
+  }
+
+  // Prep
+  if(MURAL_APP.prep==='light')price+=75;
+  else if(MURAL_APP.prep==='heavy')price+=200;
+
+  // Add materials and primer to price
+  price+=mats+primer;
+
+  if(sqft===0&&MURAL_APP.priceMode==='sqft'&&parseFloat(document.getElementById('muralFlat')?.value||0)===0){
+    alert('Please enter wall dimensions or switch to flat rate pricing.');
+    return;
+  }
+  if(price<600)price=600;
+  price=Math.round(price/50)*50;
+
+  const labour=Math.round(price*0.50); // mural is 50% labour (skilled)
+  const matsTotal=Math.round(price*0.15);
+  const net=Math.round(price*0.35);
+
+  const surfLabels={drywall:'Drywall',brick:'Brick/Concrete',wood:'Wood',plaster:'Plaster/Stucco',glass:'Glass',other:'Other'};
+  const condLabels={good:'Good — ready',prep:'Needs prep',rough:'Rough/textured'};
+
+  document.getElementById('rClient').textContent=client+(phone?' · '+phone:'')+(email?' · '+email:'');
+  document.getElementById('rPrice').textContent=fmt(price);
+  document.getElementById('rAddr').textContent=addr||'Mural job';
+
+  let bd='';
+  if(MURAL_APP.priceMode==='flat'){
+    bd+=`<div class="bdr"><span>Mural — flat rate</span><span>${fmt(parseFloat(document.getElementById('muralFlat').value)||0)}</span></div>`;
+  } else {
+    const rate=parseFloat(document.getElementById('muralRate').value)||10;
+    const complexity=parseFloat(document.getElementById('muralComplexity').value)||1.0;
+    bd+=`<div class="bdr"><span>Mural — ${sqft} sqft × $${rate}/sqft × ${complexity}x complexity</span><span>${fmt(sqft*rate*complexity)}</span></div>`;
+  }
+  if(MURAL_APP.prep==='light')bd+=`<div class="bdr"><span>Surface prep — light</span><span>$75</span></div>`;
+  if(MURAL_APP.prep==='heavy')bd+=`<div class="bdr"><span>Surface prep — heavy</span><span>$200</span></div>`;
+  if(primer>0)bd+=`<div class="bdr"><span>Primer</span><span>${fmt(primer)}</span></div>`;
+  if(mats>0)bd+=`<div class="bdr"><span>Paint & materials</span><span>${fmt(mats)}</span></div>`;
+  bd+=`<div class="bdr"><span>Surface: ${surfLabels[MURAL_APP.surf]} | ${condLabels[MURAL_APP.cond]}</span><span></span></div>`;
+  bd+=`<div class="bdr tot"><span>Total</span><span>${fmt(price)}</span></div>`;
+  document.getElementById('bdArea').innerHTML=bd;
+
+  document.getElementById('mgArea').innerHTML=`
+    <div class="mc hl"><div class="mcv">${fmt(net)}</div><div class="mcl">Your net</div></div>
+    <div class="mc"><div class="mcv">${fmt(labour)}</div><div class="mcl">Labour 50%</div></div>
+    <div class="mc"><div class="mcv">${fmt(matsTotal)}</div><div class="mcl">Materials ~15%</div></div>`;
+
+  document.getElementById('matArea').innerHTML=`<div style="font-size:13px;color:var(--text2);line-height:1.9">
+    <div>🎨 Mural paint — professional artist-grade acrylics</div>
+    ${primer>0?'<div>🖌 Primer / sealer</div>':''}
+    ${MURAL_APP.surf==='brick'||MURAL_APP.surf==='plaster'?'<div>🧱 Masonry bonding primer</div>':''}
+    <div>🖌 Brushes, rollers, spray equipment as needed</div>
+    <div>🪣 Painter tape, drop sheets, plastic sheeting</div>
+    ${notes?`<div style="margin-top:.5rem;color:var(--text)">📝 Vision: ${notes}</div>`:''}
+  </div>`;
+
+  const wEl=document.getElementById('warnBox');
+  if(MURAL_APP.surf==='brick'||MURAL_APP.surf==='plaster'){
+    wEl.style.display='block';
+    wEl.innerHTML='⚠ Textured or masonry surface — primer is strongly recommended for paint adhesion. Confirm primer is included in quote.';
+  } else wEl.style.display='none';
+
+  window._qs={client,phone,email,addr,projType:'mural',
+    scope:`mural — ${sqft}sqft ${surfLabels[MURAL_APP.surf]}`,
+    coat:'match',cond:MURAL_APP.cond,occ:'no',wp:'no',notes,price,net,
+    paintData:{},paintSummary:`Mural — ${sqft}sqft on ${surfLabels[MURAL_APP.surf]}`,
+    mats:`Mural paint + supplies`,
+    extSurf:MURAL_APP.surf,
+    sqft,ceilH:9,
+    ratePerSqft:document.getElementById('muralRate').value,
+  };
+
+  goStep(6);
+}
+
 function resetAll(){
+  // Reset exterior state
+  EXT.surf='vinyl';EXT.cond='good';EXT.storeys='1';EXT.coat='match';EXT.wash='no';EXT.caulk='no';EXT.elements.clear();
+  document.querySelectorAll('.chk[data-ext]').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('#surfaceGrid .ccard').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('#extCondGrid .ccard').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('#storeyGrp .pill').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('#extCoatGrp .pill').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('#washGrid .pill,#washGrid .ccard').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('#extSurfGrp .tb').forEach((e,i)=>e.classList.toggle('on',i===0));
+  // Reset all ext measurement inputs
+  ['extWallSqft','extWallHeight','extPerimeter','extWallCalc','extSoffitSqft','extFasciaLft',
+   'extGuttersLft','extDownspoutsLft','extWindowCount','extEntryDoorCount','extGarSingle',
+   'extGarDouble','extFrenchDoors','extFenceLft','extDeckSqft','extPorchCeilSqft',
+   'extColumnCount','extRailingLft','extPergolasSqft','extFoundationSqft','extRetainingSqft',
+   'extNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
+  // Reset mode toggle
+  S.mode='interior';
+  document.querySelectorAll('.tb[data-grp="mode"]').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.getElementById('intTypeRow').style.display='';
+  // Reset client fields
+  ['clientName','jobAddress','clientPhone','clientEmail'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  // Reset warnBox
+  const wb=document.getElementById('warnBox');if(wb)wb.style.display='none';
+// Reset mural state
+  MURAL_APP.surf='drywall';MURAL_APP.cond='good';MURAL_APP.priceMode='sqft';MURAL_APP.prep='none';
+  const muralW=document.getElementById('muralW');if(muralW)muralW.value='';
+  const muralH=document.getElementById('muralH');if(muralH)muralH.value='';
+  const muralSqftApp=document.getElementById('muralSqftApp');if(muralSqftApp)muralSqftApp.value='';
+  const muralRate=document.getElementById('muralRate');if(muralRate)muralRate.value='10';
+  const muralFlat=document.getElementById('muralFlat');if(muralFlat)muralFlat.value='';
+  const muralMats=document.getElementById('muralMats');if(muralMats)muralMats.value='0';
+  const muralNotes=document.getElementById('muralNotes');if(muralNotes)muralNotes.value='';
+  const muralPrimer=document.getElementById('muralPrimer');if(muralPrimer)muralPrimer.value='0';
+  document.querySelectorAll('#muralSurfGrp .tb').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('[data-grp="muralCond"] ').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('[data-grp="muralPriceMode"]').forEach((e,i)=>e.classList.toggle('on',i===0));
+  document.querySelectorAll('[data-grp="muralPrep"]').forEach((e,i)=>e.classList.toggle('on',i===0));
+  const sqftRow=document.getElementById('muralSqftRow');if(sqftRow)sqftRow.style.display='';
+  const flatRow=document.getElementById('muralFlatRow');if(flatRow)flatRow.style.display='none';
   S.coat='match';S.cond='good';S.occ='no';S.wp='no';S.scope=['walls'];S.mats=[];S.paintData={};
-  ['clientName','jobAddress','clientPhone','clientEmail','extraNotes'].forEach(id=>{
+  ['extraNotes'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
   ['sLiving','sBed','sOffice','sHall','sBathSm','sBathMd','sBathLg',
@@ -354,7 +869,7 @@ function resetAll(){
   goStep(0);
 }
 
-document.getElementById('s0next').addEventListener('click',()=>goStep(1));
+// s0next handled by mode-aware listener above
 document.getElementById('s1back').addEventListener('click',()=>goStep(0));
 document.getElementById('s1next').addEventListener('click',()=>goStep(2));
 document.getElementById('s2back').addEventListener('click',()=>goStep(1));
@@ -485,9 +1000,15 @@ function buildPaintCards(){
   });
 }
 document.getElementById('s5back').addEventListener('click',()=>goStep(4));
-document.getElementById('s6back').addEventListener('click',()=>goStep(5));
+document.getElementById('s6back').addEventListener('click',()=>{
+  const q=window._qs;
+  if(q&&q.projType==='exterior') goStep('ExtC');
+  else if(q&&q.projType==='mural') goStep('Mural');
+  else goStep(5);
+});
 document.getElementById('calcBtn').addEventListener('click',calculate);
 document.getElementById('newBtn').addEventListener('click',resetAll);
+document.getElementById('shareBtn').addEventListener('click', shareQuote);
 document.getElementById('jobberBtn').addEventListener('click', saveToJobber);
 
 async function saveToJobber(){
@@ -538,6 +1059,8 @@ document.querySelectorAll('.tb').forEach(btn=>{
   btn.addEventListener('click',function(){
     const grp=this.dataset.grp,val=this.dataset.val;
     if(!grp)return;
+    // Skip exterior and mode groups — handled by their own listeners
+    if(grp.startsWith('ext')||grp.startsWith('mural')||grp==='mode')return;
     document.querySelectorAll(`.tb[data-grp="${grp}"]`).forEach(b=>b.classList.remove('on'));
     this.classList.add('on');S[grp]=val;
   });
@@ -662,7 +1185,7 @@ function calculate(){
 
   if(S.occ==='yes'){base+=75;rows.push({l:'Occupied / furnished +$75',v:75});warns.push('Occupied space — allow extra time for furniture protection.');}
   if(S.wp==='yes')warns.push('Wallpaper removal is a separate scope — quote it separately.');
-  if(base<500)base=500;
+  if(base<619)base=619;
 
   // Concrete price = base × 1.05 rounded to $50 — midpoint of Wix range
   const price=r50(base*1.05);
@@ -738,6 +1261,26 @@ function calculate(){
 
 function shareQuote(){
   const q=window._qs;if(!q)return;
+  const isExt=q.projType==='exterior';
+  const isMural=q.projType==='mural';
+  const scopeBlock=isExt?
+`Surface:  ${q.extSurf||'—'}
+Elements: ${q.scope||'—'}
+Storeys:  ${q.storeys||'1'}
+Condition:${q.cond}
+Coat:     ${q.coat==='major'?'Major/primer (3 coats)':q.coat==='change'?'Color change (2 coats)':'Same/similar color'}`
+  :isMural?
+`Surface:  ${q.extSurf||'—'}
+Wall:     ${q.sqft||'—'} sqft
+Rate:     $${q.ratePerSqft||'—'}/sqft
+Condition:${q.cond}
+Vision:   ${q.notes||'—'}`
+  :
+`Scope:    ${q.scope}
+Coat:     ${q.coat==='major'?'Major/primer (3 coats)':q.coat==='change'?'Color change (2 coats)':'Same color (1 coat)'}
+Condition:${q.cond}
+Sqft:     ${q.sqft||'—'} | Ceiling: ${q.ceilH||8}ft
+Occupied: ${q.occ==='yes'?'Yes':'No'}`;
   const text=
 `TEN BELL PAINTING — QUOTE SUMMARY
 ===================================
@@ -745,25 +1288,19 @@ Client:   ${q.client}
 Phone:    ${q.phone||'—'}
 Email:    ${q.email||'—'}
 Address:  ${q.addr||'—'}
-Type:     ${q.projType}
+Type:     ${q.projType.charAt(0).toUpperCase()+q.projType.slice(1)}
 
 SCOPE & PRICING
-Scope:    ${q.scope}
-Coat:     ${q.coat==='major'?'Major/primer (3 coats)':q.coat==='change'?'Color change (2 coats)':'Same color (1 coat)'}
-Condition:${q.cond}
-Sqft:     ${q.sqft} | Ceiling: ${q.ceilH}ft
-Occupied: ${q.occ==='yes'?'Yes':'No'}
+${scopeBlock}
 
-PAINT SELECTION
-${q.paintSummary||'Not specified'}
-
-MATERIALS NEEDED
-${q.mats}
+PAINT / MATERIALS
+${q.paintSummary||q.mats||'See breakdown'}
 
 QUOTED PRICE: ${fmt(q.price)}
-Your net: ${fmt(q.net)}
+Your net:     ${fmt(q.net)}
 
-Notes: ${q.notes||'none'}`;
+Notes: ${q.notes||'none'}
+Generated by Ten Bell Painting quote tool`;
 
   if(navigator.share){
     navigator.share({ title:'Ten Bell Quote', text }).catch(()=>{});
