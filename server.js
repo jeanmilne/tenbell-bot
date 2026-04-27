@@ -3,7 +3,7 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 
 const app = express();
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // Allow requests from anywhere (needed for PWA on phone calling the API)
@@ -354,6 +354,7 @@ app.post("/website-lead", async (req, res) => {
   const q = req.body;
   const name = q.name || "Website visitor";
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const jobType = q.type === 'exterior' ? 'Exterior' : q.type === 'mural' ? 'Mural' : 'Interior';
 
   try {
     // Email to Adam
@@ -361,12 +362,67 @@ app.post("/website-lead", async (req, res) => {
     const condLabel = {good:'Good — just repaint', minor:'Minor repairs needed', heavy:'Heavy repairs needed'};
     const occLabel  = {yes:'Yes — furniture present', no:'No — vacant'};
 
-    await transporter.sendMail({
-      from: process.env.GMAIL_USER,
-      to: process.env.GMAIL_USER,
-      subject: `New Website Lead: ${name}`,
-      text:
-`New lead from website estimator
+    // Determine job type
+    const isExterior = q.type === 'exterior';
+    const isMural = q.type === 'mural';
+
+    const muralBody = `New MURAL lead from website estimator
+
+── Contact ──────────────────────
+Name:        ${name || "n/a"}
+Phone:       ${q.phone || "n/a"}
+Email:       ${q.email || "n/a"}
+Address:     ${q.addr || "n/a"}
+
+── Mural Project ────────────────
+Surface material: ${q.surface || "n/a"}
+Wall width:       ${q.width || "n/a"} ft
+Wall height:      ${q.height || "n/a"} ft
+Wall sqft:        ${q.wallSqft || "n/a"} sqft
+Surface condition:${q.cond || "n/a"}
+Notes:            ${q.notes || "n/a"}
+
+── Photos ───────────────────────
+${q.photoCount ? q.photoCount + ' photo(s) attached' : 'No photos provided'}`;
+
+    const emailBody = isMural ? muralBody : isExterior ? `New EXTERIOR lead from website estimator
+
+── Contact ──────────────────────
+Name:        ${name || "n/a"}
+Phone:       ${q.phone || "n/a"}
+Email:       ${q.email || "n/a"}
+Address:     ${q.addr || "n/a"}
+
+── Exterior Project ─────────────
+Elements:    ${q.elements || "n/a"}
+Power wash:  ${q.wash || "n/a"}
+Surface:     ${q.surface || "n/a"}
+Condition:   ${q.cond || "n/a"}
+Storeys:     ${q.storeys || "n/a"}
+Color:       ${q.coat || "n/a"}
+
+── Measurements ─────────────────
+Wall area:      ${q.wallSqft || 0} sqft
+Soffit:         ${q.soffit || 0} sqft
+Fascia:         ${q.fascia || 0} lft
+Gutters:        ${q.gutters || 0} lft
+Downspouts:     ${q.downspouts || 0} lft
+Entry doors:    ${q.entryDoors || 0}
+Garage doors:   ${q.garageDoors || 0}
+Windows:        ${q.windows || 0}
+Shutters:       ${q.shutters || 0} pairs
+Fence:          ${q.fence || 0} lft
+Deck/porch:     ${q.deck || 0} sqft
+Railing:        ${q.railing || 0} lft
+Porch ceiling:  ${q.porchCeil || 0} sqft
+Columns/posts:  ${q.columns || 0}
+
+── Estimate ─────────────────────
+Range:       $${q.low} – $${q.high}
+
+── Photos ───────────────────────
+${q.photoCount ? q.photoCount + ' photo(s) attached' : 'No photos provided'}` 
+    : `New INTERIOR lead from website estimator
 
 ── Contact ──────────────────────
 Name:        ${name || "n/a"}
@@ -398,16 +454,58 @@ Stairwell:      ${q.stairSm || 0}
 Large stairwell:${q.stairLg || 0}
 
 ── Estimate ─────────────────────
-Range:       $${q.low} – $${q.high}`,
+Range:       $${q.low} – $${q.high}
+
+── Photos ───────────────────────
+${q.photoCount ? q.photoCount + ' photo(s) attached' : 'No photos provided'}`;
+
+    // Build attachments from base64 photos
+    const attachments = [];
+    if (q.photos && Array.isArray(q.photos)) {
+      q.photos.forEach((photo, i) => {
+        if (photo.data && photo.type) {
+          attachments.push({
+            filename: `photo_${i+1}.${photo.type.split('/')[1] || 'jpg'}`,
+            content: photo.data,
+            encoding: 'base64',
+            contentType: photo.type,
+          });
+        }
+      });
+    }
+
+    await transporter.sendMail({
+      from: process.env.GMAIL_USER,
+      to: process.env.GMAIL_USER,
+      subject: `New ${isMural ? 'Mural' : isExterior ? 'Exterior' : 'Interior'} Website Lead: ${name}`,
+      text: emailBody,
+      attachments,
     });
 
     // Email to customer if they provided email
     if (q.email && emailRegex.test(q.email)) {
+      const isCustomQuote = isExterior || isMural;
       await transporter.sendMail({
         from: process.env.GMAIL_USER,
         to: q.email,
-        subject: "Your Ten Bell Painting Estimate",
-        text:
+        subject: isCustomQuote ? "Your Ten Bell Painting Request" : "Your Ten Bell Painting Estimate",
+        text: isCustomQuote ?
+`Hi ${name},
+
+Thanks for reaching out to Ten Bell Painting!
+
+We've received your ${isMural ? 'mural' : 'exterior painting'} request and will be in touch within a few hours to discuss your project and put together a custom quote.
+
+In the meantime feel free to call or text Adam directly:
+
+📱 905-536-6799
+✉️  tenbellpainting@gmail.com
+🌐 tenbellpainting.com
+
+Thanks,
+Adam — Ten Bell Painting
+Painting worth cheering for!`
+:
 `Hi ${name},
 
 Thanks for using our estimator! Here's a summary of your project estimate:
@@ -622,9 +720,15 @@ app.post("/jobber/quote", async (req, res) => {
 
     // 3. Build line items
     const lineItems = [];
+    const jobTypeLabel = q.projType === 'exterior' ? 'Exterior painting' : q.projType === 'mural' ? 'Mural painting' : `Interior painting — ${q.projType || "condo"}`;
+    const jobDesc = q.projType === 'exterior'
+      ? `Surface: ${q.extSurf || '—'} | Condition: ${q.cond || '—'} | Storeys: ${q.storeys || '1'} | Color: ${q.coat || '—'} | Elements: ${q.scope || '—'}`
+      : q.projType === 'mural'
+      ? `Wall: ${q.wallSqft || '—'} sqft | Rate: $${q.ratePerSqft || '—'}/sqft | Surface: ${q.extSurf || '—'} | Condition: ${q.cond || '—'}`
+      : `Scope: ${q.scope || "walls"} | ${q.coat === "major" ? "3 coats/major change" : q.coat === "change" ? "2 coats/color change" : "1 coat/same color"} | Condition: ${q.cond} | ${q.sqft} sqft | ${q.ceilH}ft ceilings`;
     lineItems.push({
-      name: `Interior painting — ${q.projType || "condo"}`,
-      description: `Scope: ${q.scope || "walls"} | ${q.coat === "major" ? "3 coats/major change" : q.coat === "change" ? "2 coats/color change" : "1 coat/same color"} | Condition: ${q.cond} | ${q.sqft} sqft | ${q.ceilH}ft ceilings`,
+      name: jobTypeLabel,
+      description: jobDesc,
       quantity: 1,
       unitPrice: parseFloat(q.price) || 0,
       saveToProductsAndServices: false,
@@ -661,8 +765,23 @@ app.post("/jobber/quote", async (req, res) => {
     const quoteResult = await jobberQuery(quoteMutation, {
       clientId,
       propertyId,
-      title: `Painting Quote — ${q.addr || q.projType || "Ten Bell"}`,
-      message: `Ten Bell Painting — on-site quote\n\nClient: ${q.client}\nAddress: ${q.addr || "—"}\nPhone: ${q.phone || "—"}\nEmail: ${q.email || "—"}\n\nScope: ${q.scope}\nSqft: ${q.sqft} | Ceiling: ${q.ceilH}ft\nCoat: ${q.coat} | Condition: ${q.cond}\nOccupied: ${q.occ === "yes" ? "Yes" : "No"}\n\nPaint:\n${q.paintSummary || "—"}\n\nMaterials: ${q.mats || "none"}\n\nNotes: ${q.notes || "none"}`,
+      title: `${q.projType === "exterior" ? "Exterior" : q.projType === "mural" ? "Mural" : "Interior"} Painting Quote — ${q.addr || "Ten Bell"}`,
+      message: `Ten Bell Painting — on-site quote
+
+Client: ${q.client}
+Address: ${q.addr || "—"}
+Phone: ${q.phone || "—"}
+Email: ${q.email || "—"}
+Type: ${q.projType === 'exterior' ? 'Exterior' : q.projType === 'mural' ? 'Mural' : 'Interior'}
+
+${q.projType === 'exterior' ? `Surface: ${q.extSurf||'—'} | Storeys: ${q.storeys||'1'} | Condition: ${q.cond||'—'}
+Elements: ${q.scope||'—'}` : q.projType === 'mural' ? `Wall: ${q.sqft||'—'} sqft | Surface: ${q.extSurf||'—'}
+Rate: $${q.ratePerSqft||'—'}/sqft | Condition: ${q.cond||'—'}` : `Scope: ${q.scope||'—'} | Sqft: ${q.sqft||'—'} | Ceiling: ${q.ceilH||8}ft
+Color: ${q.coat||'—'} | Condition: ${q.cond||'—'} | Occupied: ${q.occ==='yes'?'Yes':'No'}`}
+
+Paint: ${q.paintSummary||'—'}
+Materials: ${q.mats||'none'}
+Notes: ${q.notes||'none'}`,
       lineItems,
     });
     console.log("Quote result:", JSON.stringify(quoteResult, null, 2));
