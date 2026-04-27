@@ -295,7 +295,7 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
   </div>
   <div class="s-mid">
     <div class="field"><label>Full name</label><input type="text" id="cName" placeholder="Sarah Chen" autocomplete="name"></div>
-    <div class="field"><label>Phone number <span class="req">*</span></label><input type="tel" id="cPhone" placeholder="416-555-0100" autocomplete="tel"><div class="err" id="phoneErr">Phone number is required</div></div>
+    <div class="field"><label>Phone number <span class="req">*</span></label><input type="tel" id="cPhone" placeholder="416-555-0100" autocomplete="tel" required><div class="err" id="phoneErr">Phone number is required</div></div>
     <div class="field"><label>Email address</label><input type="email" id="cEmail" placeholder="you@email.com" autocomplete="email"></div>
     <div class="field"><label>Project address</label><input type="text" id="cAddr" placeholder="123 King St W, Toronto" autocomplete="street-address"></div>
     <div class="sdiv">Photos (optional, up to 5)</div>
@@ -357,17 +357,17 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
     <div class="sdiv">Doors</div>
     <div class="cgrid c2">
       <div class="ccard extElem" data-ext="entryDoor"><div class="ck"></div><span class="ci">🚪</span><div class="cl">Entry Door(s)</div></div>
-      <div class="ccard extElem" data-ext="garageDoor"><div class="ck"></div><span class="ci">🏎️</span><div class="cl">Garage Door(s)</div></div>
+      <div class="ccard extElem" data-ext="garageDoor"><div class="ck"></div><span class="ci">🚘</span><div class="cl">Garage Door(s)</div></div>
       <div class="ccard extElem" data-ext="frenchDoor"><div class="ck"></div><span class="ci">🪟</span><div class="cl">Patio / French Doors</div></div>
-      <div class="ccard extElem" data-ext="foundation"><div class="ck"></div><span class="ci">🏚️</span><div class="cl">Foundation / Parging</div></div>
+      <div class="ccard extElem" data-ext="foundation"><div class="ck"></div><span class="ci">🏗️</span><div class="cl">Foundation / Parging</div></div>
     </div>
     <div class="sdiv">Outdoor structures</div>
     <div class="cgrid c2">
       <div class="ccard extElem" data-ext="fence"><div class="ck"></div><span class="ci">🌳</span><div class="cl">Fence</div></div>
-      <div class="ccard extElem" data-ext="deck"><div class="ck"></div><span class="ci">🌿</span><div class="cl">Deck / Porch Floor</div></div>
-      <div class="ccard extElem" data-ext="porch"><div class="ck"></div><span class="ci">🏛️</span><div class="cl">Porch Ceiling & Columns</div></div>
+      <div class="ccard extElem" data-ext="deck"><div class="ck"></div><span class="ci">🪵</span><div class="cl">Deck / Porch Floor</div></div>
+      <div class="ccard extElem" data-ext="porch"><div class="ck"></div><span class="ci">🏡</span><div class="cl">Porch Ceiling & Columns</div></div>
       <div class="ccard extElem" data-ext="railing"><div class="ck"></div><span class="ci">🔩</span><div class="cl">Railings</div></div>
-      <div class="ccard extElem" data-ext="pergola"><div class="ck"></div><span class="ci">⛺</span><div class="cl">Pergola / Gazebo</div></div>
+      <div class="ccard extElem" data-ext="pergola"><div class="ck"></div><span class="ci">🌲</span><div class="cl">Pergola / Gazebo</div></div>
       <div class="ccard extElem" data-ext="retaining"><div class="ck"></div><span class="ci">🪨</span><div class="cl">Retaining Wall</div></div>
     </div>
     <div class="sdiv">Power wash</div>
@@ -396,7 +396,7 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
   <div class="s-mid">
     <div class="nbox"><strong>Exterior jobs are priced on-site.</strong> Every exterior is different — surface condition, access, and prep requirements all affect the final price. We'll review your project details and get back to you with a custom quote after a quick on-site visit.</div>
     <div class="field"><label>Full name</label><input type="text" id="extName" placeholder="Sarah Chen" autocomplete="name"></div>
-    <div class="field"><label>Phone number <span class="req">*</span></label><input type="tel" id="extPhone" placeholder="416-555-0100" autocomplete="tel"><div class="err" id="extPhoneErr">Phone number is required</div></div>
+    <div class="field"><label>Phone number <span class="req">*</span></label><input type="tel" id="extPhone" placeholder="416-555-0100" autocomplete="tel" required><div class="err" id="extPhoneErr">Phone number is required</div></div>
     <div class="field"><label>Email address</label><input type="email" id="extEmail" placeholder="you@email.com" autocomplete="email"></div>
     <div class="field"><label>Property address</label><input type="text" id="extAddr" placeholder="123 King St W, Toronto" autocomplete="street-address"></div>
     <div class="sdiv">Photos (optional, up to 5)</div>
@@ -423,10 +423,10 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
   <div class="s-mid">
     <div class="sdiv">Wall surface material</div>
     <div class="cgrid c2" id="muralSurfGrid">
-      <div class="ccard on" data-val="drywall"><div class="ck"></div><span class="ci">🧱</span><div class="cl">Drywall</div><span class="cs">Standard painted drywall</span></div>
-      <div class="ccard" data-val="brick"><div class="ck"></div><span class="ci">🪨</span><div class="cl">Brick / Concrete</div><span class="cs">Raw or painted masonry</span></div>
+      <div class="ccard on" data-val="drywall"><div class="ck"></div><span class="ci">⬜</span><div class="cl">Drywall</div><span class="cs">Standard painted drywall</span></div>
+      <div class="ccard" data-val="brick"><div class="ck"></div><span class="ci">🧱</span><div class="cl">Brick / Concrete</div><span class="cs">Raw or painted masonry</span></div>
       <div class="ccard" data-val="wood"><div class="ck"></div><span class="ci">🪵</span><div class="cl">Wood</div><span class="cs">Wood paneling or plank</span></div>
-      <div class="ccard" data-val="plaster"><div class="ck"></div><span class="ci">🏛️</span><div class="cl">Plaster / Stucco</div><span class="cs">Textured surface</span></div>
+      <div class="ccard" data-val="plaster"><div class="ck"></div><span class="ci">🏚️</span><div class="cl">Plaster / Stucco</div><span class="cs">Textured surface</span></div>
       <div class="ccard" data-val="glass"><div class="ck"></div><span class="ci">🪟</span><div class="cl">Glass / Window</div><span class="cs">Painted glass panel</span></div>
       <div class="ccard" data-val="other"><div class="ck"></div><span class="ci">❓</span><div class="cl">Other / Not sure</div><span class="cs">We'll assess on-site</span></div>
     </div>
@@ -435,7 +435,7 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
       <div class="field"><label>Wall width (ft)</label><input type="number" id="muralWidth" placeholder="e.g. 12" min="0"></div>
       <div class="field"><label>Wall height (ft)</label><input type="number" id="muralHeight" placeholder="e.g. 9" min="0"></div>
     </div>
-    <div class="field"><label>Calculated wall area</label><input type="number" id="muralSqft" placeholder="auto" readonly style="background:#f7f9fc;color:#6b7280;font-weight:600"></div>
+    <div class="field"><label>Calculated wall area</label><input type="number" min="0" id="muralSqft" placeholder="auto" readonly style="background:#f7f9fc;color:#6b7280;font-weight:600"></div>
     <div class="sdiv">Surface condition</div>
     <div class="cgrid c3" id="muralCondGrid">
       <div class="ccard on" data-val="good"><div class="ck"></div><span class="ci">✅</span><div class="cl">Good</div><span class="cs">Smooth, clean, ready to paint</span></div>
@@ -463,7 +463,7 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
   <div class="s-mid">
     <div class="nbox"><strong>Mural pricing is custom.</strong> Every mural is unique — complexity, detail level, surface prep, and size all affect the final price. We'll review your project and get back to you with a detailed quote.</div>
     <div class="field"><label>Full name</label><input type="text" id="muralName" placeholder="Sarah Chen" autocomplete="name"></div>
-    <div class="field"><label>Phone number <span class="req">*</span></label><input type="tel" id="muralPhone" placeholder="416-555-0100" autocomplete="tel"><div class="err" id="muralPhoneErr">Phone number is required</div></div>
+    <div class="field"><label>Phone number <span class="req">*</span></label><input type="tel" id="muralPhone" placeholder="416-555-0100" autocomplete="tel" required><div class="err" id="muralPhoneErr">Phone number is required</div></div>
     <div class="field"><label>Email address</label><input type="email" id="muralEmail" placeholder="you@email.com" autocomplete="email"></div>
     <div class="field"><label>Project address</label><input type="text" id="muralAddr" placeholder="123 King St W, Toronto" autocomplete="street-address"></div>
     <div class="sdiv">Photos (up to 5)</div>
@@ -926,6 +926,12 @@ async function submitMural(){
   const ph=document.getElementById('muralPhone').value.trim();
   if(!ph){document.getElementById('muralPhoneErr').style.display='block';return;}
   document.getElementById('muralPhoneErr').style.display='none';
+  const _w=parseFloat(document.getElementById('muralWidth').value)||0;
+  const _h=parseFloat(document.getElementById('muralHeight').value)||0;
+  if(_w===0&&_h===0){
+    // Allow submission without dimensions — they may not know exact size
+    // Just warn rather than block
+  }
   showSpin();
   const name=document.getElementById('muralName').value.trim();
   const email=document.getElementById('muralEmail').value.trim();
