@@ -571,6 +571,8 @@ document.querySelectorAll('.tb[data-grp^="ext"]').forEach(btn=>{
 // Mode toggle
 document.querySelectorAll('.tb[data-grp="mode"]').forEach(btn=>{
   btn.addEventListener('click',function(){
+    document.querySelectorAll('.tb[data-grp="mode"]').forEach(b=>b.classList.remove('on'));
+    this.classList.add('on');
     S.mode=this.dataset.val;
     document.getElementById('intTypeRow').style.display=S.mode==='interior'?'':'none';
   });
@@ -862,6 +864,7 @@ function resetAll(){
   document.querySelectorAll('.tb[data-val="no"]').forEach(b=>b.classList.add('on'));
   document.querySelectorAll('.tb[data-val="match"]').forEach(b=>b.classList.add('on'));
   document.querySelectorAll('.tb[data-val="good"]').forEach(b=>b.classList.add('on'));
+  document.querySelectorAll('.tb[data-grp="mode"][data-val="interior"]').forEach(b=>b.classList.add('on'));
   document.querySelectorAll('.chk[data-scope]').forEach(el=>{el.classList.toggle('on',el.dataset.scope==='walls');});
   document.querySelectorAll('.crow').forEach(el=>el.classList.remove('on'));
   document.querySelectorAll('.mat-row').forEach(el=>el.classList.remove('on'));
