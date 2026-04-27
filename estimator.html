@@ -700,7 +700,7 @@ function calcExteriorPrice(){
   // Columns
   const columns=gfe('extColumns');
   if(columns>0) base+=columns*100*cond;
-  if(base<600) base=600;
+  if(base<572) base=572;
   const mid=Math.round(base*1.05/50)*50;
   return{low:Math.round(mid*0.90/50)*50,high:Math.round(mid*1.20/50)*50,mid};
 }
@@ -738,8 +738,10 @@ async function submitExtAndShow(){
       body:JSON.stringify({
         name:name||'Website visitor',phone:ph,email,addr,
         type:'exterior',
-        elements:Array.from(extSel).join(', '),
-        surface:extS.surface,cond:extS.cond,storeys:extS.storeys,coat:extS.coat,
+        elements:extSel.size>0?Array.from(extSel).join(', '):'walls only',
+        surface:extS.surface,cond:extS.cond,
+        wash:extS.wash,
+        photos:photoStore.ext,photoCount:photoStore.ext.length,storeys:extS.storeys,coat:extS.coat,
         wallSqft:gfe('extWallSqft'),soffit:gfe('extSoffit'),fascia:gfe('extFascia'),
         gutters:gfe('extGutters'),downspouts:gfe('extDownspouts'),
         entryDoors:gfe('extEntryDoors'),garageDoors:gfe('extGarageDoors'),
