@@ -606,7 +606,12 @@ app.get("/jobber/callback", async (req, res) => {
 
 // Refresh access token when expired
 async function getValidToken() {
-  if (jobberTokens.access_token && Date.now() < jobberTokens.expires_at - 60000) {
+  // If we have a valid non-expired token, use it
+  if (jobberTokens.access_token && jobberTokens.expires_at && Date.now() < jobberTokens.expires_at - 60000) {
+    return jobberTokens.access_token;
+  }
+  // If access_token exists but no expires_at set (loaded from env), use it optimistically
+  if (jobberTokens.access_token && !jobberTokens.expires_at) {
     return jobberTokens.access_token;
   }
   if (!jobberTokens.refresh_token) return null;
@@ -642,16 +647,27 @@ async function jobberQuery(query, variables = {}) {
     headers: {
       "Content-Type":  "application/json",
       "Authorization": `Bearer ${token}`,
-      "X-JOBBER-GRAPHQL-VERSION": "2026-04-13",
+      "X-JOBBER-GRAPHQL-VERSION": "2023-11-15",
     },
     body: JSON.stringify({ query, variables }),
   });
+
+  // Check for auth failure first
+  if (resp.status === 401) {
+    throw new Error("Jobber not connected. Visit /jobber/connect first.");
+  }
+  if (resp.status === 403) {
+    throw new Error("Jobber access denied. Reconnect at /jobber/connect.");
+  }
 
   const text = await resp.text();
   try {
     return JSON.parse(text);
   } catch (e) {
-    console.error("Jobber non-JSON response:", text.substring(0, 200));
+    console.error("Jobber non-JSON response (status " + resp.status + "):", text.substring(0, 300));
+    if (text.toLowerCase().includes("token") || text.toLowerCase().includes("auth") || text.toLowerCase().includes("provid")) {
+      throw new Error("Jobber not connected. Visit /jobber/connect first.");
+    }
     throw new Error("Jobber returned an unexpected response. Token may be expired — visit /jobber/connect to reconnect.");
   }
 }
