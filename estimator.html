@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ten Bell Painting — Get an Estimate</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
@@ -539,12 +539,39 @@ function goScreen(n){
     }
   }
   window.scrollTo(0,0);
+  postHeightToParent();
 }
 function showSpin(){
   document.querySelectorAll('.screen,.spin').forEach(s=>s.classList.remove('active'));
   document.getElementById('spinner').classList.add('active');
   document.getElementById('pf').style.width='95%';
+  postHeightToParent();
 }
+
+/* ── Iframe height auto-resize: tells parent (Wix) the document height
+   so the iframe can grow/shrink to fit. Eliminates double-scroll on mobile. */
+let __lastH=0;
+function postHeightToParent(){
+  try{
+    const h=Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight
+    );
+    if(Math.abs(h-__lastH)<4) return;
+    __lastH=h;
+    if(window.parent&&window.parent!==window){
+      window.parent.postMessage({type:'tenbell-estimator-height',height:h},'*');
+    }
+  }catch(e){}
+}
+window.addEventListener('load',()=>{postHeightToParent();setTimeout(postHeightToParent,300);setTimeout(postHeightToParent,1000);});
+window.addEventListener('resize',postHeightToParent);
+if(window.ResizeObserver){
+  try{new ResizeObserver(postHeightToParent).observe(document.body);}catch(e){}
+}
+setInterval(postHeightToParent,1500);
 
 function adj(id,d){
   counts[id]=Math.max(0,counts[id]+d);

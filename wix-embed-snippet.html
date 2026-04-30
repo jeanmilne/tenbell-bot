@@ -1,0 +1,35 @@
+<!--
+  Ten Bell Painting — Wix HTML Embed for the Estimator
+  Paste this entire block into Wix:
+    Editor → Add Elements → Embed Code → Embed HTML → Custom Code
+  Set the Wix iframe element height to ~600px (it will auto-resize from there).
+-->
+<style>
+  html,body{margin:0;padding:0;background:#fff}
+  #tb-frame{display:block;border:0;width:100%;min-height:600px;transition:height .25s ease}
+</style>
+<iframe
+  id="tb-frame"
+  src="https://tenbell-bot.onrender.com/estimator"
+  title="Ten Bell Painting Estimator"
+  loading="lazy"
+  allow="clipboard-write"
+  referrerpolicy="no-referrer-when-downgrade"
+></iframe>
+<script>
+  (function(){
+    var frame=document.getElementById('tb-frame');
+    function setH(h){
+      if(!h||isNaN(h))return;
+      h=Math.max(400,Math.min(8000,h|0));
+      frame.style.height=h+'px';
+    }
+    window.addEventListener('message',function(e){
+      var d=e&&e.data;
+      if(!d||typeof d!=='object')return;
+      if(d.type==='tenbell-estimator-height'){setH(d.height);}
+    });
+    /* Fallback: if no message arrives in 4s, give it generous room */
+    setTimeout(function(){if(frame.clientHeight<=600)frame.style.height='1400px';},4000);
+  })();
+</script>
