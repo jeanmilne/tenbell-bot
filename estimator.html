@@ -807,8 +807,23 @@ function goNext(from){
   } else if(from===3){
     // Contact → validate phone → submit
     const ph=document.getElementById('cPhone').value.trim();
-    if(!ph){document.getElementById('phoneErr').style.display='block';return;}
-    document.getElementById('phoneErr').style.display='none';
+    const phoneDigits=ph.replace(/\D/g,'');
+    const phoneErr=document.getElementById('phoneErr');
+    if(!ph||phoneDigits.length<10){
+      phoneErr.textContent=ph?'Please enter a valid 10-digit phone number':'Phone number is required';
+      phoneErr.style.display='block';
+      return;
+    }
+    phoneErr.style.display='none';
+    // Email is optional but if provided must look valid
+    const em=document.getElementById('cEmail').value.trim();
+    if(em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){
+      let er=document.getElementById('emailErr');
+      if(!er){er=document.createElement('div');er.id='emailErr';er.className='err';document.getElementById('cEmail').parentNode.appendChild(er);}
+      er.textContent='Please check the email address';er.style.display='block';
+      return;
+    }
+    const er=document.getElementById('emailErr');if(er)er.style.display='none';
     submitAndShow();
   }
 }
@@ -875,8 +890,9 @@ async function submitAndShow(){
   ];
   document.getElementById('sumRows').innerHTML=rows.map(r=>`<div class="rrow"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');
 
+  let submitOk=true;
   try{
-    await fetch('https://tenbell-bot.onrender.com/website-lead',{
+    const resp=await fetch('https://tenbell-bot.onrender.com/website-lead',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         name:name||'Website visitor',phone,email,addr,
@@ -889,9 +905,20 @@ async function submitAndShow(){
         photos:photoStore.int,photoCount:photoStore.int.length
       })
     });
-  }catch(e){console.log('lead err',e);}
+    if(!resp.ok)submitOk=false;
+  }catch(e){submitOk=false;console.log('lead err',e);}
 
-  setTimeout(()=>goScreen(4),1600);
+  setTimeout(()=>{
+    goScreen(4);
+    if(!submitOk){
+      const note=document.createElement('div');
+      note.className='nbox';
+      note.style.cssText='background:#fff8e8;border-color:#f0c040;color:#7a5a00;margin-top:.75rem';
+      note.innerHTML='<strong>Heads up:</strong> we couldn\u2019t deliver your details automatically. Please call <strong>905-536-6799</strong> or email <strong>tenbellpainting@gmail.com</strong> with the estimate above so we can follow up.';
+      const r=document.getElementById('s4');
+      if(r){const sm=r.querySelector('.s-mid');(sm||r).insertBefore(note,(sm||r).firstChild);}
+    }
+  },1600);
 }
 
 // ── Photo storage ────────────────────────────────────────────────────────────
