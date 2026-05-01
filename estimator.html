@@ -376,7 +376,7 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
       <div class="ccard" data-val="yes"><div class="ck"></div><span class="ci">💧</span><div class="cl">Yes — needed</div><span class="cs">Surface needs a wash first</span></div>
       <div class="ccard" data-val="unsure"><div class="ck"></div><span class="ci">🤔</span><div class="cl">Not sure</div><span class="cs">We'll assess on-site</span></div>
     </div>
-    <div class="nbox">Nothing else to add? Tap Next to continue.</div>
+
   </div>
   <div class="s-bot">
     <div class="nav">
@@ -647,6 +647,13 @@ document.querySelectorAll('#surfaceGrid .ccard').forEach(el=>{
   });
 });
 // Condition cards (sExtB2)
+document.querySelectorAll('#washGrid .ccard').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('#washGrid .ccard').forEach(e=>e.classList.remove('on'));
+    el.classList.add('on');
+    extS.wash=el.dataset.val;
+  });
+});
 document.querySelectorAll('#extCondGrid .ccard').forEach(el=>{
   el.addEventListener('click',function(){
     document.querySelectorAll('#extCondGrid .ccard').forEach(e=>e.classList.remove('on'));
