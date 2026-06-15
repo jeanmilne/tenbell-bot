@@ -81,7 +81,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .share-btn{width:100%;padding:15px;font-size:15px;font-weight:600;border-radius:var(--radius);cursor:pointer;border:1.5px solid var(--border2);background:var(--bg2);color:var(--text);touch-action:manipulation;margin-top:8px;text-align:center}
 .share-btn:active{opacity:.8}
-.finish-opt{border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;cursor:pointer;user-select:none;touch-action:manipulation}
+.finish-opt{border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:6px;cursor:pointer;user-select:none;touch-action:manipulation}
 .finish-opt.on{border-color:var(--teal);background:var(--teal-lt)}
 .fo-top{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .fo-cb{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
@@ -117,6 +117,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .paint-card{border:2px solid var(--teal);border-radius:var(--radius-lg);padding:1rem 1.1rem;margin-bottom:1rem;background:var(--bg)}
 .paint-card-title{font-size:13px;font-weight:600;color:var(--teal-dk);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.875rem}
 .paint-card .fld input{background:var(--bg)}
+/* Per-room scope cards */
+.room-card{border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.1rem;margin-bottom:.875rem;background:var(--bg)}
+.room-card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.pill-lbl{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.375rem}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.5rem}
+.pill{padding:7px 13px;font-size:12px;font-weight:500;border:1.5px solid var(--border);border-radius:20px;background:var(--bg);color:var(--text);cursor:pointer;user-select:none;touch-action:manipulation}
+.pill.on{background:var(--teal);border-color:var(--teal);color:white;font-weight:600}
+.pill.coat-pill{font-size:11px;padding:6px 11px;border-color:var(--border2)}
+.pill.coat-pill.on{background:var(--teal-dk);border-color:var(--teal-dk);color:white}
+.apply-all-btn{font-size:11px;color:var(--teal-dk);background:none;border:1px solid var(--teal);border-radius:20px;padding:4px 10px;cursor:pointer;font-weight:500;white-space:nowrap;flex-shrink:0}
+.apply-all-btn:active{opacity:.7}
+/* Room dimension row in detailed mode */
+.meas-room-row{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:.75rem;margin-bottom:.5rem}
+.meas-room-label{font-size:12px;font-weight:600;color:var(--text);margin-bottom:.5rem}
+.meas-dim-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.meas-dim-row .fld{margin-bottom:0}
+.meas-dim-row label{font-size:10px}
+.meas-dim-row input{padding:8px 8px;font-size:14px}
+.meas-sqft-tag{font-size:11px;color:var(--teal-dk);font-weight:600;margin-top:4px;text-align:right}
+/* Saved room cards in room builder */
+.saved-room-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:.5rem;background:var(--bg);display:flex;align-items:flex-start;gap:10px}
+.saved-room-card .src-info{flex:1;min-width:0}
+.saved-room-card .src-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.saved-room-card .src-detail{font-size:11px;color:var(--text2);line-height:1.5}
+.saved-room-card .src-sqft{font-size:12px;font-weight:600;color:var(--teal-dk);margin-top:2px}
+.saved-room-card .src-actions{display:flex;gap:6px;flex-shrink:0}
+.src-btn{padding:5px 10px;font-size:11px;font-weight:600;border-radius:8px;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);color:var(--text2);touch-action:manipulation}
+.src-btn.edit{color:var(--teal-dk);border-color:var(--teal)}
+.src-btn.del{color:#e24b4a;border-color:#fca5a5}
+.src-btn:active{opacity:.7}
+/* Room card dimensions section */
+.room-dims{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:.75rem;padding:.625rem;background:var(--bg2);border-radius:var(--radius)}
+.room-dims .fld{margin-bottom:0}
+.room-dims label{font-size:10px}
+.room-dims input{padding:7px 8px;font-size:14px}
+.room-dims-calc{font-size:11px;color:var(--teal-dk);font-weight:600;margin-top:4px;text-align:right;grid-column:span 3}
 </style>
 </head>
 <body>
@@ -126,6 +162,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div><h1>Ten Bell Painting</h1><p>On-site quote tool</p></div>
 </div>
 <div class="prog"><div class="pd done" id="pd0"></div><div class="pd" id="pd1"></div><div class="pd" id="pd2"></div><div class="pd" id="pd3"></div><div class="pd" id="pd4"></div><div class="pd" id="pd5"></div></div>
+
+<!-- STEP 0: Job info -->
 <div class="step active" id="step0">
   <div class="slbl">Step 1 of 6 — Job info</div>
   <div class="stitle">Client details</div>
@@ -137,9 +175,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="stitle">Job type</div>
   <div class="tgrp">
-    <div class="tb on" data-grp="mode" data-val="interior">🏠 Interior</div>
-    <div class="tb" data-grp="mode" data-val="exterior">🏡 Exterior</div>
-    <div class="tb" data-grp="mode" data-val="mural">🎨 Mural</div>
+    <div class="tb on" data-grp="mode" data-val="interior">&#127968; Interior</div>
+    <div class="tb" data-grp="mode" data-val="exterior">&#127969; Exterior</div>
+    <div class="tb" data-grp="mode" data-val="mural">&#127912; Mural</div>
   </div>
   <div id="intTypeRow">
     <div class="fld"><label>Property type</label>
@@ -152,10 +190,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </select>
     </div>
   </div>
-  <div class="btnrow"><button class="btn pri" id="s0next">Next →</button></div>
+  <div class="btnrow"><button class="btn pri" id="s0next">Next &#8594;</button></div>
 </div>
+
+<!-- EXTERIOR A -->
 <div class="step" id="stepExtA">
-  <div class="slbl">Exterior — Step 2 of 6</div>
+  <div class="slbl">Exterior &#8212; Step 2 of 6</div>
   <div class="stitle">Main surface material</div>
   <div class="tgrp" id="extSurfGrp">
     <div class="tb on" data-grp="extSurf" data-val="vinyl">Vinyl / Aluminum</div>
@@ -167,7 +207,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tb" data-grp="extSurf" data-val="noWalls">Trim &amp; elements only</div>
   </div>
   <div class="stitle">Additional elements being painted</div>
-  <div class="note">Select all that apply — leave unselected if not included.</div>
+  <div class="note">Select all that apply &#8212; leave unselected if not included.</div>
   <div class="sdiv">Roof trim</div>
   <div class="chk" data-ext="soffit"><div class="cb"></div><span>Soffits</span><small>per sqft</small></div>
   <div class="chk" data-ext="fascia"><div class="cb"></div><span>Fascia</span><small>per lft</small></div>
@@ -187,23 +227,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="chk" data-ext="foundation"><div class="cb"></div><span>Foundation / parging</span><small>per sqft</small></div>
   <div class="chk" data-ext="retaining"><div class="cb"></div><span>Retaining wall</span><small>per sqft</small></div>
   <div class="btnrow">
-    <button class="btn bk" onclick="goStep(0)">← Back</button>
-    <button class="btn pri" onclick="goStep('ExtB')">Next →</button>
+    <button class="btn bk" onclick="goStep(0)">&#8592; Back</button>
+    <button class="btn pri" onclick="goStep('ExtB')">Next &#8594;</button>
   </div>
 </div>
+
+<!-- EXTERIOR B -->
 <div class="step" id="stepExtB">
-  <div class="slbl">Exterior — Step 3 of 6</div>
+  <div class="slbl">Exterior &#8212; Step 3 of 6</div>
   <div class="stitle">Surface condition</div>
   <div class="tgrp">
-    <div class="tb on" data-grp="extCond" data-val="good">✅ Good — ready to paint</div>
-    <div class="tb" data-grp="extCond" data-val="fair">⚠️ Fair — light peeling / chalking</div>
-    <div class="tb" data-grp="extCond" data-val="poor">🛠️ Poor — heavy peeling / bare wood</div>
+    <div class="tb on" data-grp="extCond" data-val="good">Good &#8212; ready to paint</div>
+    <div class="tb" data-grp="extCond" data-val="fair">Fair &#8212; light peeling</div>
+    <div class="tb" data-grp="extCond" data-val="poor">Poor &#8212; heavy peeling</div>
   </div>
   <div class="stitle">Number of storeys</div>
   <div class="tgrp">
     <div class="tb on" data-grp="extStoreys" data-val="1">1 storey</div>
     <div class="tb" data-grp="extStoreys" data-val="2">2 storeys (+20%)</div>
-    <div class="tb" data-grp="extStoreys" data-val="3">3 storeys / awkward (+35%)</div>
+    <div class="tb" data-grp="extStoreys" data-val="3">3 storeys (+35%)</div>
   </div>
   <div class="stitle">Color situation</div>
   <div class="tgrp">
@@ -214,8 +256,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="stitle">Power wash needed?</div>
   <div class="tgrp">
     <div class="tb on" data-grp="extWash" data-val="no">Not needed</div>
-    <div class="tb" data-grp="extWash" data-val="yes">Yes — needed (+$200–400)</div>
-    <div class="tb" data-grp="extWash" data-val="unsure">Unsure — assess on-site</div>
+    <div class="tb" data-grp="extWash" data-val="yes">Yes (+$200&#8211;400)</div>
+    <div class="tb" data-grp="extWash" data-val="unsure">Unsure &#8212; assess on-site</div>
   </div>
   <div class="stitle">Caulking / sealing needed?</div>
   <div class="tgrp">
@@ -224,18 +266,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tb" data-grp="extCaulk" data-val="extensive">Extensive (+$200)</div>
   </div>
   <div class="btnrow">
-    <button class="btn bk" onclick="goStep('ExtA')">← Back</button>
-    <button class="btn pri" onclick="goStep('ExtC')">Next →</button>
+    <button class="btn bk" onclick="goStep('ExtA')">&#8592; Back</button>
+    <button class="btn pri" onclick="goStep('ExtC')">Next &#8594;</button>
   </div>
 </div>
+
+<!-- EXTERIOR C -->
 <div class="step" id="stepExtC">
-  <div class="slbl">Exterior — Step 4 of 6</div>
+  <div class="slbl">Exterior &#8212; Step 4 of 6</div>
   <div class="stitle">Measurements</div>
-  <div class="note"><strong>Measure only what's being painted.</strong> Leave at 0 if not included in scope.</div>
+  <div class="note"><strong>Measure only what&#39;s being painted.</strong> Leave at 0 if not included.</div>
   <div class="sdiv">Main walls</div>
-  <div class="note"><strong>Vertical wall surface only</strong> — do not include soffits, fascia, or below-grade foundation.<br><br>Enter wall sqft directly if measured, or enter perimeter + height to auto-calculate.</div>
+  <div class="note"><strong>Vertical wall surface only.</strong> Enter wall sqft directly, or enter perimeter + height to auto-calculate.</div>
   <div class="r2">
-    <div class="fld"><label>Wall sqft (measured directly)</label><input type="number" min="0" id="extWallSqft" placeholder="0" value="0" oninput="autoCalcWall()"></div>
+    <div class="fld"><label>Wall sqft (direct)</label><input type="number" min="0" id="extWallSqft" placeholder="0" value="0" oninput="autoCalcWall()"></div>
     <div class="fld"><label>Wall height (ft)</label><input type="number" min="0" id="extWallHeight" placeholder="9" value="9" oninput="autoCalcWall()"></div>
     <div class="fld"><label>Perimeter (lft)</label><input type="number" min="0" id="extPerimeter" placeholder="e.g. 160" value="0" oninput="autoCalcWall()"></div>
     <div class="fld"><label>Calculated wall sqft</label><input type="number" min="0" id="extWallCalc" placeholder="auto" value="0" readonly style="background:#f7f8fa;color:#6b7280;font-weight:600"></div>
@@ -246,7 +290,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="fld"><label>Fascia (lft)</label><input type="number" id="extFasciaLft" value="0" min="0"></div>
     <div class="fld"><label>Gutters (lft)</label><input type="number" id="extGuttersLft" value="0" min="0"></div>
     <div class="fld"><label>Downspouts (lft)</label><input type="number" id="extDownspoutsLft" value="0" min="0"></div>
-    <div class="fld"><label>Windows / shutters (count)</label><input type="number" id="extWindowCount" value="0" min="0"></div>
+    <div class="fld"><label>Windows / shutters (#)</label><input type="number" id="extWindowCount" value="0" min="0"></div>
   </div>
   <div class="sdiv">Doors</div>
   <div class="r2">
@@ -260,7 +304,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="fld"><label>Fence (lft)</label><input type="number" id="extFenceLft" value="0" min="0"></div>
     <div class="fld"><label>Deck / porch floor (sqft)</label><input type="number" id="extDeckSqft" value="0" min="0"></div>
     <div class="fld"><label>Porch ceiling (sqft)</label><input type="number" id="extPorchCeilSqft" value="0" min="0"></div>
-    <div class="fld"><label>Columns / posts (count)</label><input type="number" id="extColumnCount" value="0" min="0"></div>
+    <div class="fld"><label>Columns / posts (#)</label><input type="number" id="extColumnCount" value="0" min="0"></div>
     <div class="fld"><label>Railing (lft)</label><input type="number" id="extRailingLft" value="0" min="0"></div>
     <div class="fld"><label>Pergola / gazebo (sqft)</label><input type="number" id="extPergolasSqft" value="0" min="0"></div>
     <div class="fld"><label>Foundation / parging (sqft)</label><input type="number" id="extFoundationSqft" value="0" min="0"></div>
@@ -269,120 +313,139 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="stitle">Notes</div>
   <div class="fld"><input type="text" id="extNotes" placeholder="e.g. rotted wood on south side" autocomplete="off"></div>
   <div class="btnrow">
-    <button class="btn bk" onclick="goStep('ExtB')">← Back</button>
-    <button class="btn pri" onclick="calcExterior()">Generate quote →</button>
+    <button class="btn bk" onclick="goStep('ExtB')">&#8592; Back</button>
+    <button class="btn pri" onclick="calcExterior()">Generate quote &#8594;</button>
   </div>
 </div>
+
+<!-- STEPS 1+2+3 COMBINED: Room builder -->
 <div class="step" id="step1">
-  <div class="slbl">Step 2 of 5 — Spaces</div>
-  <div class="stitle">Count each space being painted</div>
-  <div class="note"><strong>Difficulty premiums only.</strong> The sqft rate covers paint. These add a small amount for cutting and access complexity.</div>
-  <div class="sdiv">Living spaces</div>
-  <div class="sgrid">
-    <div class="sc"><label>Living / dining</label><input type="number" id="sLiving" value="0" min="0"><div class="ss">No premium</div></div>
-    <div class="sc"><label>Bedrooms</label><input type="number" id="sBed" value="0" min="0"><div class="ss">+$25 each</div></div>
-    <div class="sc"><label>Office / den</label><input type="number" id="sOffice" value="0" min="0"><div class="ss">+$25 each</div></div>
-    <div class="sc"><label>Hallways &amp; entries</label><input type="number" id="sHall" value="0" min="0"><div class="ss">+$50 each</div></div>
+  <div class="slbl">Step 2 of 4 &#8212; Rooms</div>
+  <div class="stitle">Add each space as you walk the job</div>
+  <div class="note"><strong>Tap + Add room</strong> for each space. Set scope, dimensions and coats right there. Edit or delete any room at any time.</div>
+
+  <!-- Saved rooms list -->
+  <div id="roomList"></div>
+
+  <!-- Running total -->
+  <div id="roomTotalBar" style="display:none;margin-bottom:.75rem;padding:.75rem 1rem;background:var(--teal-lt);border:1px solid rgba(115,199,170,.3);border-radius:var(--radius)">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:12px;color:var(--text2);font-weight:500">Total floor area</span>
+      <span style="font-size:17px;font-weight:700;color:var(--teal-dk)" id="roomTotalSqft">0 sqft</span>
+    </div>
   </div>
-  <div class="sdiv">Bathrooms</div>
-  <div class="sgrid">
-    <div class="sc"><label>Small / powder room</label><input type="number" id="sBathSm" value="0" min="0"><div class="ss">+$75 each</div></div>
-    <div class="sc"><label>Standard bathroom</label><input type="number" id="sBathMd" value="0" min="0"><div class="ss">+$125 each</div></div>
-    <div class="sc"><label>Large / ensuite</label><input type="number" id="sBathLg" value="0" min="0"><div class="ss">+$150 each</div></div>
+
+  <!-- Add room inline form -->
+  <div id="addRoomForm" style="display:none;background:var(--bg2);border:1.5px solid var(--teal);border-radius:var(--radius-lg);padding:1rem;margin-bottom:.875rem">
+    <div class="stitle" style="margin-top:0;margin-bottom:.75rem" id="addRoomFormTitle">New room</div>
+    <div class="pill-lbl">Room type</div>
+    <div class="pill-row" id="roomTypePicker" style="margin-bottom:.75rem">
+      <div class="pill" data-rtype="living">Living / dining</div>
+      <div class="pill" data-rtype="bed">Bedroom</div>
+      <div class="pill" data-rtype="office">Office / den</div>
+      <div class="pill" data-rtype="hall">Hallway</div>
+      <div class="pill" data-rtype="bathSm">Small bath</div>
+      <div class="pill" data-rtype="bathMd">Bathroom</div>
+      <div class="pill" data-rtype="bathLg">Ensuite</div>
+      <div class="pill" data-rtype="kitchen">Kitchen</div>
+      <div class="pill" data-rtype="laundry">Laundry</div>
+      <div class="pill" data-rtype="closet">Closet</div>
+      <div class="pill" data-rtype="stairSm">Stairwell</div>
+      <div class="pill" data-rtype="stairLg">Large stairwell</div>
+      <div class="pill" data-rtype="other">Other</div>
+    </div>
+    <div class="fld" id="customNameRow" style="display:none">
+      <label>Room name</label>
+      <input type="text" id="customRoomName" placeholder="e.g. Sunroom, Garage..." autocomplete="off">
+    </div>
+    <div class="pill-lbl">Dimensions</div>
+    <div class="r2" style="margin-bottom:.625rem">
+      <div class="fld" style="margin-bottom:0"><label>Length (ft)</label><input type="number" id="formL" min="0" step="0.5" placeholder="e.g. 14"></div>
+      <div class="fld" style="margin-bottom:0"><label>Width (ft)</label><input type="number" id="formW" min="0" step="0.5" placeholder="e.g. 12"></div>
+      <div class="fld" style="margin-bottom:0"><label>Ceiling ht (ft)</label><input type="number" id="formH" min="0" step="0.5" value="8"></div>
+      <div style="font-size:12px;color:var(--teal-dk);font-weight:600;padding-top:2px" id="formSqftCalc"></div>
+    </div>
+    <div class="pill-lbl">Surfaces</div>
+    <div class="pill-row" id="formScopePills" style="margin-bottom:.5rem">
+      <div class="pill on" data-fscope="walls">Walls</div>
+      <div class="pill" data-fscope="trim">Trim</div>
+      <div class="pill" data-fscope="doors">Doors</div>
+      <div class="pill" data-fscope="ceiling">Ceiling</div>
+    </div>
+    <div class="pill-lbl">Coats</div>
+    <div class="pill-row" id="formCoatPills" style="margin-bottom:.875rem">
+      <div class="pill coat-pill" data-fcoat="match">1 coat &#8212; match</div>
+      <div class="pill coat-pill on" data-fcoat="change">2 coats &#8212; change</div>
+      <div class="pill coat-pill" data-fcoat="major">3 coats &#8212; primer</div>
+    </div>
+    <div class="pill-lbl" style="margin-top:.25rem">Doors &amp; windows in this room</div>
+    <div class="r2" style="margin-bottom:.875rem">
+      <div class="fld" style="margin-bottom:0"><label>Doors (#)</label><input type="number" id="formDoors" min="0" value="0"></div>
+      <div class="fld" style="margin-bottom:0"><label>Small windows (#)</label><input type="number" id="formWinSm" min="0" value="0"></div>
+      <div class="fld" style="margin-bottom:0"><label>Medium windows (#)</label><input type="number" id="formWinMd" min="0" value="0"></div>
+      <div class="fld" style="margin-bottom:0"><label>Large windows (#)</label><input type="number" id="formWinLg" min="0" value="0"></div>
+    </div>
+    <div class="btnrow" style="margin-top:.25rem">
+      <button class="btn bk" id="cancelRoomBtn" style="flex:0 0 80px">Cancel</button>
+      <button class="btn pri" id="saveRoomBtn">Save room</button>
+    </div>
   </div>
-  <div class="sdiv">Other spaces</div>
-  <div class="sgrid">
-    <div class="sc"><label>Kitchen</label><input type="number" id="sKitchen" value="0" min="0"><div class="ss">+$75 each</div></div>
-    <div class="sc"><label>Laundry room</label><input type="number" id="sLaundry" value="0" min="0"><div class="ss">+$50 each</div></div>
-    <div class="sc"><label>Closets</label><input type="number" id="sCloset" value="0" min="0"><div class="ss">+$50–100 by count</div></div>
-  </div>
-  <div class="sdiv">Stairwells</div>
-  <div class="sgrid">
-    <div class="sc"><label>Standard stairwell</label><input type="number" id="sStairSm" value="0" min="0"><div class="ss">+$200 flat</div></div>
-    <div class="sc"><label>Large / open stairwell</label><input type="number" id="sStairLg" value="0" min="0"><div class="ss">+$350 flat</div></div>
-  </div>
-  <div class="btnrow">
-    <button class="btn bk" id="s1back">← Back</button>
-    <button class="btn pri" id="s1next">Next →</button>
-  </div>
-</div>
-<div class="step" id="step2">
-  <div class="slbl">Step 3 of 5 — Measurements</div>
-  <div class="stitle">Exact measurements</div>
-  <div class="note"><strong>Measure total floor area</strong> — length × width of each room added together.</div>
-  <div class="r2">
-    <div class="fld"><label>Total floor area (sqft)</label><input type="number" min="0" id="floorSqft" placeholder="e.g. 750"></div>
-    <div class="fld"><label>Ceiling height (ft)</label><input type="number" min="0" id="ceilHeight" value="8"></div>
-  </div>
-  <div class="fld"><label>Number of doors being painted</label><input type="number" min="0" id="numDoors" value="0"></div>
-  <div class="stitle">Windows being painted (trim only)</div>
-  <div class="note" style="margin-bottom:.75rem"><strong>Count windows by size</strong> — used to calculate trim linear footage accurately.</div>
-  <div class="sgrid">
-    <div class="sc"><label>Small windows</label><input type="number" id="winSm" value="0" min="0"><div class="ss">~10ft trim each</div></div>
-    <div class="sc"><label>Medium windows</label><input type="number" id="winMd" value="0" min="0"><div class="ss">~14ft trim each</div></div>
-    <div class="sc"><label>Large windows</label><input type="number" id="winLg" value="0" min="0"><div class="ss">~18ft trim each</div></div>
-  </div>
-  <div class="stitle">Occupied / furnished?</div>
-  <div class="tgrp">
-    <div class="tb on" data-grp="occ" data-val="no">No — vacant</div>
-    <div class="tb" data-grp="occ" data-val="yes">Yes — furniture present (+$75)</div>
-  </div>
-  <div class="btnrow">
-    <button class="btn bk" id="s2back">← Back</button>
-    <button class="btn pri" id="s2next">Next →</button>
-  </div>
-</div>
-<div class="step" id="step3">
-  <div class="slbl">Step 4 of 5 — Scope &amp; condition</div>
-  <div class="stitle">What's being painted?</div>
-  <div class="chk on" data-scope="walls"><div class="cb"></div><span>Walls</span><small>base rate</small></div>
-  <div class="chk" data-scope="trim"><div class="cb"></div><span>Trim &amp; baseboards</span><small>$2/linear ft</small></div>
-  <div class="chk" data-scope="doors"><div class="cb"></div><span>Doors</span><small>$100 each</small></div>
-  <div class="chk" data-scope="ceiling"><div class="cb"></div><span>Ceilings</span><small>tiered by sqft</small></div>
-  <div class="stitle">Color situation</div>
-  <div class="tgrp">
-    <div class="tb on" data-grp="coat" data-val="match">Same color (1 coat)</div>
-    <div class="tb" data-grp="coat" data-val="change">Color change (2 coats)</div>
-    <div class="tb" data-grp="coat" data-val="major">Major change / primer (3 coats)</div>
-  </div>
-  <div class="stitle">Wall condition</div>
+
+  <!-- Add room trigger -->
+  <button class="btn pri" id="addRoomBtn" style="width:100%;margin-bottom:1.25rem">+ Add room</button>
+
+  <!-- Job-wide settings -->
+  <div class="sdiv">Overall condition</div>
   <div class="tgrp">
     <div class="tb on" data-grp="cond" data-val="good">Good</div>
     <div class="tb" data-grp="cond" data-val="minor">Minor repairs</div>
     <div class="tb" data-grp="cond" data-val="heavy">Heavy repairs</div>
   </div>
-  <div class="stitle">Wallpaper present?</div>
+  <div class="sdiv">Occupied / furnished?</div>
+  <div class="tgrp">
+    <div class="tb on" data-grp="occ" data-val="no">No &#8212; vacant</div>
+    <div class="tb" data-grp="occ" data-val="yes">Yes &#8212; furniture present (+$75)</div>
+  </div>
+  <div class="sdiv">Wallpaper present?</div>
   <div class="tgrp">
     <div class="tb on" data-grp="wp" data-val="no">No</div>
-    <div class="tb" data-grp="wp" data-val="yes">Yes — needs removal</div>
+    <div class="tb" data-grp="wp" data-val="yes">Yes &#8212; needs removal</div>
   </div>
   <div class="btnrow">
-    <button class="btn bk" id="s3back">← Back</button>
-    <button class="btn pri" id="s3next">Next →</button>
+    <button class="btn bk" id="s1back">&#8592; Back</button>
+    <button class="btn pri" id="s1next">Next &#8594;</button>
   </div>
 </div>
+
+<!-- step2 and step3 kept as empty stubs for nav compatibility -->
+<div class="step" id="step2"></div>
+<div class="step" id="step3"></div>
+
+<!-- STEP 4: Checklist -->
 <div class="step" id="step4">
-  <div class="slbl">Step 5 of 6 — Checklist</div>
+  <div class="slbl">Step 5 of 6 &#8212; Checklist</div>
   <div class="stitle">Site walkthrough checklist</div>
-  <div class="crow"><div class="cb"></div><div><div class="ct">Walls clean — no grease, mold, or water damage</div></div></div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">Walls clean &#8212; no grease, mold, or water damage</div></div></div>
   <div class="crow"><div class="cb"></div><div><div class="ct">Access confirmed</div><div class="cs">Elevator booked, parking arranged</div></div></div>
   <div class="crow"><div class="cb"></div><div><div class="ct">Space is or will be vacant</div><div class="cs">If occupied, noted in step 3</div></div></div>
   <div class="crow"><div class="cb"></div><div><div class="ct">No wallpaper to remove</div><div class="cs">Removal is a separate quote</div></div></div>
   <div class="crow"><div class="cb"></div><div><div class="ct">No surprise repairs needed</div><div class="cs">Matches what client described</div></div></div>
   <div class="crow"><div class="cb"></div><div><div class="ct">Trim and baseboards in good shape</div></div></div>
   <div class="crow"><div class="cb"></div><div><div class="ct">Paint color and sheen confirmed</div><div class="cs">Flat, eggshell, or semi-gloss agreed on</div></div></div>
-  <div class="crow"><div class="cb"></div><div><div class="ct">Scope confirmed with client</div><div class="cs">Client knows what is and isn't included</div></div></div>
+  <div class="crow"><div class="cb"></div><div><div class="ct">Scope confirmed with client</div><div class="cs">Client knows what is and isn&#39;t included</div></div></div>
   <div class="crow"><div class="cb"></div><div><div class="ct">Timeline agreed</div><div class="cs">Start date and expected duration discussed</div></div></div>
-  <div class="fld" style="margin-top:1rem"><label>Additional notes</label>
+  <div class="fld"><label>Additional notes</label>
     <input type="text" id="extraNotes" placeholder="Anything else to flag for this job" autocomplete="off">
   </div>
   <div class="btnrow">
-    <button class="btn bk" id="s4back">← Back</button>
-    <button class="btn pri" id="s4next">Next →</button>
+    <button class="btn bk" id="s4back">&#8592; Back</button>
+    <button class="btn pri" id="s4next">Next &#8594;</button>
   </div>
 </div>
+
+<!-- STEP 5: Paint & materials -->
 <div class="step" id="step5">
-  <div class="slbl">Step 6 of 6 — Paint &amp; materials</div>
+  <div class="slbl">Step 6 of 6 &#8212; Paint &amp; materials</div>
   <div id="paintCardsArea"></div>
   <div class="stitle">Drywall &amp; prep materials needed</div>
   <div id="matsArea">
@@ -395,29 +458,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="mat-row" data-mat="putty"><div class="mat-cb"></div><div><div class="ct">Spackling / wall putty</div><div class="cs">Small nail holes and minor surface repairs</div></div></div>
     <div class="mat-row" data-mat="corner-bead"><div class="mat-cb"></div><div><div class="ct">Corner bead</div><div class="cs">Protecting and finishing drywall corners</div></div></div>
     <div class="mat-row" data-mat="drop-sheets"><div class="mat-cb"></div><div><div class="ct">Drop sheets / plastic sheeting</div><div class="cs">Protecting floors and furniture</div></div></div>
-    <div class="mat-row" data-mat="painters-tape"><div class="mat-cb"></div><div><div class="ct">Painter's tape</div><div class="cs">Masking trim, edges, and fixtures</div></div></div>
+    <div class="mat-row" data-mat="painters-tape"><div class="mat-cb"></div><div><div class="ct">Painter&#39;s tape</div><div class="cs">Masking trim, edges, and fixtures</div></div></div>
   </div>
   <div class="btnrow" style="margin-top:1.5rem">
-    <button class="btn bk" id="s5back">← Back</button>
-    <button class="btn pri" id="calcBtn">Generate quote →</button>
+    <button class="btn bk" id="s5back">&#8592; Back</button>
+    <button class="btn pri" id="calcBtn">Generate quote &#8594;</button>
   </div>
 </div>
+
+<!-- MURAL -->
 <div class="step" id="stepMural">
   <div class="slbl">Mural quote</div>
   <div class="stitle">Wall &amp; surface details</div>
   <div class="tgrp" id="muralSurfGrp">
-    <div class="tb on" data-grp="muralSurf" data-val="drywall">⬜ Drywall</div>
-    <div class="tb" data-grp="muralSurf" data-val="brick">🧱 Brick / Concrete</div>
-    <div class="tb" data-grp="muralSurf" data-val="wood">🪵 Wood</div>
-    <div class="tb" data-grp="muralSurf" data-val="plaster">🏚️ Plaster / Stucco</div>
-    <div class="tb" data-grp="muralSurf" data-val="glass">🪟 Glass</div>
-    <div class="tb" data-grp="muralSurf" data-val="other">❓ Other</div>
+    <div class="tb on" data-grp="muralSurf" data-val="drywall">Drywall</div>
+    <div class="tb" data-grp="muralSurf" data-val="brick">Brick / Concrete</div>
+    <div class="tb" data-grp="muralSurf" data-val="wood">Wood</div>
+    <div class="tb" data-grp="muralSurf" data-val="plaster">Plaster / Stucco</div>
+    <div class="tb" data-grp="muralSurf" data-val="glass">Glass</div>
+    <div class="tb" data-grp="muralSurf" data-val="other">Other</div>
   </div>
   <div class="stitle">Surface condition</div>
   <div class="tgrp">
-    <div class="tb on" data-grp="muralCond" data-val="good">✅ Good — ready to paint</div>
-    <div class="tb" data-grp="muralCond" data-val="prep">🔧 Needs prep / patching</div>
-    <div class="tb" data-grp="muralCond" data-val="rough">🛠️ Rough / heavily textured</div>
+    <div class="tb on" data-grp="muralCond" data-val="good">Good &#8212; ready to paint</div>
+    <div class="tb" data-grp="muralCond" data-val="prep">Needs prep / patching</div>
+    <div class="tb" data-grp="muralCond" data-val="rough">Rough / heavily textured</div>
   </div>
   <div class="stitle">Wall dimensions</div>
   <div class="r2">
@@ -426,20 +491,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="fld"><label>Wall sqft (auto)</label><input type="number" min="0" id="muralSqftApp" placeholder="auto" readonly style="background:var(--bg2);color:var(--text2);font-weight:600"></div>
   </div>
   <div class="stitle">Pricing</div>
-  <div class="note">Set your rate for this job. Use sqft rate for standard murals or flat rate for unique/complex projects.</div>
+  <div class="note">Set your rate for this job.</div>
   <div class="tgrp">
     <div class="tb on" data-grp="muralPriceMode" data-val="sqft">Price per sqft</div>
     <div class="tb" data-grp="muralPriceMode" data-val="flat">Flat rate</div>
   </div>
   <div id="muralSqftRow">
     <div class="r2">
-      <div class="fld"><label>Rate per sqft ($)</label><input type="number" id="muralRate" placeholder="8–12" value="10" step="0.5" min="0"></div>
+      <div class="fld"><label>Rate per sqft ($)</label><input type="number" id="muralRate" placeholder="8&#8211;12" value="10" step="0.5" min="0"></div>
       <div class="fld"><label>Complexity multiplier</label>
         <select id="muralComplexity">
-          <option value="1.0">Simple — solid colors, basic shapes (×1.0)</option>
-          <option value="1.25">Moderate — some detail, shading (×1.25)</option>
-          <option value="1.5">Detailed — fine detail, gradients (×1.5)</option>
-          <option value="2.0">Complex — photorealistic, intricate (×2.0)</option>
+          <option value="1.0">Simple &#8212; solid colors (&#215;1.0)</option>
+          <option value="1.25">Moderate &#8212; some detail (&#215;1.25)</option>
+          <option value="1.5">Detailed &#8212; fine detail (&#215;1.5)</option>
+          <option value="2.0">Complex &#8212; photorealistic (&#215;2.0)</option>
         </select>
       </div>
     </div>
@@ -455,7 +520,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <option value="0">No primer needed</option>
         <option value="75">Light primer (+$75)</option>
         <option value="150">Full prime coat (+$150)</option>
-        <option value="250">Masonry/specialty primer (+$250)</option>
+        <option value="250">Masonry/specialty (+$250)</option>
       </select>
     </div>
   </div>
@@ -465,12 +530,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="tb" data-grp="muralPrep" data-val="light">Light prep (+$75)</div>
     <div class="tb" data-grp="muralPrep" data-val="heavy">Heavy prep (+$200)</div>
   </div>
-  <div class="fld"><label>Notes / description</label><input type="text" id="muralNotes" placeholder="e.g. abstract floral, geometric, logo, outdoor scene..." autocomplete="off"></div>
+  <div class="fld"><label>Notes / description</label><input type="text" id="muralNotes" placeholder="e.g. abstract floral, geometric, logo..." autocomplete="off"></div>
   <div class="btnrow">
-    <button class="btn bk" onclick="goStep(0)">← Back</button>
-    <button class="btn pri" onclick="calcMural()">Generate quote →</button>
+    <button class="btn bk" onclick="goStep(0)">&#8592; Back</button>
+    <button class="btn pri" onclick="calcMural()">Generate quote &#8594;</button>
   </div>
 </div>
+
+<!-- STEP 6: Results -->
 <div class="step" id="step6">
   <div class="slbl">Your quote</div>
   <div id="warnBox" class="warn" style="display:none"></div>
@@ -483,97 +550,666 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="card"><div class="clbl">Pricing breakdown</div><div id="bdArea"></div></div>
   <div class="card"><div class="clbl">Your margin</div><div class="mg" id="mgArea"></div></div>
   <div class="card"><div class="clbl">Materials needed</div><div id="matArea"></div></div>
-  <button class="share-btn" id="shareBtn">📋 Copy quote summary</button>
-  <button class="share-btn" id="jobberBtn" style="margin-top:8px;background:#73C7AA;color:white;border-color:#73C7AA">Save to Jobber →</button>
+  <button class="share-btn" id="shareBtn">&#128203; Copy quote summary</button>
+  <button class="share-btn" id="jobberBtn" style="margin-top:8px;background:#73C7AA;color:white;border-color:#73C7AA">Save to Jobber &#8594;</button>
   <div id="jobberStatus" style="font-size:13px;text-align:center;margin-top:8px;color:#6b7280"></div>
   <div class="btnrow" style="margin-top:1rem">
-    <button class="btn bk" id="s6back">← Adjust</button>
-    <button class="btn pri" id="newBtn">New quote →</button>
+    <button class="btn bk" id="s6back">&#8592; Adjust</button>
+    <button class="btn pri" id="newBtn">New quote &#8594;</button>
   </div>
 </div>
 </div>
+
 <script>
-const S={coat:'match',cond:'good',occ:'no',wp:'no',scope:['walls'],mats:[],paintData:{},mode:'interior'};
+// ============================================================
+// TEN BELL PAINTING -- QUOTE TOOL v3
+// Room-by-room entry: add each space on site with scope + dims
+// Pricing: $0.66/actual wall sqft per coat
+// Coat factors: 1-coat x1.00, 2-coat x1.85, 3-coat x2.70
+// ============================================================
+
+const S={coat:'change',cond:'good',occ:'no',wp:'no',scope:['walls'],mats:[],paintData:{},mode:'interior'};
 const EXT={surf:'vinyl',cond:'good',storeys:'1',coat:'match',wash:'no',caulk:'no',elements:new Set()};
 const MURAL_APP={surf:'drywall',cond:'good',priceMode:'sqft',prep:'none'};
-// Paint price per gallon by tier (Sherwin-Williams approx CAD)
 const PAINT_PRICE={good:45,better:60,best:80};
-function goStep(n){
-  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
-  if(typeof n==='number'){
-    document.getElementById('step'+n)?.classList.add('active');
-    for(let i=0;i<6;i++){const d=document.getElementById('pd'+i);if(d)d.classList.toggle('done',i<=Math.min(n,5));}
+
+const WALL_RATE = 0.66;   // per actual wall sqft per coat
+const CEIL_RATE = 0.45;   // per floor sqft per coat
+const BASE_RATE = 1.10;   // per lft baseboards per coat
+const WIN_RATE  = 1.75;   // per lft window casings per coat
+const DOOR_FRAME_RATE = 2.00; // per lft door casings per coat
+const DOOR_RATE = 90;     // per door (slab face) per coat factor
+const COAT_FACTOR = {match:1.25, change:1.85, major:2.55}; // 1-coat includes fixed setup cost; 2-coat is standard baseline; 3-coat slightly less aggressive
+
+const ROOM_TYPE_LABELS = {
+  living:'Living / dining', bed:'Bedroom', office:'Office / den', hall:'Hallway',
+  bathSm:'Small bath', bathMd:'Bathroom', bathLg:'Ensuite', kitchen:'Kitchen',
+  laundry:'Laundry', closet:'Closet', stairSm:'Stairwell', stairLg:'Large stairwell', other:'Room'
+};
+
+// rooms array: [{id, type, label, L, W, H, scope:Set, coat}]
+let rooms = [];
+let editingRoomId = null;
+let formScope = new Set(['walls']);
+let formCoat = 'change';
+let formType = null;
+let nextRoomId = 1;
+
+// ============================================================
+// ROOM BUILDER UI
+// ============================================================
+
+function openAddForm(editId) {
+  editingRoomId = editId || null;
+  const form = document.getElementById('addRoomForm');
+  const title = document.getElementById('addRoomFormTitle');
+  const addBtn = document.getElementById('addRoomBtn');
+
+  if (editId) {
+    const room = rooms.find(r => r.id === editId);
+    if (!room) return;
+    title.textContent = 'Edit room';
+    // Pre-fill type
+    formType = room.type;
+    document.querySelectorAll('#roomTypePicker .pill').forEach(p => {
+      p.classList.toggle('on', p.dataset.rtype === room.type);
+    });
+    document.getElementById('customNameRow').style.display = room.type === 'other' ? '' : 'none';
+    document.getElementById('customRoomName').value = room.type === 'other' ? room.label : '';
+    // Pre-fill dims
+    document.getElementById('formL').value = room.L || '';
+    document.getElementById('formW').value = room.W || '';
+    document.getElementById('formH').value = room.H || 8;
+    document.getElementById('formDoors').value = room.doors || 0;
+    document.getElementById('formWinSm').value = room.winSm || 0;
+    document.getElementById('formWinMd').value = room.winMd || 0;
+    document.getElementById('formWinLg').value = room.winLg || 0;
+    updateFormSqft();
+    // Pre-fill scope
+    formScope = new Set(room.scope);
+    document.querySelectorAll('#formScopePills .pill').forEach(p => {
+      p.classList.toggle('on', formScope.has(p.dataset.fscope));
+    });
+    // Pre-fill coat
+    formCoat = room.coat;
+    document.querySelectorAll('#formCoatPills .pill').forEach(p => {
+      p.classList.toggle('on', p.dataset.fcoat === formCoat);
+    });
   } else {
-    document.getElementById('step'+n)?.classList.add('active');
-    const stepPcts={ExtA:1,ExtB:2,ExtC:3,Mural:2};
-    const prog=stepPcts[n]||0;
-    for(let i=0;i<6;i++){const d=document.getElementById('pd'+i);if(d)d.classList.toggle('done',i<=prog);}
+    title.textContent = 'New room';
+    formType = null;
+    formScope = new Set(['walls']);
+    formCoat = 'change';
+    document.querySelectorAll('#roomTypePicker .pill').forEach(p => p.classList.remove('on'));
+    document.getElementById('customNameRow').style.display = 'none';
+    document.getElementById('customRoomName').value = '';
+    document.getElementById('formL').value = '';
+    document.getElementById('formW').value = '';
+    document.getElementById('formH').value = 8;
+    document.getElementById('formDoors').value = 0;
+    document.getElementById('formWinSm').value = 0;
+    document.getElementById('formWinMd').value = 0;
+    document.getElementById('formWinLg').value = 0;
+    document.getElementById('formSqftCalc').textContent = '';
+    document.querySelectorAll('#formScopePills .pill').forEach(p => {
+      p.classList.toggle('on', p.dataset.fscope === 'walls');
+    });
+    document.querySelectorAll('#formCoatPills .pill').forEach(p => {
+      p.classList.toggle('on', p.dataset.fcoat === 'change');
+    });
   }
-  window.scrollTo(0,0);
+
+  form.style.display = '';
+  addBtn.style.display = 'none';
+  window.scrollTo(0, form.offsetTop - 20);
 }
+
+function closeForm() {
+  document.getElementById('addRoomForm').style.display = 'none';
+  document.getElementById('addRoomBtn').style.display = '';
+  editingRoomId = null;
+}
+
+function updateFormSqft() {
+  const L = parseFloat(document.getElementById('formL').value) || 0;
+  const W = parseFloat(document.getElementById('formW').value) || 0;
+  const el = document.getElementById('formSqftCalc');
+  if (el) el.textContent = L && W ? Math.round(L * W) + ' sqft' : '';
+}
+
+function saveRoom() {
+  if (!formType) { alert('Please select a room type.'); return; }
+  const L = parseFloat(document.getElementById('formL').value) || 0;
+  const W = parseFloat(document.getElementById('formW').value) || 0;
+  const H = parseFloat(document.getElementById('formH').value) || 8;
+  let label = ROOM_TYPE_LABELS[formType] || formType;
+  if (formType === 'other') {
+    const custom = document.getElementById('customRoomName').value.trim();
+    if (custom) label = custom;
+  }
+  // Make label unique if same type exists
+  const sameType = rooms.filter(r => r.type === formType && r.id !== editingRoomId);
+  if (sameType.length > 0 && formType !== 'other') {
+    label = label + ' ' + (sameType.length + 1);
+  }
+
+  const doors = parseInt(document.getElementById('formDoors').value) || 0;
+  const winSm = parseInt(document.getElementById('formWinSm').value) || 0;
+  const winMd = parseInt(document.getElementById('formWinMd').value) || 0;
+  const winLg = parseInt(document.getElementById('formWinLg').value) || 0;
+  if (editingRoomId) {
+    const idx = rooms.findIndex(r => r.id === editingRoomId);
+    if (idx > -1) {
+      rooms[idx] = {id: editingRoomId, type: formType, label, L, W, H, doors, winSm, winMd, winLg, scope: new Set(formScope), coat: formCoat};
+    }
+  } else {
+    rooms.push({id: nextRoomId++, type: formType, label, L, W, H, doors, winSm, winMd, winLg, scope: new Set(formScope), coat: formCoat});
+  }
+  closeForm();
+  renderRoomList();
+}
+
+function deleteRoom(id) {
+  rooms = rooms.filter(r => r.id !== id);
+  renderRoomList();
+}
+
+function renderRoomList() {
+  const list = document.getElementById('roomList');
+  const totalBar = document.getElementById('roomTotalBar');
+  list.innerHTML = '';
+
+  if (rooms.length === 0) {
+    totalBar.style.display = 'none';
+    return;
+  }
+
+  let totalFloor = 0;
+  rooms.forEach(room => {
+    const sqft = room.L && room.W ? Math.round(room.L * room.W) : 0;
+    totalFloor += sqft;
+    const scopeStr = Array.from(room.scope).join(', ');
+    const coatStr = room.coat === 'major' ? '3 coats' : room.coat === 'change' ? '2 coats' : '1 coat';
+    const dimStr = room.L && room.W ? room.L + 'x' + room.W + 'ft H:' + room.H + 'ft' : 'No dimensions';
+    const doorsWinParts = [];
+    if (room.doors) doorsWinParts.push(room.doors + ' door' + (room.doors > 1 ? 's' : ''));
+    if (room.winSm) doorsWinParts.push(room.winSm + ' sm win');
+    if (room.winMd) doorsWinParts.push(room.winMd + ' md win');
+    if (room.winLg) doorsWinParts.push(room.winLg + ' lg win');
+    const doorsWinStr = doorsWinParts.length ? ' | ' + doorsWinParts.join(', ') : '';
+
+    const card = document.createElement('div');
+    card.className = 'saved-room-card';
+    card.innerHTML =
+      '<div class="src-info">' +
+        '<div class="src-title">' + room.label + '</div>' +
+        '<div class="src-detail">' + scopeStr + ' -- ' + coatStr + '</div>' +
+        '<div class="src-sqft">' + dimStr + (sqft ? ' (' + sqft + ' sqft)' : '') + doorsWinStr + '</div>' +
+      '</div>' +
+      '<div class="src-actions">' +
+        '<button class="src-btn edit" data-id="' + room.id + '">Edit</button>' +
+        '<button class="src-btn del" data-id="' + room.id + '">Delete</button>' +
+      '</div>';
+    list.appendChild(card);
+
+    card.querySelector('.src-btn.edit').addEventListener('click', function() {
+      openAddForm(parseInt(this.dataset.id));
+    });
+    card.querySelector('.src-btn.del').addEventListener('click', function() {
+      deleteRoom(parseInt(this.dataset.id));
+    });
+  });
+
+  totalBar.style.display = '';
+  document.getElementById('roomTotalSqft').textContent = totalFloor + ' sqft';
+}
+
+// Form event listeners
+document.getElementById('addRoomBtn').addEventListener('click', () => openAddForm(null));
+document.getElementById('cancelRoomBtn').addEventListener('click', closeForm);
+document.getElementById('saveRoomBtn').addEventListener('click', saveRoom);
+
+['formL','formW','formH'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateFormSqft);
+});
+
+document.querySelectorAll('#roomTypePicker .pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    document.querySelectorAll('#roomTypePicker .pill').forEach(p => p.classList.remove('on'));
+    this.classList.add('on');
+    formType = this.dataset.rtype;
+    document.getElementById('customNameRow').style.display = formType === 'other' ? '' : 'none';
+  });
+});
+
+document.querySelectorAll('#formScopePills .pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    const sc = this.dataset.fscope;
+    if (formScope.has(sc)) {
+      if (formScope.size > 1) { formScope.delete(sc); this.classList.remove('on'); }
+    } else {
+      formScope.add(sc); this.classList.add('on');
+    }
+  });
+});
+
+document.querySelectorAll('#formCoatPills .pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    document.querySelectorAll('#formCoatPills .pill').forEach(p => p.classList.remove('on'));
+    this.classList.add('on');
+    formCoat = this.dataset.fcoat;
+  });
+});
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+
+function goStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  if (typeof n === 'number') {
+    document.getElementById('step' + n)?.classList.add('active');
+    for (let i = 0; i < 6; i++) {
+      const d = document.getElementById('pd' + i);
+      if (d) d.classList.toggle('done', i <= Math.min(n, 5));
+    }
+  } else {
+    document.getElementById('step' + n)?.classList.add('active');
+    const prog = {ExtA:1, ExtB:2, ExtC:3, Mural:2}[n] || 0;
+    for (let i = 0; i < 6; i++) {
+      const d = document.getElementById('pd' + i);
+      if (d) d.classList.toggle('done', i <= prog);
+    }
+  }
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll('.tb[data-grp="mode"]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tb[data-grp="mode"]').forEach(b => b.classList.remove('on'));
+    this.classList.add('on');
+    S.mode = this.dataset.val;
+    document.getElementById('intTypeRow').style.display = S.mode === 'interior' ? '' : 'none';
+  });
+});
+
+document.getElementById('s0next').addEventListener('click', () => {
+  if (S.mode === 'exterior') goStep('ExtA');
+  else if (S.mode === 'mural') goStep('Mural');
+  else goStep(1);
+});
+
+document.getElementById('s1back').addEventListener('click', () => goStep(0));
+document.getElementById('s1next').addEventListener('click', () => {
+  if (rooms.length === 0) { alert('Please add at least one room before continuing.'); return; }
+  goStep(4); // skip to checklist
+});
+
+document.getElementById('s4back').addEventListener('click', () => goStep(1));
+document.getElementById('s4next').addEventListener('click', () => { buildPaintCards(); goStep(5); });
+document.getElementById('s5back').addEventListener('click', () => goStep(4));
+document.getElementById('s6back').addEventListener('click', () => {
+  const q = window._qs;
+  if (q && q.projType === 'exterior') goStep('ExtC');
+  else if (q && q.projType === 'mural') goStep('Mural');
+  else goStep(5);
+});
+
+document.querySelectorAll('.mat-row').forEach(el => {
+  el.addEventListener('click', function() {
+    this.classList.toggle('on');
+    const mat = this.dataset.mat;
+    const idx = S.mats.indexOf(mat);
+    if (idx > -1) S.mats.splice(idx, 1); else S.mats.push(mat);
+  });
+});
+
+// Checklist row toggle - delegated for reliability
+document.addEventListener('click', function(e) {
+  const crow = e.target.closest('.crow');
+  if (crow) { crow.classList.toggle('on'); }
+});
+
+// Generic tb handler (cond, occ, wp, ext, mural)
+document.querySelectorAll('.tb').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const grp = this.dataset.grp, val = this.dataset.val;
+    if (!grp) return;
+    if (grp === 'mode') return;
+    if (grp.startsWith('ext') || grp.startsWith('mural')) return;
+    document.querySelectorAll('.tb[data-grp="' + grp + '"]').forEach(b => b.classList.remove('on'));
+    this.classList.add('on');
+    S[grp] = val;
+  });
+});
+
+// ============================================================
+// CALCULATE (from rooms array)
+// ============================================================
+document.getElementById('calcBtn').addEventListener('click', calculate);
+document.getElementById('newBtn').addEventListener('click', resetAll);
+document.getElementById('shareBtn').addEventListener('click', shareQuote);
+document.getElementById('jobberBtn').addEventListener('click', saveToJobber);
+
+function gi(id) { return parseInt(document.getElementById(id)?.value) || 0; }
+function gf(id, fb = 0) { const v = parseFloat(document.getElementById(id)?.value); return isNaN(v) ? fb : v; }
+function r50(n) { return Math.round(n / 50) * 50; }
+function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+
+function calculate() {
+  const client = document.getElementById('clientName').value || 'Client';
+  const addr = document.getElementById('jobAddress').value || '';
+  const phone = document.getElementById('clientPhone').value || '';
+  const email = document.getElementById('clientEmail').value || '';
+  const projType = document.getElementById('projectType').value;
+  const notes = document.getElementById('extraNotes').value || '';
+  const isCommercial = projType === 'commercial';
+  const commMult = isCommercial ? 1.40 : 1.00; // commercial: after-hours, prep complexity, liability
+  const warns = [];
+
+  if (!rooms.length) { alert('No rooms found. Go back and add rooms.'); goStep(1); return; }
+
+  let totalWallSqft = 0, totalCeilSqft = 0, totalTrimLft = 0, totalDoors = 0, totalFloorSqft = 0;
+  let wallCost = 0, ceilCost = 0, trimCost = 0, doorCost = 0;
+  const roomLines = [];
+
+  // Doors and windows now stored per room directly
+
+  rooms.forEach(room => {
+    const L = room.L || 0, W = room.W || 0, H = room.H || 8;
+    const floorSqft = L && W ? L * W : 0;
+    totalFloorSqft += floorSqft;
+    const cf = COAT_FACTOR[room.coat] || 1.85;
+    const coatLabel = room.coat === 'major' ? '3 coats' : room.coat === 'change' ? '2 coats' : '1 coat';
+
+    if (room.scope.has('walls') && L && W) {
+      const wSqft = 2 * (L + W) * H * 0.85;
+      totalWallSqft += wSqft;
+      // High ceiling premium: extra ladder time, staging, difficulty cutting in at height
+      const ceilPrem = H >= 12 ? 1.25 : H >= 10 ? 1.15 : 1.00;
+      wallCost += wSqft * WALL_RATE * cf * commMult * ceilPrem;
+    }
+    if (room.scope.has('ceiling') && L && W) {
+      const cSqft = L * W;
+      totalCeilSqft += cSqft;
+      // Ceiling-only rooms get a 1.5x difficulty premium (overhead work, fatigue)
+      // If walls are also selected, no premium needed -- included in wall setup time
+      const ceilOnlyPrem = room.scope.has('walls') ? 1.0 : 1.5;
+      ceilCost += cSqft * CEIL_RATE * cf * commMult * ceilOnlyPrem;
+    }
+    if (room.scope.has('trim') && L && W) {
+      // Baseboards: perimeter of room
+      const baseLft = 2 * (L + W);
+      // Window casings: small=10lft, medium=14lft, large=18lft each
+      const winLft = (room.winSm||0)*10 + (room.winMd||0)*14 + (room.winLg||0)*18;
+      // Door casings: ~17lft per door (two sides + head casing)
+      const doorCasingLft = (room.doors||0) * 17;
+      totalTrimLft += baseLft + winLft + doorCasingLft;
+      trimCost += (baseLft * BASE_RATE + winLft * WIN_RATE + doorCasingLft * DOOR_FRAME_RATE) * cf * commMult;
+    }
+    if (room.scope.has('doors') && (room.doors||0) > 0) {
+      // Door slab face painting (separate from door casing trim above)
+      totalDoors += room.doors;
+      doorCost += room.doors * DOOR_RATE * cf * commMult;
+    }
+
+    const scopeStr = Array.from(room.scope).join('+');
+    const dimStr = L && W ? '[' + L + 'x' + W + ' H:' + H + 'ft]' : '';
+    const dwStr = (room.doors ? room.doors + ' doors ' : '') + ((room.winSm||0)+(room.winMd||0)+(room.winLg||0) > 0 ? (room.winSm||0) + '/' + (room.winMd||0) + '/' + (room.winLg||0) + ' win' : '');
+    roomLines.push(room.label + ': ' + scopeStr + ' (' + coatLabel + ') ' + dimStr + (dwStr ? ' ' + dwStr : ''));
+  });
+
+  let base = wallCost + ceilCost + trimCost + doorCost;
+
+  if (S.cond === 'minor') { const c = base * 0.12; base += c; warns.push('Minor repairs flagged.'); }
+  else if (S.cond === 'heavy') { const c = base * 0.30; base += c; warns.push('Heavy repairs -- confirm drywall scope before finalising.'); }
+
+  if (S.occ === 'yes') { base += 75; warns.push('Occupied space -- allow extra time for furniture protection.'); }
+  if (S.wp === 'yes') warns.push('Wallpaper removal is a separate scope -- quote it separately.');
+
+  // Warn if any room has doors scope selected but 0 doors entered
+  const doorsButNone = rooms.filter(r => r.scope.has('doors') && !(r.doors > 0));
+  if (doorsButNone.length > 0) {
+    warns.push('Doors scope selected in ' + doorsButNone.map(r=>r.label).join(', ') + ' but no door count entered -- door painting not priced. Add door count in room entry to include it.');
+  }
+
+  // Minimum: $400 general floor.
+  // Trim-only or ceiling-only jobs have higher setup per sqft -- bump to $550.
+  const allScopeTypes = new Set(rooms.flatMap(r => Array.from(r.scope)));
+  const hasWalls = allScopeTypes.has('walls');
+  const jobMin = hasWalls ? 400 : 550;
+  if (base < jobMin) base = jobMin;
+  const price = r50(base * 1.05);
+  const painters = Math.round(price * 0.40);
+  const matsAmt = Math.round(price * 0.10);
+  const net = Math.round(price * 0.50);
+
+  // Breakdown rows
+  const rowsArr = [];
+  if (wallCost > 0) rowsArr.push({l:'Walls -- ' + Math.round(totalWallSqft) + ' wall sqft x $' + WALL_RATE + '/sqft per coat', v:wallCost});
+  if (ceilCost > 0) rowsArr.push({l:'Ceilings -- ' + Math.round(totalCeilSqft) + ' sqft (selected rooms only)', v:ceilCost});
+  if (trimCost > 0) rowsArr.push({l:'Trim -- baseboards $' + BASE_RATE + '/lft | window casings $' + WIN_RATE + '/lft | door casings $' + DOOR_FRAME_RATE + '/lft', v:trimCost});
+  if (doorCost > 0) rowsArr.push({l:'Doors -- ' + totalDoors + ' doors', v:doorCost});
+  if (S.cond === 'minor') rowsArr.push({l:'Minor repairs +12%', v:base * 0.12 / 1.12, coat:true});
+  else if (S.cond === 'heavy') rowsArr.push({l:'Heavy repairs +30%', v:base * 0.30 / 1.30, coat:true});
+  if (S.occ === 'yes') rowsArr.push({l:'Occupied +$75', v:75});
+
+  // Derive global scope
+  const allScope = new Set();
+  rooms.forEach(r => r.scope.forEach(s => allScope.add(s)));
+  S.scope = Array.from(allScope);
+
+  // Paint quantities
+  const coatCounts = {match:0, change:0, major:0};
+  rooms.forEach(r => coatCounts[r.coat] = (coatCounts[r.coat] || 0) + 1);
+  const dominantCoat = ['major','change','match'].find(c => coatCounts[c] === Math.max(...Object.values(coatCounts))) || 'change';
+  const numCoats = dominantCoat === 'major' ? 3 : dominantCoat === 'change' ? 2 : 1;
+
+  // Build paint summary from paintData
+  let matHTML = '';
+  const paintSummaryLines = [];
+  Object.keys(S.paintData).forEach(surf => {
+    const pd = S.paintData[surf];
+    const surfLbl = {walls:'Walls', trim:'Trim & doors', ceiling:'Ceilings'}[surf] || surf;
+    let gallons = 0;
+    if (surf === 'walls') gallons = Math.ceil(totalWallSqft / 400 * numCoats);
+    else if (surf === 'trim') gallons = Math.ceil(totalTrimLft / 150 * numCoats);
+    else if (surf === 'ceiling') gallons = Math.ceil(totalCeilSqft / 400 * numCoats);
+    if (gallons < 1) gallons = 1;
+    const tierPrice = PAINT_PRICE[pd.tier] || 55;
+    const paintCostSurf = Math.round(gallons * tierPrice);
+    const colorStr = pd.colorMatch ? 'Color match' : ((pd.colorName || '') + (pd.colorCode ? ' (' + pd.colorCode + ')' : '')) || 'Not specified';
+    const productStr = pd.tier ? (pd.tier.charAt(0).toUpperCase() + pd.tier.slice(1)) + (pd.product ? ' -- ' + pd.product : '') : 'Not selected';
+    paintSummaryLines.push(surfLbl + ': ' + colorStr + ' - ' + (pd.finish || '--') + ' - ' + productStr + ' - ~' + gallons + ' gal (~$' + paintCostSurf + ')');
+    matHTML += '<div style="font-size:13px;padding:6px 0;border-bottom:.5px solid var(--border);color:var(--text2)"><strong style="color:var(--text)">' + surfLbl + '</strong><br>' + colorStr + ' - ' + (pd.finish || '--') + ' finish - ' + productStr + '<br><span style="color:var(--teal-dk)">~' + gallons + ' gal - ~$' + paintCostSurf + ' est.</span></div>';
+  });
+  if (!matHTML) {
+    const gW = totalWallSqft > 0 ? Math.ceil(totalWallSqft / 400 * numCoats) : 0;
+    const gC = totalCeilSqft > 0 ? Math.ceil(totalCeilSqft / 400 * numCoats) : 0;
+    const gT = totalTrimLft > 0 ? Math.ceil(totalTrimLft / 150 * numCoats) : 0;
+    matHTML = '<div style="font-size:13px;color:var(--text2);line-height:1.9">' +
+      (gW ? '<div>Walls: ~' + gW + ' gal (' + numCoats + ' coat' + (numCoats > 1 ? 's' : '') + ' - ' + Math.round(totalWallSqft) + ' wall sqft)</div>' : '') +
+      (gC ? '<div>Ceilings: ~' + gC + ' gal (' + Math.round(totalCeilSqft) + ' sqft)</div>' : '') +
+      (gT ? '<div>Trim: ~' + gT + ' gal (' + Math.round(totalTrimLft) + ' lft)</div>' : '') +
+      '</div>';
+  }
+  document.getElementById('matArea').innerHTML = matHTML;
+
+  // Build clean customer-facing note for Jobber
+  const condLabel = {good:'Good -- no repairs required', minor:'Minor repairs included', heavy:'Heavy repairs included'}[S.cond] || S.cond;
+  const occLabel = S.occ === 'yes' ? 'Occupied -- furniture protection included' : '';
+  const wpLabel = S.wp === 'yes' ? 'Wallpaper removal quoted separately' : '';
+  const coatSummary = dominantCoat === 'major' ? '3 coats (primer + 2 finish coats)' : dominantCoat === 'change' ? '2 coats' : '1 coat -- colour match';
+  const typeLabel = {condo:'Condo', apartment:'Apartment', house:'House', rental:'Rental property', commercial:'Commercial space'}[projType] || projType;
+
+  // Room lines for customer note -- clean format
+  const clientRoomLines = rooms.map(room => {
+    const scopeArr = Array.from(room.scope);
+    const scopeClean = scopeArr.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
+    const coatClean = room.coat === 'major' ? '3 coats' : room.coat === 'change' ? '2 coats' : '1 coat';
+    return '  - ' + room.label + ': ' + scopeClean + ' (' + coatClean + ')';
+  });
+
+  const extraLines = [condLabel, occLabel, wpLabel, notes].filter(Boolean);
+
+  const clientNote = [
+    'Ten Bell Painting -- ' + typeLabel + ' Interior Quote',
+    '',
+    'Scope of work:',
+    ...clientRoomLines,
+    '',
+    extraLines.join('  |  '),
+    '',
+    'Quoted price: ' + fmt(price) + ' + HST',
+    'Valid for 30 days. Final price confirmed after on-site visit.',
+    '',
+    'Questions? Call or text Adam: 905-536-6799'
+  ].filter((line, i, arr) => !(line === '' && arr[i-1] === '')).join('\n');
+
+  window._qs = {client, phone, email, addr, projType, sqft:Math.round(totalFloorSqft), wallSqft:Math.round(totalWallSqft), ceilSqft:Math.round(totalCeilSqft), trimLft:Math.round(totalTrimLft), doors:totalDoors, scope:S.scope.join(', '), coat:dominantCoat, cond:S.cond, occ:S.occ, wp:S.wp, notes, price, net, paintData:S.paintData, paintSummary:paintSummaryLines.join('\n'), mats:S.mats.length ? S.mats.join(', ') : 'none', roomScopeDetail:roomLines.join('\n'), clientNote};
+
+  document.getElementById('rClient').textContent = client + (phone ? ' - ' + phone : '') + (email ? ' - ' + email : '');
+  document.getElementById('rPrice').textContent = fmt(price);
+  document.getElementById('rAddr').textContent = addr || projType;
+
+  let bd = '';
+  rowsArr.forEach(r => {
+    if (r.coat) bd += '<div class="bdr coat-row"><span>' + r.l + '</span><span>' + fmt(r.v) + '</span></div>';
+    else bd += '<div class="bdr"><span>' + r.l + '</span><span>' + fmt(r.v) + '</span></div>';
+  });
+  bd += '<div class="bdr tot"><span>Total</span><span>' + fmt(price) + '</span></div>';
+  document.getElementById('bdArea').innerHTML = bd;
+  document.getElementById('mgArea').innerHTML = '<div class="mc hl"><div class="mcv">' + fmt(net) + '</div><div class="mcl">Your net</div></div><div class="mc"><div class="mcv">' + fmt(painters) + '</div><div class="mcl">Painters 40%</div></div><div class="mc"><div class="mcv">' + fmt(matsAmt) + '</div><div class="mcl">Materials ~10%</div></div>';
+  const wEl = document.getElementById('warnBox');
+  if (warns.length) { wEl.style.display = 'block'; wEl.innerHTML = warns.map(w => '!! ' + w).join('<br><br>'); }
+  else wEl.style.display = 'none';
+  goStep(6);
+}
+
+// ============================================================
+// RESET
+// ============================================================
+function resetAll() {
+  rooms = []; nextRoomId = 1; editingRoomId = null;
+  formScope = new Set(['walls']); formCoat = 'change'; formType = null;
+  renderRoomList();
+  document.getElementById('addRoomForm').style.display = 'none';
+  document.getElementById('addRoomBtn').style.display = '';
+  document.querySelectorAll('#roomTypePicker .pill').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('#formScopePills .pill').forEach(p => p.classList.toggle('on', p.dataset.fscope === 'walls'));
+  document.querySelectorAll('#formCoatPills .pill').forEach(p => p.classList.toggle('on', p.dataset.fcoat === 'change'));
+  document.getElementById('formL').value = '';
+  document.getElementById('formW').value = '';
+  document.getElementById('formH').value = 8;
+  document.getElementById('formDoors').value = 0;
+  document.getElementById('formWinSm').value = 0;
+  document.getElementById('formWinMd').value = 0;
+  document.getElementById('formWinLg').value = 0;
+  document.getElementById('formSqftCalc').textContent = '';
+  document.getElementById('customRoomName').value = '';
+  document.getElementById('customNameRow').style.display = 'none';
+
+  EXT.surf='vinyl';EXT.cond='good';EXT.storeys='1';EXT.coat='match';EXT.wash='no';EXT.caulk='no';EXT.elements.clear();
+  document.querySelectorAll('.chk[data-ext]').forEach(e => e.classList.remove('on'));
+  document.querySelectorAll('#extSurfGrp .tb').forEach((e,i) => e.classList.toggle('on', i===0));
+  ['extWallSqft','extWallHeight','extPerimeter','extWallCalc','extSoffitSqft','extFasciaLft','extGuttersLft','extDownspoutsLft','extWindowCount','extEntryDoorCount','extGarSingle','extGarDouble','extFrenchDoors','extFenceLft','extDeckSqft','extPorchCeilSqft','extColumnCount','extRailingLft','extPergolasSqft','extFoundationSqft','extRetainingSqft','extNotes'].forEach(id => { const el = document.getElementById(id); if (el) el.value = '0'; });
+
+  S.mode='interior';S.coat='change';S.cond='good';S.occ='no';S.wp='no';S.scope=['walls'];S.mats=[];S.paintData={};
+  MURAL_APP.surf='drywall';MURAL_APP.cond='good';MURAL_APP.priceMode='sqft';MURAL_APP.prep='none';
+
+  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.tb[data-grp="mode"][data-val="interior"]').forEach(b => b.classList.add('on'));
+  document.querySelectorAll('.tb[data-grp="cond"][data-val="good"]').forEach(b => b.classList.add('on'));
+  document.querySelectorAll('.tb[data-grp="occ"][data-val="no"]').forEach(b => b.classList.add('on'));
+  document.querySelectorAll('.tb[data-grp="wp"][data-val="no"]').forEach(b => b.classList.add('on'));
+  document.querySelectorAll('#extSurfGrp .tb').forEach((e,i) => e.classList.toggle('on', i===0));
+  document.querySelectorAll('#muralSurfGrp .tb').forEach((e,i) => e.classList.toggle('on', i===0));
+  ['muralCond','muralPriceMode','muralPrep'].forEach(grp => { document.querySelectorAll('[data-grp="' + grp + '"]').forEach((e,i) => e.classList.toggle('on', i===0)); });
+  document.getElementById('muralSqftRow').style.display = '';
+  document.getElementById('muralFlatRow').style.display = 'none';
+
+  ['clientName','jobAddress','clientPhone','clientEmail'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  ['muralW','muralH','muralSqftApp','muralFlat','muralNotes','muralRate'].forEach(id => { const el = document.getElementById(id); if (el) el.value = id === 'muralRate' ? '10' : ''; });
+  document.getElementById('muralMats').value = '0';
+  document.getElementById('muralPrimer').value = '0';
+  document.getElementById('numDoors').value = '0';
+  document.getElementById('extraNotes').value = '';
+  document.getElementById('projectType').value = 'condo';
+  document.getElementById('paintCardsArea').innerHTML = '';
+  document.querySelectorAll('.crow').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.mat-row').forEach(el => el.classList.remove('on'));
+  const wb = document.getElementById('warnBox'); if (wb) wb.style.display = 'none';
+  goStep(0);
+}
+
+// -- EXTERIOR --------------------------------------------------
 document.querySelectorAll('.chk[data-ext]').forEach(el=>{el.addEventListener('click',function(){this.classList.toggle('on');const v=this.dataset.ext;if(EXT.elements.has(v))EXT.elements.delete(v);else EXT.elements.add(v);});});
 document.querySelectorAll('.tb[data-grp^="ext"]').forEach(btn=>{btn.addEventListener('click',function(){const grp=this.dataset.grp,val=this.dataset.val;document.querySelectorAll('.tb[data-grp="'+grp+'"]').forEach(b=>b.classList.remove('on'));this.classList.add('on');const map={extSurf:'surf',extCond:'cond',extStoreys:'storeys',extCoat:'coat',extWash:'wash',extCaulk:'caulk'};if(map[grp])EXT[map[grp]]=val;});});
 document.querySelectorAll('.tb[data-grp="mode"]').forEach(btn=>{btn.addEventListener('click',function(){document.querySelectorAll('.tb[data-grp="mode"]').forEach(b=>b.classList.remove('on'));this.classList.add('on');S.mode=this.dataset.val;document.getElementById('intTypeRow').style.display=S.mode==='interior'?'':'none';});});
 document.getElementById('s0next').addEventListener('click',()=>{if(S.mode==='exterior')goStep('ExtA');else if(S.mode==='mural')goStep('Mural');else goStep(1);});
-function autoCalcWall(){const direct=parseFloat(document.getElementById('extWallSqft').value)||0;const perim=parseFloat(document.getElementById('extPerimeter').value)||0;const h=parseFloat(document.getElementById('extWallHeight').value)||9;const calc=direct>0?direct:Math.round(perim*h*0.85);document.getElementById('extWallCalc').value=calc||0;}
+function autoCalcWall(){const direct=parseFloat(document.getElementById('extWallSqft').value)||0;const perim=parseFloat(document.getElementById('extPerimeter').value)||0;const h=parseFloat(document.getElementById('extWallHeight').value)||9;document.getElementById('extWallCalc').value=direct>0?direct:Math.round(perim*h*0.85)||0;}
 function gext(id,fb=0){const v=parseFloat(document.getElementById(id)?.value);return isNaN(v)?fb:v;}
 function calcExterior(){
-  const client=document.getElementById('clientName').value||'Client';
-  const addr=document.getElementById('jobAddress').value||'';
-  const phone=document.getElementById('clientPhone').value||'';
-  const email=document.getElementById('clientEmail').value||'';
-  const notes=document.getElementById('extNotes').value||'';
+  const client=document.getElementById('clientName').value||'Client',addr=document.getElementById('jobAddress').value||'',phone=document.getElementById('clientPhone').value||'',email=document.getElementById('clientEmail').value||'',notes=document.getElementById('extNotes').value||'';
   const wallRates={vinyl:1.95,wood:2.75,brick:3.25,stucco:3.00,fiberCement:2.25,metal:2.40,noWalls:0};
-  const condMult={good:1.00,fair:1.20,poor:1.45};
-  const storeyMult={'1':1.00,'2':1.20,'3':1.35};
-  const coatMult={match:1.00,change:1.15,major:1.30};
+  const condMult={good:1.00,fair:1.20,poor:1.45},storeyMult={'1':1.00,'2':1.20,'3':1.35},coatMult={match:1.00,change:1.15,major:1.30};
   let base=0;const rows=[],warns=[];
   const cond=condMult[EXT.cond]||1,stor=storeyMult[EXT.storeys]||1,coat=coatMult[EXT.coat]||1,surfRate=wallRates[EXT.surf]||0;
-  const directSqft=gext('extWallSqft'),calcSqft=gext('extWallCalc'),wallSqft=directSqft>0?directSqft:calcSqft;
-  if(wallSqft>0&&surfRate>0){const src=directSqft>0?'measured':'from perimeter';const c=wallSqft*surfRate*cond*stor*coat;base+=c;rows.push({l:'Walls — '+wallSqft+' sqft ('+src+') × $'+surfRate.toFixed(2)+'/sqft',v:c});}
-  const soffit=gext('extSoffitSqft');if(soffit>0){const c=soffit*3.00*cond;base+=c;rows.push({l:'Soffits — '+soffit+' sqft',v:c});}
-  const fascia=gext('extFasciaLft');if(fascia>0){const c=fascia*4.25*cond;base+=c;rows.push({l:'Fascia — '+fascia+' lft',v:c});}
-  const gutters=gext('extGuttersLft');if(gutters>0){const c=gutters*3.25*cond;base+=c;rows.push({l:'Gutters — '+gutters+' lft',v:c});}
-  const downspouts=gext('extDownspoutsLft');if(downspouts>0){const c=downspouts*2.50*cond;base+=c;rows.push({l:'Downspouts — '+downspouts+' lft',v:c});}
-  const windows=gext('extWindowCount');if(windows>0){const c=windows*100;base+=c;rows.push({l:'Window frames / shutters — '+windows+' × $100',v:c});}
-  const entryDoors=gext('extEntryDoorCount');if(entryDoors>0){const c=entryDoors*212;base+=c;rows.push({l:'Entry doors — '+entryDoors+' × $212',v:c});}
-  const garSingle=gext('extGarSingle');if(garSingle>0){const c=garSingle*237;base+=c;rows.push({l:'Single garage doors — '+garSingle+' × $237',v:c});}
-  const garDouble=gext('extGarDouble');if(garDouble>0){const c=garDouble*375;base+=c;rows.push({l:'Double garage doors — '+garDouble+' × $375',v:c});}
-  const frenchDoors=gext('extFrenchDoors');if(frenchDoors>0){const c=frenchDoors*262;base+=c;rows.push({l:'French / patio doors — '+frenchDoors+' × $262',v:c});}
-  const fenceLft=gext('extFenceLft');if(fenceLft>0){const c=fenceLft*5.50*cond;base+=c;rows.push({l:'Fence — '+fenceLft+' lft',v:c});}
-  const deckSqft=gext('extDeckSqft');if(deckSqft>0){const c=deckSqft*3.25*cond;base+=c;rows.push({l:'Deck / porch floor — '+deckSqft+' sqft',v:c});}
-  const porchCeil=gext('extPorchCeilSqft');if(porchCeil>0){const c=porchCeil*2.875*cond;base+=c;rows.push({l:'Porch ceiling — '+porchCeil+' sqft',v:c});}
-  const columns=gext('extColumnCount');if(columns>0){const c=columns*100*cond;base+=c;rows.push({l:'Columns / posts — '+columns+' × $100',v:c});}
-  const railing=gext('extRailingLft');if(railing>0){const c=railing*6.50*cond;base+=c;rows.push({l:'Railings — '+railing+' lft',v:c});}
-  const pergola=gext('extPergolasSqft');if(pergola>0){const c=pergola*3.25*cond;base+=c;rows.push({l:'Pergola / gazebo — '+pergola+' sqft',v:c});}
-  const foundation=gext('extFoundationSqft');if(foundation>0){const c=foundation*4.00*cond;base+=c;rows.push({l:'Foundation / parging — '+foundation+' sqft',v:c});}
-  const retaining=gext('extRetainingSqft');if(retaining>0){const c=retaining*3.25*cond;base+=c;rows.push({l:'Retaining wall — '+retaining+' sqft',v:c});}
-  if(EXT.wash==='yes'){base+=300;rows.push({l:'Power wash',v:300});warns.push('Power wash at $300 flat — adjust if larger home.');}else if(EXT.wash==='unsure')warns.push('Power wash not priced — assess on-site.');
-  if(EXT.caulk==='minor'){base+=75;rows.push({l:'Caulking — minor',v:75});}else if(EXT.caulk==='extensive'){base+=200;rows.push({l:'Caulking — extensive',v:200});}
-  if(EXT.cond==='poor')warns.push('Poor condition — confirm full scope of prep before finalising.');
-  if(EXT.surf==='wood'&&EXT.cond!=='good')warns.push('Wood in less-than-good condition — check for rot or bare wood before quoting.');
-  if(EXT.surf==='brick')warns.push('Brick — confirm if previously painted. Unpainted brick needs masonry primer (not included).');
+  const dSqft=gext('extWallSqft'),cSqft=gext('extWallCalc'),wallSqft=dSqft>0?dSqft:cSqft;
+  if(wallSqft>0&&surfRate>0){const c=wallSqft*surfRate*cond*stor*coat;base+=c;rows.push({l:'Walls -- '+wallSqft+' sqft x $'+surfRate.toFixed(2)+'/sqft',v:c});}
+  const adds=[['extSoffitSqft','Soffits',3.00,'sqft'],['extFasciaLft','Fascia',4.25,'lft'],['extGuttersLft','Gutters',3.25,'lft'],['extDownspoutsLft','Downspouts',2.50,'lft']];
+  adds.forEach(([id,lbl,rate,unit])=>{const v=gext(id);if(v>0){const c=v*rate*cond;base+=c;rows.push({l:lbl+' -- '+v+' '+unit,v:c});}});
+  const windows=gext('extWindowCount');if(windows>0){const c=windows*100;base+=c;rows.push({l:'Window frames -- '+windows+' x $100',v:c});}
+  const doors2=[['extEntryDoorCount','Entry doors',212],['extGarSingle','Single garage doors',237],['extGarDouble','Double garage doors',375],['extFrenchDoors','French/patio doors',262]];
+  doors2.forEach(([id,lbl,rate])=>{const v=gext(id);if(v>0){const c=v*rate;base+=c;rows.push({l:lbl+' -- '+v+' x $'+rate,v:c});}});
+  const structs=[['extFenceLft','Fence',5.50,'lft',true],['extDeckSqft','Deck/porch floor',3.25,'sqft',true],['extPorchCeilSqft','Porch ceiling',2.875,'sqft',true],['extColumnCount','Columns/posts',100,'ea',true],['extRailingLft','Railings',6.50,'lft',true],['extPergolasSqft','Pergola/gazebo',3.25,'sqft',true],['extFoundationSqft','Foundation/parging',4.00,'sqft',true],['extRetainingSqft','Retaining wall',3.25,'sqft',true]];
+  structs.forEach(([id,lbl,rate,unit,useCond])=>{const v=gext(id);if(v>0){const c=v*rate*(useCond?cond:1);base+=c;rows.push({l:lbl+' -- '+v+' '+unit,v:c});}});
+  if(EXT.wash==='yes'){base+=300;rows.push({l:'Power wash',v:300});warns.push('Power wash at $300 flat -- adjust if larger home.');}else if(EXT.wash==='unsure')warns.push('Power wash not priced -- assess on-site.');
+  if(EXT.caulk==='minor'){base+=75;rows.push({l:'Caulking -- minor',v:75});}else if(EXT.caulk==='extensive'){base+=200;rows.push({l:'Caulking -- extensive',v:200});}
+  if(EXT.cond==='poor')warns.push('Poor condition -- confirm full scope of prep before finalising.');
+  if(EXT.surf==='wood'&&EXT.cond!=='good')warns.push('Wood in less-than-good condition -- check for rot before quoting.');
+  if(EXT.surf==='brick')warns.push('Brick -- confirm if previously painted. Unpainted brick needs masonry primer (not included).');
   if(base<572)base=572;
   const price=Math.round(base*1.05/50)*50,painters=Math.round(price*0.40),matsAmt=Math.round(price*0.12),net=Math.round(price*0.48);
-  const surfLabels={vinyl:'Vinyl / Aluminum',wood:'Wood',brick:'Brick / Masonry',stucco:'Stucco',fiberCement:'Fiber Cement',metal:'Metal / Steel',noWalls:'Trim & elements only'};
-  const condLabels={good:'Good',fair:'Fair — light peeling',poor:'Poor — heavy peeling'};
+  const surfLabels={vinyl:'Vinyl/Aluminum',wood:'Wood',brick:'Brick/Masonry',stucco:'Stucco',fiberCement:'Fiber Cement',metal:'Metal/Steel',noWalls:'Trim & elements only'};
+  const condLabels={good:'Good',fair:'Fair -- light peeling',poor:'Poor -- heavy peeling'};
   const coatLabels={match:'Same/similar color',change:'Color change (2 coats)',major:'Major change / primer (3 coats)'};
-  document.getElementById('rClient').textContent=client+(phone?' · '+phone:'')+(email?' · '+email:'');
-  document.getElementById('rPrice').textContent=fmt(price);
-  document.getElementById('rAddr').textContent=addr||'Exterior job';
+  document.getElementById('rClient').textContent=client+(phone?' _ '+phone:'')+(email?' _ '+email:'');
+  document.getElementById('rPrice').textContent=fmt(price);document.getElementById('rAddr').textContent=addr||'Exterior job';
   let bd='';rows.forEach(r=>{bd+='<div class="bdr"><span>'+r.l+'</span><span>'+fmt(r.v)+'</span></div>';});
-  bd+='<div class="bdr"><span>'+surfLabels[EXT.surf]+' · '+condLabels[EXT.cond]+' · '+EXT.storeys+' storey</span><span></span></div>';
+  bd+='<div class="bdr"><span>'+surfLabels[EXT.surf]+' _ '+condLabels[EXT.cond]+' _ '+EXT.storeys+' storey</span><span></span></div>';
   bd+='<div class="bdr coat-row"><span>'+coatLabels[EXT.coat]+'</span><span>included</span></div>';
   bd+='<div class="bdr tot"><span>Total</span><span>'+fmt(price)+'</span></div>';
   document.getElementById('bdArea').innerHTML=bd;
   document.getElementById('mgArea').innerHTML='<div class="mc hl"><div class="mcv">'+fmt(net)+'</div><div class="mcl">Your net</div></div><div class="mc"><div class="mcv">'+fmt(painters)+'</div><div class="mcl">Labour 40%</div></div><div class="mc"><div class="mcv">'+fmt(matsAmt)+'</div><div class="mcl">Materials ~12%</div></div>';
-  document.getElementById('matArea').innerHTML='<div style="font-size:13px;color:var(--text2);line-height:1.9"><div>🖌 Exterior paint — weather-resistant, 2 coat min</div>'+(EXT.surf==='wood'?'<div>🪵 Wood primer / sealer if bare wood present</div>':'')+(EXT.surf==='brick'?'<div>🧱 Masonry primer / bonding primer</div>':'')+(EXT.surf==='stucco'?'<div>🏗️ Elastomeric or masonry paint recommended</div>':'')+(EXT.caulk!=='no'?'<div>🔒 Exterior caulk / sealant</div>':'')+(EXT.wash==='yes'?'<div>💧 Power washer / cleaning agent</div>':'')+'<div>🪣 Painter tape, drop sheets, plastic sheeting</div>'+(EXT.cond==='poor'?'<div>🛠️ Scraper, sandpaper, spot primer for prep</div>':'')+(notes?'<div style="margin-top:.5rem;color:var(--text)">⚑ Notes: '+notes+'</div>':'')+'</div>';
-  const wEl=document.getElementById('warnBox');if(warns.length){wEl.style.display='block';wEl.innerHTML=warns.map(w=>'⚠ '+w).join('<br><br>');}else wEl.style.display='none';
-  window._qs={client,phone,email,addr,projType:'exterior',scope:Array.from(EXT.elements).join(', ')||'walls',coat:EXT.coat,cond:EXT.cond,occ:'no',wp:'no',notes,price,net,paintData:{},paintSummary:'Exterior — '+EXT.surf+' | '+EXT.storeys+' storey | '+EXT.cond+' condition',mats:'exterior materials',extSurf:EXT.surf,storeys:EXT.storeys,wallSqft:gext('extWallSqft')||0};
+  document.getElementById('matArea').innerHTML='<div style="font-size:13px;color:var(--text2);line-height:1.9"><div>Exterior paint -- weather-resistant, 2 coat min</div>'+(EXT.surf==='wood'?'<div>Wood primer / sealer if bare wood present</div>':'')+(EXT.surf==='brick'?'<div>Masonry primer / bonding primer</div>':'')+(EXT.surf==='stucco'?'<div>Elastomeric or masonry paint recommended</div>':'')+(EXT.caulk!=='no'?'<div>Exterior caulk / sealant</div>':'')+(EXT.wash==='yes'?'<div>Power washer / cleaning agent</div>':'')+'<div>Painter tape, drop sheets, plastic sheeting</div>'+(EXT.cond==='poor'?'<div>Scraper, sandpaper, spot primer for prep</div>':'')+(notes?'<div style="margin-top:.5rem;color:var(--text)">Notes: '+notes+'</div>':'')+'</div>';
+  const wEl=document.getElementById('warnBox');if(warns.length){wEl.style.display='block';wEl.innerHTML=warns.map(w=>'! '+w).join('<br><br>');}else wEl.style.display='none';
+  const extSurfLabel={vinyl:'Vinyl / aluminum siding',wood:'Wood siding',brick:'Brick / masonry',stucco:'Stucco',fiberCement:'Fiber cement siding',metal:'Metal siding',noWalls:'Trim and elements only'};
+  const extCondLabel={good:'Good condition',fair:'Fair -- light prep required',poor:'Heavy prep required'};
+  const extCoatLabel={match:'Same / similar colour',change:'Colour change (2 coats)',major:'Major colour change / primer (3 coats)'};
+  const extClientNote=[
+    'Ten Bell Painting -- Exterior Quote',
+    '',
+    'Surface: '+( extSurfLabel[EXT.surf]||EXT.surf ),
+    'Storeys: '+EXT.storeys,
+    'Condition: '+(extCondLabel[EXT.cond]||EXT.cond),
+    'Colour: '+(extCoatLabel[EXT.coat]||EXT.coat),
+    (EXT.wash!=='no'?'Power wash: included':''),
+    (EXT.caulk!=='no'?'Caulking: included':''),
+    (notes?'Notes: '+notes:''),
+    '',
+    'Quoted price: '+fmt(price)+' + HST',
+    'Valid for 30 days. Final price confirmed after on-site visit.',
+    '',
+    'Questions? Call or text Adam: 905-536-6799'
+  ].filter(Boolean).join('\n');
+  window._qs={client,phone,email,addr,projType:'exterior',scope:Array.from(EXT.elements).join(', ')||'walls',coat:EXT.coat,cond:EXT.cond,occ:'no',wp:'no',notes,price,net,paintData:{},paintSummary:'Exterior -- '+EXT.surf+' | '+EXT.storeys+' storey | '+EXT.cond+' condition',mats:'exterior materials',extSurf:EXT.surf,storeys:EXT.storeys,wallSqft:gext('extWallSqft')||0,clientNote:extClientNote};
   goStep(6);
 }
+
+// -- MURAL -----------------------------------------------------
 document.querySelectorAll('.tb[data-grp^="mural"]').forEach(btn=>{btn.addEventListener('click',function(){const grp=this.dataset.grp,val=this.dataset.val;document.querySelectorAll('.tb[data-grp="'+grp+'"]').forEach(b=>b.classList.remove('on'));this.classList.add('on');const map={muralSurf:'surf',muralCond:'cond',muralPriceMode:'priceMode',muralPrep:'prep'};if(map[grp]){MURAL_APP[map[grp]]=val;if(grp==='muralPriceMode'){document.getElementById('muralSqftRow').style.display=val==='sqft'?'':'none';document.getElementById('muralFlatRow').style.display=val==='flat'?'':'none';}}});});
-function calcMuralSqft(){const w=parseFloat(document.getElementById('muralW').value)||0;const h=parseFloat(document.getElementById('muralH').value)||0;const el=document.getElementById('muralSqftApp');if(el)el.value=w>0&&h>0?Math.round(w*h):0;}
+function calcMuralSqft(){const w=parseFloat(document.getElementById('muralW').value)||0,h=parseFloat(document.getElementById('muralH').value)||0;const el=document.getElementById('muralSqftApp');if(el)el.value=w>0&&h>0?Math.round(w*h):0;}
 function calcMural(){
   const client=document.getElementById('clientName').value||'Client',addr=document.getElementById('jobAddress').value||'',phone=document.getElementById('clientPhone').value||'',email=document.getElementById('clientEmail').value||'',notes=document.getElementById('muralNotes').value||'';
   const w=parseFloat(document.getElementById('muralW').value)||0,h=parseFloat(document.getElementById('muralH').value)||0;
@@ -581,32 +1217,48 @@ function calcMural(){
   const mats=parseFloat(document.getElementById('muralMats').value)||0,primer=parseFloat(document.getElementById('muralPrimer').value)||0;
   let price=0;
   if(MURAL_APP.priceMode==='flat'){price=parseFloat(document.getElementById('muralFlat').value)||0;}
-  else{const rate=parseFloat(document.getElementById('muralRate').value)||10;const complexity=parseFloat(document.getElementById('muralComplexity').value)||1.0;price=sqft*rate*complexity;}
+  else{const rate=parseFloat(document.getElementById('muralRate').value)||10,complexity=parseFloat(document.getElementById('muralComplexity').value)||1.0;price=sqft*rate*complexity;}
   if(MURAL_APP.prep==='light')price+=75;else if(MURAL_APP.prep==='heavy')price+=200;
   price+=mats+primer;
-  if(sqft===0&&MURAL_APP.priceMode==='sqft'&&parseFloat(document.getElementById('muralFlat')?.value||0)===0){alert('Please enter wall dimensions or switch to flat rate pricing.');return;}
+  if(sqft===0&&MURAL_APP.priceMode==='sqft'){alert('Please enter wall dimensions or switch to flat rate pricing.');return;}
   if(price<600)price=600;price=Math.round(price/50)*50;
   const labour=Math.round(price*0.50),matsTotal=Math.round(price*0.15),net=Math.round(price*0.35);
   const surfLabels={drywall:'Drywall',brick:'Brick/Concrete',wood:'Wood',plaster:'Plaster/Stucco',glass:'Glass',other:'Other'};
-  const condLabels={good:'Good — ready',prep:'Needs prep',rough:'Rough/textured'};
-  document.getElementById('rClient').textContent=client+(phone?' · '+phone:'')+(email?' · '+email:'');
+  const condLabels={good:'Good -- ready',prep:'Needs prep',rough:'Rough/textured'};
+  document.getElementById('rClient').textContent=client+(phone?' _ '+phone:'')+(email?' _ '+email:'');
   document.getElementById('rPrice').textContent=fmt(price);document.getElementById('rAddr').textContent=addr||'Mural job';
   let bd='';
-  if(MURAL_APP.priceMode==='flat'){bd+='<div class="bdr"><span>Mural — flat rate</span><span>'+fmt(parseFloat(document.getElementById('muralFlat').value)||0)+'</span></div>';}
-  else{const rate=parseFloat(document.getElementById('muralRate').value)||10;const complexity=parseFloat(document.getElementById('muralComplexity').value)||1.0;bd+='<div class="bdr"><span>Mural — '+sqft+' sqft × $'+rate+'/sqft × '+complexity+'x complexity</span><span>'+fmt(sqft*rate*complexity)+'</span></div>';}
-  if(MURAL_APP.prep==='light')bd+='<div class="bdr"><span>Surface prep — light</span><span>$75</span></div>';
-  if(MURAL_APP.prep==='heavy')bd+='<div class="bdr"><span>Surface prep — heavy</span><span>$200</span></div>';
+  if(MURAL_APP.priceMode==='flat'){bd+='<div class="bdr"><span>Mural -- flat rate</span><span>'+fmt(parseFloat(document.getElementById('muralFlat').value)||0)+'</span></div>';}
+  else{const rate=parseFloat(document.getElementById('muralRate').value)||10,complexity=parseFloat(document.getElementById('muralComplexity').value)||1.0;bd+='<div class="bdr"><span>Mural -- '+sqft+' sqft x $'+rate+'/sqft x '+complexity+'x</span><span>'+fmt(sqft*rate*complexity)+'</span></div>';}
+  if(MURAL_APP.prep==='light')bd+='<div class="bdr"><span>Surface prep -- light</span><span>$75</span></div>';
+  if(MURAL_APP.prep==='heavy')bd+='<div class="bdr"><span>Surface prep -- heavy</span><span>$200</span></div>';
   if(primer>0)bd+='<div class="bdr"><span>Primer</span><span>'+fmt(primer)+'</span></div>';
-  if(mats>0)bd+='<div class="bdr"><span>Paint &amp; materials</span><span>'+fmt(mats)+'</span></div>';
-  bd+='<div class="bdr"><span>Surface: '+surfLabels[MURAL_APP.surf]+' | '+condLabels[MURAL_APP.cond]+'</span><span></span></div>';
+  if(mats>0)bd+='<div class="bdr"><span>Paint & materials</span><span>'+fmt(mats)+'</span></div>';
+  bd+='<div class="bdr"><span>'+surfLabels[MURAL_APP.surf]+' | '+condLabels[MURAL_APP.cond]+'</span><span></span></div>';
   bd+='<div class="bdr tot"><span>Total</span><span>'+fmt(price)+'</span></div>';
   document.getElementById('bdArea').innerHTML=bd;
   document.getElementById('mgArea').innerHTML='<div class="mc hl"><div class="mcv">'+fmt(net)+'</div><div class="mcl">Your net</div></div><div class="mc"><div class="mcv">'+fmt(labour)+'</div><div class="mcl">Labour 50%</div></div><div class="mc"><div class="mcv">'+fmt(matsTotal)+'</div><div class="mcl">Materials ~15%</div></div>';
-  document.getElementById('matArea').innerHTML='<div style="font-size:13px;color:var(--text2);line-height:1.9"><div>🎨 Mural paint — professional artist-grade acrylics</div>'+(primer>0?'<div>🖌 Primer / sealer</div>':'')+(MURAL_APP.surf==='brick'||MURAL_APP.surf==='plaster'?'<div>🧱 Masonry bonding primer</div>':'')+'<div>🖌 Brushes, rollers, spray equipment as needed</div><div>🪣 Painter tape, drop sheets, plastic sheeting</div>'+(notes?'<div style="margin-top:.5rem;color:var(--text)">📝 Vision: '+notes+'</div>':'')+'</div>';
-  const wEl=document.getElementById('warnBox');if(MURAL_APP.surf==='brick'||MURAL_APP.surf==='plaster'){wEl.style.display='block';wEl.innerHTML='⚠ Textured or masonry surface — primer is strongly recommended for paint adhesion.';}else wEl.style.display='none';
-  window._qs={client,phone,email,addr,projType:'mural',scope:'mural — '+sqft+'sqft '+surfLabels[MURAL_APP.surf],coat:'match',cond:MURAL_APP.cond,occ:'no',wp:'no',notes,price,net,paintData:{},paintSummary:'Mural — '+sqft+'sqft on '+surfLabels[MURAL_APP.surf],mats:'Mural paint + supplies',extSurf:MURAL_APP.surf,sqft,ceilH:9,ratePerSqft:document.getElementById('muralRate').value};
+  document.getElementById('matArea').innerHTML='<div style="font-size:13px;color:var(--text2);line-height:1.9"><div>Mural paint -- professional artist-grade acrylics</div>'+(primer>0?'<div>Primer / sealer</div>':'')+(MURAL_APP.surf==='brick'||MURAL_APP.surf==='plaster'?'<div>Masonry bonding primer</div>':'')+'<div>Brushes, rollers, spray equipment as needed</div><div>Painter tape, drop sheets, plastic sheeting</div>'+(notes?'<div style="margin-top:.5rem;color:var(--text)">Vision: '+notes+'</div>':'')+'</div>';
+  const wEl=document.getElementById('warnBox');if(MURAL_APP.surf==='brick'||MURAL_APP.surf==='plaster'){wEl.style.display='block';wEl.innerHTML='! Textured or masonry surface -- primer is strongly recommended for paint adhesion.';}else wEl.style.display='none';
+  const muralClientNote=[
+    'Ten Bell Painting -- Mural Quote',
+    '',
+    'Wall surface: '+(surfLabels[MURAL_APP.surf]||MURAL_APP.surf),
+    (sqft?'Wall size: ~'+sqft+' sqft':''),
+    'Surface condition: '+(condLabels[MURAL_APP.cond]||MURAL_APP.cond),
+    (notes?'Vision: '+notes:''),
+    '',
+    'Quoted price: '+fmt(price)+' + HST',
+    'This is a custom quote based on the details provided.',
+    'Final scope confirmed before work begins.',
+    '',
+    'Questions? Call or text Adam: 905-536-6799'
+  ].filter(Boolean).join('\n');
+  window._qs={client,phone,email,addr,projType:'mural',scope:'mural -- '+sqft+'sqft '+surfLabels[MURAL_APP.surf],coat:'match',cond:MURAL_APP.cond,occ:'no',wp:'no',notes,price,net,paintData:{},paintSummary:'Mural -- '+sqft+'sqft on '+surfLabels[MURAL_APP.surf],mats:'Mural paint + supplies',extSurf:MURAL_APP.surf,sqft,ceilH:9,ratePerSqft:document.getElementById('muralRate').value,clientNote:muralClientNote};
   goStep(6);
 }
+
+// -- RESET -----------------------------------------------------
 function resetAll(){
   EXT.surf='vinyl';EXT.cond='good';EXT.storeys='1';EXT.coat='match';EXT.wash='no';EXT.caulk='no';EXT.elements.clear();
   document.querySelectorAll('.chk[data-ext]').forEach(e=>e.classList.remove('on'));
@@ -619,36 +1271,36 @@ function resetAll(){
   ['muralW','muralH','muralSqftApp','muralFlat','muralNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   const mr=document.getElementById('muralRate');if(mr)mr.value='10';const mm=document.getElementById('muralMats');if(mm)mm.value='0';const mp=document.getElementById('muralPrimer');if(mp)mp.value='0';
   document.querySelectorAll('#muralSurfGrp .tb').forEach((e,i)=>e.classList.toggle('on',i===0));
-  document.querySelectorAll('[data-grp="muralCond"]').forEach((e,i)=>e.classList.toggle('on',i===0));
-  document.querySelectorAll('[data-grp="muralPriceMode"]').forEach((e,i)=>e.classList.toggle('on',i===0));
-  document.querySelectorAll('[data-grp="muralPrep"]').forEach((e,i)=>e.classList.toggle('on',i===0));
-  const sqftRow=document.getElementById('muralSqftRow');if(sqftRow)sqftRow.style.display='';const flatRow=document.getElementById('muralFlatRow');if(flatRow)flatRow.style.display='none';
-  S.coat='match';S.cond='good';S.occ='no';S.wp='no';S.scope=['walls'];S.mats=[];S.paintData={};
+  ['muralCond','muralPriceMode','muralPrep'].forEach(grp=>{document.querySelectorAll('[data-grp="'+grp+'"]').forEach((e,i)=>e.classList.toggle('on',i===0));});
+  document.getElementById('muralSqftRow').style.display='';document.getElementById('muralFlatRow').style.display='none';
+  S.coat='change';S.cond='good';S.occ='no';S.wp='no';S.scope=['walls'];S.mats=[];S.paintData={};
+  // rooms array reset already done above
   document.getElementById('extraNotes').value='';
-  ['sLiving','sBed','sOffice','sHall','sBathSm','sBathMd','sBathLg','sKitchen','sLaundry','sCloset','sStairSm','sStairLg','numDoors','winSm','winMd','winLg'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
+  document.getElementById('roomCardsArea').innerHTML='';
+  document.getElementById('measRoomRows').innerHTML='';
+  document.getElementById('measQuickArea').style.display='';
+  document.getElementById('measDetailArea').style.display='none';
+  document.querySelectorAll('[data-grp="measMode"]').forEach((e,i)=>e.classList.toggle('on',i===0));
+  ['sLiving','sBed','sOffice','sHall','sBathSm','sBathMd','sBathLg','sKitchen','sLaundry','sCloset','sStairSm','sStairLg','numDoors'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
   document.getElementById('floorSqft').value='';document.getElementById('ceilHeight').value='8';document.getElementById('projectType').value='condo';
   document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
   document.querySelectorAll('.tb[data-val="no"]').forEach(b=>b.classList.add('on'));
-  document.querySelectorAll('.tb[data-val="match"]').forEach(b=>b.classList.add('on'));
-  document.querySelectorAll('.tb[data-val="good"]').forEach(b=>b.classList.add('on'));
   document.querySelectorAll('.tb[data-grp="mode"][data-val="interior"]').forEach(b=>b.classList.add('on'));
-  document.querySelectorAll('.chk[data-scope]').forEach(el=>{el.classList.toggle('on',el.dataset.scope==='walls');});
+  document.querySelectorAll('.tb[data-grp="measMode"][data-val="quick"]').forEach(b=>b.classList.add('on'));
+  document.querySelectorAll('.tb[data-grp="occ"][data-val="no"]').forEach(b=>b.classList.add('on'));
+  document.querySelectorAll('.tb[data-grp="cond"][data-val="good"]').forEach(b=>b.classList.add('on'));
+  document.querySelectorAll('.tb[data-grp="wp"][data-val="no"]').forEach(b=>b.classList.add('on'));
   document.querySelectorAll('.crow').forEach(el=>el.classList.remove('on'));
   document.querySelectorAll('.mat-row').forEach(el=>el.classList.remove('on'));
   document.getElementById('paintCardsArea').innerHTML='';
   goStep(0);
 }
-document.getElementById('s1back').addEventListener('click',()=>goStep(0));
-document.getElementById('s1next').addEventListener('click',()=>goStep(2));
-document.getElementById('s2back').addEventListener('click',()=>goStep(1));
-document.getElementById('s2next').addEventListener('click',()=>goStep(3));
-document.getElementById('s3back').addEventListener('click',()=>goStep(2));
-document.getElementById('s3next').addEventListener('click',()=>goStep(4));
-document.getElementById('s4back').addEventListener('click',()=>goStep(3));
-document.getElementById('s4next').addEventListener('click',()=>{buildPaintCards();goStep(5);});
-document.querySelectorAll('.mat-row').forEach(el=>{el.addEventListener('click',function(){this.classList.toggle('on');const mat=this.dataset.mat;const idx=S.mats.indexOf(mat);if(idx>-1)S.mats.splice(idx,1);else S.mats.push(mat);});});
-const defaultFinish={walls:'eggshell',trim:'semi-gloss',doors:'semi-gloss',ceiling:'flat'};
-const surfaceLabel={walls:'Walls',trim:'Trim & baseboards',doors:'Doors',ceiling:'Ceilings'};
+
+// nav handled in new room builder section above
+
+// -- PAINT CARDS -----------------------------------------------
+const defaultFinish={walls:'eggshell',trim:'semi-gloss',ceiling:'flat'};
+const surfaceLabel={walls:'Walls',trim:'Trim & baseboards',ceiling:'Ceilings'};
 const finishOptions=[
   {val:'flat',label:'Flat',desc:'Zero sheen. Best for ceilings. Hides imperfections. Not washable.'},
   {val:'matte',label:'Matte',desc:'Very low sheen. Good for bedrooms and low-traffic rooms.'},
@@ -657,7 +1309,12 @@ const finishOptions=[
   {val:'semi-gloss',label:'Semi-gloss',desc:'Standard for trim, doors, and baseboards. Very durable.'},
   {val:'gloss',label:'Gloss',desc:'High shine. Accents and feature walls. Walls must be smooth.'},
 ];
+
 function buildPaintCards(){
+  // Derive global scope from rooms array
+  const allScope=new Set();
+  rooms.forEach(r=>r.scope.forEach(s=>allScope.add(s)));
+  S.scope=Array.from(allScope);
   const area=document.getElementById('paintCardsArea');area.innerHTML='';S.paintData={};
   const surfaces=[];
   if(S.scope.includes('walls'))surfaces.push('walls');
@@ -667,8 +1324,8 @@ function buildPaintCards(){
     S.paintData[surf]={colorMatch:false,colorName:'',colorCode:'',finish:defaultFinish[surf]||'eggshell',tier:'',product:''};
     const label=surf==='trim'?(S.scope.includes('trim')&&S.scope.includes('doors')?'Trim, baseboards & doors':S.scope.includes('trim')?'Trim & baseboards':'Doors'):surfaceLabel[surf];
     const card=document.createElement('div');card.className='paint-card';card.dataset.surf=surf;
-    const finOpts=finishOptions.map(f=>'<div class="finish-opt'+(f.val===defaultFinish[surf]?' on':'')+'" data-surf="'+surf+'" data-finish="'+f.val+'" style="margin-bottom:6px"><div class="fo-top"><div class="fo-cb"></div><span class="fo-name">'+f.label+'</span></div><div class="fo-desc">'+f.desc+'</div></div>').join('');
-    card.innerHTML='<div class="paint-card-title">'+label+'</div><div class="cm-toggle" id="cm-'+surf+'" style="margin-bottom:10px"><div class="cm-cb"></div><div><div class="ct">Color match existing</div><div class="cs">Match current color exactly</div></div></div><div class="color-fields" id="cf-'+surf+'"><div class="r2" style="margin-bottom:.875rem"><div class="fld"><label>Color name</label><input type="text" id="cn-'+surf+'" placeholder="e.g. Accessible Beige" autocomplete="off"></div><div class="fld"><label>SW color code</label><input type="text" id="cc-'+surf+'" placeholder="e.g. SW 7036" autocomplete="off"></div></div></div><div class="stitle" style="margin-top:.5rem">Finish</div><div id="fo-'+surf+'">'+finOpts+'</div><div class="stitle">Product tier</div><div id="to-'+surf+'"><div class="tier-opt" data-surf="'+surf+'" data-tier="good" style="margin-bottom:8px"><div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Good</span><span class="tier-badge good-badge">~$45/gal</span></div><div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tp-'+surf+'-good" placeholder="e.g. ProMar 200" autocomplete="off"></div></div><div class="tier-opt" data-surf="'+surf+'" data-tier="better" style="margin-bottom:8px"><div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Better</span><span class="tier-badge better-badge">~$60/gal</span></div><div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tp-'+surf+'-better" placeholder="e.g. SuperPaint" autocomplete="off"></div></div><div class="tier-opt" data-surf="'+surf+'" data-tier="best" style="margin-bottom:8px"><div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Best</span><span class="tier-badge best-badge">~$80/gal</span></div><div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tp-'+surf+'-best" placeholder="e.g. Emerald" autocomplete="off"></div></div></div>';
+    const finOpts=finishOptions.map(f=>'<div class="finish-opt'+(f.val===defaultFinish[surf]?' on':'')+'" data-surf="'+surf+'" data-finish="'+f.val+'"><div class="fo-top"><div class="fo-cb"></div><span class="fo-name">'+f.label+'</span></div><div class="fo-desc">'+f.desc+'</div></div>').join('');
+    card.innerHTML='<div class="paint-card-title">'+label+'</div><div class="cm-toggle" id="cm-'+surf+'"><div class="cm-cb"></div><div><div class="ct">Color match existing</div><div class="cs">Match current color exactly</div></div></div><div class="color-fields" id="cf-'+surf+'"><div class="r2" style="margin-bottom:.875rem"><div class="fld"><label>Color name</label><input type="text" id="cn-'+surf+'" placeholder="e.g. Accessible Beige" autocomplete="off"></div><div class="fld"><label>SW color code</label><input type="text" id="cc-'+surf+'" placeholder="e.g. SW 7036" autocomplete="off"></div></div></div><div class="stitle" style="margin-top:.5rem">Finish</div><div id="fo-'+surf+'">'+finOpts+'</div><div class="stitle">Product tier</div><div id="to-'+surf+'"><div class="tier-opt" data-surf="'+surf+'" data-tier="good"><div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Good</span><span class="tier-badge good-badge">~$45/gal</span></div><div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tp-'+surf+'-good" placeholder="e.g. ProMar 200" autocomplete="off"></div></div><div class="tier-opt" data-surf="'+surf+'" data-tier="better"><div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Better</span><span class="tier-badge better-badge">~$60/gal</span></div><div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tp-'+surf+'-better" placeholder="e.g. SuperPaint" autocomplete="off"></div></div><div class="tier-opt" data-surf="'+surf+'" data-tier="best"><div class="tier-top"><div class="tier-cb"></div><span class="tier-name">Best</span><span class="tier-badge best-badge">~$80/gal</span></div><div class="fld" style="margin-top:8px;margin-bottom:0"><input type="text" id="tp-'+surf+'-best" placeholder="e.g. Emerald" autocomplete="off"></div></div></div>';
     area.appendChild(card);
     document.getElementById('cm-'+surf).addEventListener('click',function(){S.paintData[surf].colorMatch=!S.paintData[surf].colorMatch;this.classList.toggle('on',S.paintData[surf].colorMatch);document.getElementById('cf-'+surf).classList.toggle('dimmed',S.paintData[surf].colorMatch);});
     document.getElementById('cn-'+surf).addEventListener('input',function(){S.paintData[surf].colorName=this.value;});
@@ -678,12 +1335,9 @@ function buildPaintCards(){
     ['good','better','best'].forEach(t=>{const inp=document.getElementById('tp-'+surf+'-'+t);if(inp)inp.addEventListener('input',function(){if(S.paintData[surf].tier===t)S.paintData[surf].product=this.value;});});
   });
 }
-document.getElementById('s5back').addEventListener('click',()=>goStep(4));
-document.getElementById('s6back').addEventListener('click',()=>{const q=window._qs;if(q&&q.projType==='exterior')goStep('ExtC');else if(q&&q.projType==='mural')goStep('Mural');else goStep(5);});
-document.getElementById('calcBtn').addEventListener('click',calculate);
-document.getElementById('newBtn').addEventListener('click',resetAll);
-document.getElementById('shareBtn').addEventListener('click',shareQuote);
-document.getElementById('jobberBtn').addEventListener('click',saveToJobber);
+
+// listeners handled above
+
 async function saveToJobber(){
   const q=window._qs;if(!q)return;
   const btn=document.getElementById('jobberBtn'),status=document.getElementById('jobberStatus');
@@ -691,118 +1345,38 @@ async function saveToJobber(){
   try{
     const resp=await fetch('/jobber/quote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});
     const data=await resp.json();
-    if(data.success){btn.textContent='Saved to Jobber ✓';btn.style.background='#4fa88a';status.textContent='Quote #'+data.quoteNumber+' created — open Jobber to review and send.';status.style.color='#4fa88a';}
+    if(data.success){btn.textContent='Saved to Jobber _';btn.style.background='#4fa88a';status.textContent='Quote #'+data.quoteNumber+' created -- open Jobber to review and send.';status.style.color='#4fa88a';}
     else throw new Error(data.error||'Unknown error');
   }catch(err){
-    btn.textContent='Save to Jobber →';btn.style.opacity='1';
-    if(err.message.includes('not connected'))status.innerHTML='Jobber not connected. <a href="/jobber/connect" target="_blank" style="color:#73C7AA">Connect Jobber →</a>';
+    btn.textContent='Save to Jobber _';btn.style.opacity='1';
+    if(err.message.includes('not connected'))status.innerHTML='Jobber not connected. <a href="/jobber/connect" target="_blank" style="color:#73C7AA">Connect Jobber _</a>';
     else{status.textContent='Error: '+err.message;status.style.color='#e24b4a';}
   }
 }
-document.querySelectorAll('.tb').forEach(btn=>{btn.addEventListener('click',function(){const grp=this.dataset.grp,val=this.dataset.val;if(!grp)return;if(grp.startsWith('ext')||grp.startsWith('mural')||grp==='mode')return;document.querySelectorAll('.tb[data-grp="'+grp+'"]').forEach(b=>b.classList.remove('on'));this.classList.add('on');S[grp]=val;});});
-document.querySelectorAll('.chk[data-scope]').forEach(el=>{el.addEventListener('click',function(){const val=this.dataset.scope;this.classList.toggle('on');const idx=S.scope.indexOf(val);if(idx>-1)S.scope.splice(idx,1);else S.scope.push(val);});});
-document.querySelectorAll('.crow').forEach(el=>{el.addEventListener('click',function(){this.classList.toggle('on');});});
-function gi(id){return parseInt(document.getElementById(id).value)||0;}
-function gf(id,fb=0){const v=parseFloat(document.getElementById(id).value);return isNaN(v)?fb:v;}
+
+document.querySelectorAll('.tb').forEach(btn=>{btn.addEventListener('click',function(){const grp=this.dataset.grp,val=this.dataset.val;if(!grp)return;if(grp.startsWith('ext')||grp.startsWith('mural')||grp==='mode'||grp==='measMode')return;document.querySelectorAll('.tb[data-grp="'+grp+'"]').forEach(b=>b.classList.remove('on'));this.classList.add('on');S[grp]=val;});});
+// crow handled by delegated listener above
+
+function gi(id){return parseInt(document.getElementById(id)?.value)||0;}
+function gf(id,fb=0){const v=parseFloat(document.getElementById(id)?.value);return isNaN(v)?fb:v;}
 function r50(n){return Math.round(n/50)*50;}
 function fmt(n){return '$'+Math.round(n).toLocaleString();}
-function getWallsRate(sqft,type){
-  if(type==='house'){if(sqft<=1000)return 2.75;if(sqft<=1500)return 2.55;if(sqft<=2000)return 2.35;return 2.10;}
-  if(type==='commercial')return getWallsRate(sqft,'condo')*1.20;
-  if(sqft<=300)return 3.75;if(sqft<=450)return 2.90;if(sqft<=700)return 2.55;
-  if(sqft<=900)return 2.50;if(sqft<=1300)return 2.40;if(sqft<=2000)return 2.15;return 1.85;
-}
-function getCeilingRate(sqft){if(sqft<=600)return 1.50;if(sqft<=800)return 1.35;if(sqft<=1100)return 1.20;if(sqft<=1500)return 1.05;if(sqft<=2000)return 0.90;return 0.75;}
-function coatLabel(coat){if(coat==='major')return '3 coats — major color change / primer';if(coat==='change')return '2 coats — color change';return '1 coat — same color';}
-function calculate(){
-  const sqft=gf('floorSqft'),ceilH=gf('ceilHeight',8),doors=gi('numDoors');
-  const client=document.getElementById('clientName').value||'Client',addr=document.getElementById('jobAddress').value||'',phone=document.getElementById('clientPhone').value||'',email=document.getElementById('clientEmail').value||'';
-  const projType=document.getElementById('projectType').value,notes=document.getElementById('extraNotes').value||'';
-  const beds=gi('sBed'),offices=gi('sOffice'),halls=gi('sHall'),bathSm=gi('sBathSm'),bathMd=gi('sBathMd'),bathLg=gi('sBathLg'),kitchen=gi('sKitchen'),laundry=gi('sLaundry'),closets=gi('sCloset'),stairSm=gi('sStairSm'),stairLg=gi('sStairLg');
-  if(!sqft){alert('Please enter floor area in step 3.');goStep(2);return;}
-  const type=projType==='house'?'house':projType==='commercial'?'commercial':'condo';
-  let base=0,wallBase=0;const rows=[],warns=[];
-  if(S.scope.includes('walls')){const rate=getWallsRate(sqft,type);wallBase=sqft*rate;base+=wallBase;rows.push({l:'Walls — '+sqft+' sqft × $'+rate.toFixed(2)+'/sqft',v:wallBase});}
-  if(S.scope.includes('trim')){
-    const winSm=gi('winSm'),winMd=gi('winMd'),winLg=gi('winLg');
-    const baseFt=Math.max(40,Math.round(sqft*0.15)),totalTrimFt=baseFt+doors*20+winSm*10+winMd*14+winLg*18;
-    const c=totalTrimFt*2;base+=c;rows.push({l:'Trim — ~'+totalTrimFt+'ft × $2/ft (base '+baseFt+'ft + '+doors+' doors + '+(winSm+winMd+winLg)+' windows)',v:c});
-  }
-  if(S.scope.includes('doors')&&doors>0){const c=doors*100;base+=c;rows.push({l:'Doors — '+doors+' × $100',v:c});}
-  if(S.scope.includes('ceiling')){const rate=getCeilingRate(sqft);const c=sqft*rate;base+=c;rows.push({l:'Ceilings — '+sqft+' sqft × $'+rate.toFixed(2)+'/sqft',v:c});}
-  if(ceilH>=10){const pct=ceilH>=12?0.18:ceilH>=11?0.12:0.10;const c=base*pct;base+=c;rows.push({l:'High ceilings ('+ceilH+'ft) +'+Math.round(pct*100)+'%',v:c});}
-  let premiums=0;
-  premiums+=beds*25;premiums+=offices*25;premiums+=halls*50;premiums+=bathSm*75;premiums+=bathMd*125;premiums+=bathLg*150;premiums+=kitchen*75;premiums+=laundry*50;
-  if(closets===1)premiums+=50;else if(closets===2)premiums+=75;else if(closets>=3)premiums+=100;
-  premiums+=stairSm*200;premiums+=stairLg*350;
-  if(wallBase>0)premiums=Math.min(premiums,wallBase*0.15);
-  if(premiums>0){base+=premiums;rows.push({l:'Space complexity premiums',v:premiums});}
-  if(S.cond==='minor'){const c=base*0.12;base+=c;rows.push({l:'Minor repairs +12%',v:c});}
-  else if(S.cond==='heavy'){const c=base*0.30;base+=c;rows.push({l:'Heavy repairs +30%',v:c});warns.push('Heavy repairs flagged — confirm drywall scope before finalising.');}
-  if(S.coat==='change'){const c=base*0.15;base*=1.15;rows.push({l:coatLabel(S.coat),v:c,coat:true});}
-  else if(S.coat==='major'){const c=base*0.30;base*=1.30;rows.push({l:coatLabel(S.coat),v:c,coat:true});}
-  else rows.push({l:coatLabel(S.coat),v:null,coat:true});
-  if(S.occ==='yes'){base+=75;rows.push({l:'Occupied / furnished +$75',v:75});warns.push('Occupied space — allow extra time for furniture protection.');}
-  if(S.wp==='yes')warns.push('Wallpaper removal is a separate scope — quote it separately.');
-  if(base<619)base=619;
-  const price=r50(base*1.05),painters=Math.round(price*0.40),matsAmt=Math.round(price*0.10),net=Math.round(price*0.50);
-  const coats=S.coat==='major'?3:S.coat==='change'?2:1;
 
-  // ── PAINT QUANTITY — gallons, quality-based pricing ──────────────────────
-  // Estimate actual wall sqft from floor area + ceiling height
-  // Perimeter ≈ sqrt(floorSqft) × 4 sides; wall area = perimeter × height × 0.85
-  const wallSqftEst=Math.round(Math.sqrt(sqft)*4*ceilH*0.85);
-  let matHTML='';const paintSummaryLines=[];
-  Object.keys(S.paintData).forEach(surf=>{
-    const pd=S.paintData[surf];
-    const surfLbl={walls:'Walls',trim:'Trim & doors',ceiling:'Ceilings'}[surf]||surf;
-    let gallons=0;
-    if(surf==='walls'){
-      // 400 sqft/gallon per coat — Canadian standard interior latex
-      gallons=Math.ceil(wallSqftEst/400*coats);
-    } else if(surf==='trim'){
-      const winSm=gi('winSm'),winMd=gi('winMd'),winLg=gi('winLg');
-      const totalTrimFt=Math.max(40,Math.round(sqft*0.15))+doors*20+winSm*10+winMd*14+winLg*18;
-      // 150 linear ft per gallon per coat for trim
-      gallons=Math.ceil(totalTrimFt/150*coats);
-    } else if(surf==='ceiling'){
-      gallons=Math.ceil(sqft/400*coats);
-    }
-    if(gallons<1)gallons=1;
-    // Price per gallon by quality tier
-    const tierPrice=PAINT_PRICE[pd.tier]||55;
-    const paintCostSurf=Math.round(gallons*tierPrice);
-    const colorStr=pd.colorMatch?'Color match':((pd.colorName||'')+(pd.colorCode?' ('+pd.colorCode+')':''))||'Not specified';
-    const productStr=pd.tier?(pd.tier.charAt(0).toUpperCase()+pd.tier.slice(1))+(pd.product?' — '+pd.product:''):'Not selected';
-    paintSummaryLines.push(surfLbl+': '+colorStr+' · '+(pd.finish||'—')+' · '+productStr+' · ~'+gallons+' gal (~$'+paintCostSurf+')');
-    matHTML+='<div style="font-size:13px;padding:6px 0;border-bottom:.5px solid var(--border);color:var(--text2)"><strong style="color:var(--text)">'+surfLbl+'</strong><br>'+colorStr+' · '+(pd.finish||'—')+' finish · '+productStr+'<br><span style="color:var(--teal-dk)">~'+gallons+' gal Sherwin-Williams · ~$'+paintCostSurf+' est.</span></div>';
-  });
-  if(!matHTML){
-    const gallonsFb=Math.ceil(wallSqftEst/400*coats);
-    const paintCost=Math.round(gallonsFb*55);
-    matHTML='<span class="ptag">~'+gallonsFb+' gal Sherwin-Williams ('+coats+' coat'+(coats>1?'s':'')+' · ~$'+paintCost+' est. cost)</span>';
-  }
-  // ─────────────────────────────────────────────────────────────────────────
+// old calculate removed - using new rooms-array version above
 
-  document.getElementById('matArea').innerHTML=matHTML;
-  window._qs={client,phone,email,addr,projType,sqft,ceilH,doors,bathSm,bathMd,bathLg,kitchen,laundry,closets,stairSm,stairLg,beds,halls,offices,scope:S.scope.join(', '),coat:S.coat,cond:S.cond,occ:S.occ,wp:S.wp,notes,price,net,paintData:S.paintData,paintSummary:paintSummaryLines.join('\n'),mats:S.mats.length?S.mats.join(', '):'none'};
-  document.getElementById('rClient').textContent=client+(phone?' · '+phone:'')+(email?' · '+email:'');
-  document.getElementById('rPrice').textContent=fmt(price);document.getElementById('rAddr').textContent=addr||projType;
-  let bd='';
-  rows.forEach(r=>{if(r.coat)bd+='<div class="bdr coat-row"><span>'+r.l+'</span><span>'+(r.v!==null?fmt(r.v):'included')+'</span></div>';else bd+='<div class="bdr"><span>'+r.l+'</span><span>'+fmt(r.v)+'</span></div>';});
-  bd+='<div class="bdr tot"><span>Total</span><span>'+fmt(price)+'</span></div>';
-  document.getElementById('bdArea').innerHTML=bd;
-  document.getElementById('mgArea').innerHTML='<div class="mc hl"><div class="mcv">'+fmt(net)+'</div><div class="mcl">Your net</div></div><div class="mc"><div class="mcv">'+fmt(painters)+'</div><div class="mcl">Painters 40%</div></div><div class="mc"><div class="mcv">'+fmt(matsAmt)+'</div><div class="mcl">Materials ~10%</div></div>';
-  const wEl=document.getElementById('warnBox');if(warns.length){wEl.style.display='block';wEl.innerHTML=warns.map(w=>'⚠ '+w).join('<br><br>');}else wEl.style.display='none';
-  goStep(6);
-}
 function shareQuote(){
   const q=window._qs;if(!q)return;
   const isExt=q.projType==='exterior',isMural=q.projType==='mural';
-  const scopeBlock=isExt?'Surface:  '+(q.extSurf||'—')+'\nElements: '+(q.scope||'—')+'\nStoreys:  '+(q.storeys||'1')+'\nCondition:'+q.cond+'\nCoat:     '+(q.coat==='major'?'Major/primer (3 coats)':q.coat==='change'?'Color change (2 coats)':'Same/similar color'):isMural?'Surface:  '+(q.extSurf||'—')+'\nWall:     '+(q.sqft||'—')+' sqft\nRate:     $'+(q.ratePerSqft||'—')+'/sqft\nCondition:'+q.cond+'\nVision:   '+(q.notes||'—'):'Scope:    '+q.scope+'\nCoat:     '+(q.coat==='major'?'Major/primer (3 coats)':q.coat==='change'?'Color change (2 coats)':'Same color (1 coat)')+'\nCondition:'+q.cond+'\nSqft:     '+(q.sqft||'—')+' | Ceiling: '+(q.ceilH||8)+'ft\nOccupied: '+(q.occ==='yes'?'Yes':'No');
-  const text='TEN BELL PAINTING — QUOTE SUMMARY\n===================================\nClient:   '+q.client+'\nPhone:    '+(q.phone||'—')+'\nEmail:    '+(q.email||'—')+'\nAddress:  '+(q.addr||'—')+'\nType:     '+q.projType.charAt(0).toUpperCase()+q.projType.slice(1)+'\n\nSCOPE & PRICING\n'+scopeBlock+'\n\nPAINT / MATERIALS\n'+(q.paintSummary||q.mats||'See breakdown')+'\n\nQUOTED PRICE: '+fmt(q.price)+'\nYour net:     '+fmt(q.net)+'\n\nNotes: '+(q.notes||'none')+'\nGenerated by Ten Bell Painting quote tool';
+  const NL='\n';
+  const scopeBlock=isExt?
+    'Surface:  '+(q.extSurf||'--')+NL+'Storeys:  '+(q.storeys||'1')+NL+'Condition:'+q.cond+NL+'Coat:     '+(q.coat==='major'?'Major/primer (3 coats)':q.coat==='change'?'Color change (2 coats)':'Same/similar color')
+    :isMural?
+    'Surface:  '+(q.extSurf||'--')+NL+'Wall:     '+(q.sqft||'--')+' sqft'+NL+'Rate:     $'+(q.ratePerSqft||'--')+'/sqft'+NL+'Condition:'+q.cond+NL+'Vision:   '+(q.notes||'--')
+    :
+    'Scope:    '+q.scope+NL+'Coat:     '+(q.coat==='major'?'Major/primer (3 coats)':q.coat==='change'?'Color change (2 coats)':'Same color (1 coat)')+NL+'Condition:'+q.cond+NL+'Sqft:     '+(q.sqft||'--')+' floor | '+(q.wallSqft||'--')+' wall'+NL+'Occupied: '+(q.occ==='yes'?'Yes':'No')+(q.roomScopeDetail?NL+NL+'ROOM SCOPE'+NL+q.roomScopeDetail:'');
+  const text='TEN BELL PAINTING -- QUOTE SUMMARY'+NL+'==================================='+NL+'Client:   '+q.client+NL+'Phone:    '+(q.phone||'--')+NL+'Email:    '+(q.email||'--')+NL+'Address:  '+(q.addr||'--')+NL+'Type:     '+q.projType.charAt(0).toUpperCase()+q.projType.slice(1)+NL+NL+'SCOPE & PRICING'+NL+scopeBlock+NL+NL+'PAINT / MATERIALS'+NL+(q.paintSummary||q.mats||'See breakdown')+NL+NL+'QUOTED PRICE: '+fmt(q.price)+NL+'Your net:     '+fmt(q.net)+NL+NL+'Notes: '+(q.notes||'none')+NL+'Generated by Ten Bell Painting quote tool';
   if(navigator.share)navigator.share({title:'Ten Bell Quote',text}).catch(()=>{});
-  else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>{document.getElementById('shareBtn').textContent='✅ Copied!';setTimeout(()=>{document.getElementById('shareBtn').textContent='📋 Copy quote summary';},2000);});
+  else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>{document.getElementById('shareBtn').textContent='Copied!';setTimeout(()=>{document.getElementById('shareBtn').textContent='Copy quote summary';},2000);});
 }
 </script>
 </body>
