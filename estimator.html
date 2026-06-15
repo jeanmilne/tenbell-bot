@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ten Bell Painting — Get an Estimate</title>
+<title>Ten Bell Painting &#8212; Get an Estimate</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -13,40 +13,24 @@
   --text:#1a1a2e;--text2:#5a6a7e;--border:rgba(15,117,188,.15);
   --radius:12px;--radius-lg:18px;
 }
-
-/* ── Core layout: full viewport, no page scroll ── */
 html,body{background:var(--dark);min-height:100%}
 body{font-family:'DM Sans',sans-serif;color:var(--text)}
-
-
-/* Teal scrollbar for webkit browsers */
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--teal);border-radius:3px}
-* {scrollbar-width:thin;scrollbar-color:var(--teal) transparent}
-
-/* Progress bar */
+*{scrollbar-width:thin;scrollbar-color:var(--teal) transparent}
 .pbar{height:4px;background:#e8f5f0;flex-shrink:0}
 .pbar-fill{height:100%;background:var(--teal);transition:width .45s ease;box-shadow:0 0 6px rgba(115,199,170,.4);width:5%}
-
-/* Each screen = full remaining height, flex column */
 .screen{display:none;flex-direction:column;max-width:640px;width:100%;margin:0 auto;padding:1.25rem 1.25rem 1.5rem}
 .screen.active{display:flex;animation:fu .35s ease}
 @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-
-/* Screen sections */
 .s-top{padding-bottom:.75rem;border-bottom:1px solid var(--border);margin-bottom:.875rem}
 .s-mid{padding-right:2px}
-
 .s-bot{padding-top:.75rem;border-top:1px solid var(--border);margin-top:1rem}
-
-/* Typography */
 .step-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;display:flex;align-items:center;gap:8px}
 .step-lbl::before{content:'';display:block;width:18px;height:2px;background:var(--teal);border-radius:2px}
 h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-height:1.2;margin-bottom:.3rem}
 .sub{font-size:13px;color:var(--text2);line-height:1.5}
-
-/* Choice cards grid */
 .cgrid{display:grid;gap:10px}
 .cgrid.c2{grid-template-columns:1fr 1fr}
 .cgrid.c3{grid-template-columns:1fr 1fr 1fr}
@@ -61,8 +45,6 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
 .ccard .cl{font-size:13px;font-weight:600;color:var(--text)}
 .ccard.on .cl{color:var(--teal-dk)}
 .ccard .cs{font-size:11px;color:var(--text2);margin-top:4px;line-height:1.35;display:block}
-
-/* Space counters */
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.5rem}
 .scard{background:#ffffff;border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 10px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .scard label{font-size:11px;color:var(--text2);display:block;margin-bottom:6px;font-weight:500}
@@ -70,18 +52,12 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
 .cbtn{width:28px;height:28px;border-radius:7px;border:1.5px solid var(--border);background:#eef2f7;color:var(--teal);font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;touch-action:manipulation;user-select:none;line-height:1}
 .cbtn:active{transform:scale(.88)}
 .cval{flex:1;text-align:center;font-size:17px;font-weight:700;color:var(--text)}
-
-/* Section dividers */
 .sdiv{font-size:10px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.08em;margin:.875rem 0 .5rem;display:flex;align-items:center;gap:8px}
 .sdiv::after{content:'';flex:1;height:1px;background:rgba(115,199,170,.3)}
-
-/* Pill toggles */
 .pgrp{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:.875rem}
 .pill{padding:9px 15px;font-size:12px;font-weight:500;border:1.5px solid var(--border);border-radius:30px;background:#ffffff;color:var(--text2);cursor:pointer;user-select:none;touch-action:manipulation;transition:all .18s;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .pill:active{transform:scale(.97)}
 .pill.on{background:var(--teal);border-color:var(--teal);color:#ffffff;font-weight:600}
-
-/* Input fields */
 .field{margin-bottom:.75rem}
 .field label{display:block;font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px}
 .field input,.field select{width:100%;padding:12px 13px;font-size:15px;border:1.5px solid var(--border);border-radius:var(--radius);background:#ffffff;color:var(--text);appearance:none;-webkit-appearance:none;transition:border-color .2s;box-shadow:0 1px 3px rgba(0,0,0,.05)}
@@ -91,20 +67,14 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
 .req{color:#ff6b6b;margin-left:2px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .err{font-size:12px;color:#ff6b6b;margin-top:4px;display:none}
-
-/* Nav buttons */
 .nav{display:flex;gap:10px}
 .nbtn{flex:1;padding:14px;font-size:15px;font-weight:600;border-radius:var(--radius);cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--text2);touch-action:manipulation;transition:all .18s}
 .nbtn:active{transform:scale(.98)}
 .nbtn.pri{background:var(--teal);color:#ffffff;border-color:var(--teal);font-weight:700}
 .nbtn.pri:hover{filter:brightness(1.08)}
 .nbtn.bk{flex:0 0 72px;font-size:13px;color:var(--text2)}
-
-/* Note box */
 .nbox{background:rgba(115,199,170,.08);border:1px solid rgba(115,199,170,.3);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:.875rem}
 .nbox strong{color:var(--text)}
-
-/* Result */
 .rhero{background:linear-gradient(135deg,var(--blue),var(--sky));border-radius:var(--radius-lg);padding:1.5rem 1.25rem;margin-bottom:1rem;text-align:center;position:relative;overflow:hidden}
 .rhero::before{content:'🎨';position:absolute;right:-8px;bottom:-18px;font-size:90px;opacity:.1}
 .rhero .rwho{font-size:13px;opacity:.9;margin-bottom:4px;color:#ffffff}
@@ -123,16 +93,12 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
 .ctaa.pri{background:var(--teal);color:#ffffff}
 .ctaa.sec{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
 .disc{font-size:10px;color:var(--text2);text-align:center;line-height:1.6;padding:0 .5rem;margin-top:.5rem}
-
-/* Spinner */
 .spin{display:none;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:1rem}
 .spin.on{display:flex;animation:fu .3s ease}
 .sdrop{font-size:52px;animation:drip 1s ease-in-out infinite alternate}
 @keyframes drip{from{transform:translateY(0) scale(1)}to{transform:translateY(10px) scale(.94)}}
 .spin p{font-size:15px;color:var(--text2);text-align:center}
 .spin strong{color:var(--teal)}
-
-/* Responsive desktop */
 @media(min-width:768px){
   .screen{padding:1.5rem 2rem 1rem}
   .sgrid{grid-template-columns:repeat(4,1fr)}
@@ -148,7 +114,6 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
 
 <div class="pbar"><div class="pbar-fill" id="pf"></div></div>
 
-<!-- SCREEN INTRO — Interior or Exterior -->
 <div class="screen active" id="sIntro">
   <div class="s-top">
     <div class="step-lbl">Get started</div>
@@ -158,28 +123,26 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
   <div class="s-mid">
     <div class="cgrid c2" style="margin-top:.5rem">
       <div class="ccard" onclick="startInterior()" style="padding:2rem 1rem">
-        <span class="ci" style="font-size:36px">🏠</span>
+        <span class="ci" style="font-size:36px">&#127968;</span>
         <div class="cl" style="font-size:16px;margin-top:.5rem">Interior</div>
-        <span class="cs">Walls, ceilings, trim & more</span>
+        <span class="cs">Walls, ceilings, trim &amp; more</span>
       </div>
       <div class="ccard" onclick="startExterior()" style="padding:2rem 1rem">
-        <span class="ci" style="font-size:36px">🏡</span>
+        <span class="ci" style="font-size:36px">&#127969;</span>
         <div class="cl" style="font-size:16px;margin-top:.5rem">Exterior</div>
-        <span class="cs">Siding, doors, trim, fences & more</span>
+        <span class="cs">Siding, doors, trim, fences &amp; more</span>
       </div>
       <div class="ccard" onclick="startMural()" style="padding:2rem 1rem;grid-column:span 2">
-        <span class="ci" style="font-size:36px">🎨</span>
+        <span class="ci" style="font-size:36px">&#127912;</span>
         <div class="cl" style="font-size:16px;margin-top:.5rem">Mural</div>
-        <span class="cs">Custom wall art & feature murals — we'll reach out with a custom quote</span>
+        <span class="cs">Custom wall art &amp; feature murals &#8212; we'll reach out with a custom quote</span>
       </div>
     </div>
   </div>
   <div class="s-bot"></div>
 </div>
 
-<!-- SCREEN 0 — Project type (interior) -->
 <div class="screen" id="s0">
-
   <div class="s-top">
     <div class="step-lbl">Step 1 of 4</div>
     <h1>What are we painting?</h1>
@@ -187,25 +150,23 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
   </div>
   <div class="s-mid">
     <div class="cgrid c2" id="typeGrid">
-      <div class="ccard" data-val="condo"><div class="ck"></div><span class="ci">🏢</span><div class="cl">Condo</div><span class="cs">Apartment or unit</span></div>
-      <div class="ccard" data-val="house"><div class="ck"></div><span class="ci">🏠</span><div class="cl">House</div><span class="cs">Detached or semi</span></div>
-      <div class="ccard" data-val="apartment"><div class="ck"></div><span class="ci">🏙️</span><div class="cl">Apartment</div><span class="cs">Rental unit</span></div>
-      <div class="ccard" data-val="rental"><div class="ck"></div><span class="ci">🔑</span><div class="cl">Rental Property</div><span class="cs">Investment unit</span></div>
-      <div class="ccard" data-val="commercial" style="grid-column:span 2"><div class="ck"></div><span class="ci">💼</span><div class="cl">Small Commercial</div><span class="cs">Office, retail, studio</span></div>
+      <div class="ccard" data-val="condo"><div class="ck"></div><span class="ci">&#127970;</span><div class="cl">Condo</div><span class="cs">Apartment or unit</span></div>
+      <div class="ccard" data-val="house"><div class="ck"></div><span class="ci">&#127968;</span><div class="cl">House</div><span class="cs">Detached or semi</span></div>
+      <div class="ccard" data-val="apartment"><div class="ck"></div><span class="ci">&#127961;</span><div class="cl">Apartment</div><span class="cs">Rental unit</span></div>
+      <div class="ccard" data-val="rental"><div class="ck"></div><span class="ci">&#128273;</span><div class="cl">Rental Property</div><span class="cs">Investment unit</span></div>
+      <div class="ccard" data-val="commercial" style="grid-column:span 2"><div class="ck"></div><span class="ci">&#128188;</span><div class="cl">Small Commercial</div><span class="cs">Office, retail, studio</span></div>
     </div>
     <div class="err" id="typeErr">Please select a project type</div>
   </div>
   <div class="s-bot">
-    <div class="nav"><button class="nbtn pri" onclick="goNext(0)">Let's go →</button></div>
+    <div class="nav"><button class="nbtn pri" onclick="goNext(0)">Let's go &#8594;</button></div>
   </div>
 </div>
 
-<!-- SCREEN 1 — Scope & details -->
 <div class="screen" id="s1">
-
   <div class="s-top">
     <div class="step-lbl">Step 2 of 4</div>
-    <h1>Scope & details.</h1>
+    <h1>Scope &amp; details.</h1>
     <p class="sub">A few more specifics and your estimate is ready.</p>
   </div>
   <div class="s-mid">
@@ -215,10 +176,10 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
     </div>
     <div class="sdiv">What's being painted?</div>
     <div class="cgrid c2" id="scopeGrid" style="margin-bottom:.875rem">
-      <div class="ccard on" data-scope="walls"><div class="ck"></div><span class="ci">🧱</span><div class="cl">Walls</div></div>
-      <div class="ccard" data-scope="ceiling"><div class="ck"></div><span class="ci">⬆️</span><div class="cl">Ceilings</div></div>
-      <div class="ccard" data-scope="trim"><div class="ck"></div><span class="ci">🪟</span><div class="cl">Trim & Baseboards</div></div>
-      <div class="ccard" data-scope="doors"><div class="ck"></div><span class="ci">🚪</span><div class="cl">Doors</div></div>
+      <div class="ccard on" data-scope="walls"><div class="ck"></div><span class="ci">&#129521;</span><div class="cl">Walls</div></div>
+      <div class="ccard" data-scope="ceiling"><div class="ck"></div><span class="ci">&#11014;&#65039;</span><div class="cl">Ceilings</div></div>
+      <div class="ccard" data-scope="trim"><div class="ck"></div><span class="ci">&#129695;</span><div class="cl">Trim &amp; Baseboards</div></div>
+      <div class="ccard" data-scope="doors"><div class="ck"></div><span class="ci">&#128682;</span><div class="cl">Doors</div></div>
     </div>
     <div class="sdiv">Color situation</div>
     <div class="pgrp" id="coatGrp">
@@ -228,27 +189,25 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
     </div>
     <div class="sdiv">Wall condition</div>
     <div class="cgrid c3" id="condGrid" style="margin-bottom:.875rem">
-      <div class="ccard on" data-val="good"><div class="ck"></div><span class="ci">✅</span><div class="cl">Good</div><span class="cs">Smooth walls, no damage — just a fresh coat</span></div>
-      <div class="ccard" data-val="minor"><div class="ck"></div><span class="ci">🔧</span><div class="cl">Minor repairs</div><span class="cs">Small nail holes, hairline cracks, scuffs or dents</span></div>
-      <div class="ccard" data-val="heavy"><div class="ck"></div><span class="ci">🛠️</span><div class="cl">Heavy repairs</div><span class="cs">Large holes, water damage or significant patching</span></div>
+      <div class="ccard on" data-val="good"><div class="ck"></div><span class="ci">&#9989;</span><div class="cl">Good</div><span class="cs">Smooth walls, no damage &#8212; just a fresh coat</span></div>
+      <div class="ccard" data-val="minor"><div class="ck"></div><span class="ci">&#128295;</span><div class="cl">Minor repairs</div><span class="cs">Small nail holes, hairline cracks, scuffs or dents</span></div>
+      <div class="ccard" data-val="heavy"><div class="ck"></div><span class="ci">&#128736;&#65039;</span><div class="cl">Heavy repairs</div><span class="cs">Large holes, water damage or significant patching</span></div>
     </div>
     <div class="sdiv">Occupied?</div>
     <div class="pgrp" id="occGrp">
-      <div class="pill on" data-val="no">No — vacant</div>
-      <div class="pill" data-val="yes">Yes — furniture present</div>
+      <div class="pill on" data-val="no">No &#8212; vacant</div>
+      <div class="pill" data-val="yes">Yes &#8212; furniture present</div>
     </div>
   </div>
   <div class="s-bot">
     <div class="nav">
-      <button class="nbtn bk" onclick="goScreen(0)">← Back</button>
-      <button class="nbtn pri" onclick="goNext(1)">Next →</button>
+      <button class="nbtn bk" onclick="goScreen(0)">&#8592; Back</button>
+      <button class="nbtn pri" onclick="goNext(1)">Next &#8594;</button>
     </div>
   </div>
 </div>
 
-<!-- SCREEN 2 — Spaces -->
 <div class="screen" id="s2">
-
   <div class="s-top">
     <div class="step-lbl">Step 3 of 4</div>
     <h1>Count the spaces.</h1>
@@ -257,37 +216,35 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
   <div class="s-mid">
     <div class="sdiv">Living spaces</div>
     <div class="sgrid">
-      <div class="scard"><label>Living / Dining</label><div class="counter"><button class="cbtn" onclick="adj('sLiving',-1)">−</button><div class="cval" id="sLiving">0</div><button class="cbtn" onclick="adj('sLiving',1)">+</button></div></div>
-      <div class="scard"><label>Bedrooms</label><div class="counter"><button class="cbtn" onclick="adj('sBed',-1)">−</button><div class="cval" id="sBed">0</div><button class="cbtn" onclick="adj('sBed',1)">+</button></div></div>
-      <div class="scard"><label>Office / Den</label><div class="counter"><button class="cbtn" onclick="adj('sOffice',-1)">−</button><div class="cval" id="sOffice">0</div><button class="cbtn" onclick="adj('sOffice',1)">+</button></div></div>
-      <div class="scard"><label>Hallways</label><div class="counter"><button class="cbtn" onclick="adj('sHall',-1)">−</button><div class="cval" id="sHall">0</div><button class="cbtn" onclick="adj('sHall',1)">+</button></div></div>
+      <div class="scard"><label>Living / Dining</label><div class="counter"><button class="cbtn" onclick="adj('sLiving',-1)">&#8722;</button><div class="cval" id="sLiving">0</div><button class="cbtn" onclick="adj('sLiving',1)">+</button></div></div>
+      <div class="scard"><label>Bedrooms</label><div class="counter"><button class="cbtn" onclick="adj('sBed',-1)">&#8722;</button><div class="cval" id="sBed">0</div><button class="cbtn" onclick="adj('sBed',1)">+</button></div></div>
+      <div class="scard"><label>Office / Den</label><div class="counter"><button class="cbtn" onclick="adj('sOffice',-1)">&#8722;</button><div class="cval" id="sOffice">0</div><button class="cbtn" onclick="adj('sOffice',1)">+</button></div></div>
+      <div class="scard"><label>Hallways</label><div class="counter"><button class="cbtn" onclick="adj('sHall',-1)">&#8722;</button><div class="cval" id="sHall">0</div><button class="cbtn" onclick="adj('sHall',1)">+</button></div></div>
     </div>
     <div class="sdiv">Bathrooms</div>
     <div class="sgrid">
-      <div class="scard"><label>Small / Powder</label><div class="counter"><button class="cbtn" onclick="adj('sBathSm',-1)">−</button><div class="cval" id="sBathSm">0</div><button class="cbtn" onclick="adj('sBathSm',1)">+</button></div></div>
-      <div class="scard"><label>Standard Bath</label><div class="counter"><button class="cbtn" onclick="adj('sBathMd',-1)">−</button><div class="cval" id="sBathMd">0</div><button class="cbtn" onclick="adj('sBathMd',1)">+</button></div></div>
-      <div class="scard"><label>Large / Ensuite</label><div class="counter"><button class="cbtn" onclick="adj('sBathLg',-1)">−</button><div class="cval" id="sBathLg">0</div><button class="cbtn" onclick="adj('sBathLg',1)">+</button></div></div>
+      <div class="scard"><label>Small / Powder</label><div class="counter"><button class="cbtn" onclick="adj('sBathSm',-1)">&#8722;</button><div class="cval" id="sBathSm">0</div><button class="cbtn" onclick="adj('sBathSm',1)">+</button></div></div>
+      <div class="scard"><label>Standard Bath</label><div class="counter"><button class="cbtn" onclick="adj('sBathMd',-1)">&#8722;</button><div class="cval" id="sBathMd">0</div><button class="cbtn" onclick="adj('sBathMd',1)">+</button></div></div>
+      <div class="scard"><label>Large / Ensuite</label><div class="counter"><button class="cbtn" onclick="adj('sBathLg',-1)">&#8722;</button><div class="cval" id="sBathLg">0</div><button class="cbtn" onclick="adj('sBathLg',1)">+</button></div></div>
     </div>
     <div class="sdiv">Other</div>
     <div class="sgrid">
-      <div class="scard"><label>Kitchen</label><div class="counter"><button class="cbtn" onclick="adj('sKitchen',-1)">−</button><div class="cval" id="sKitchen">0</div><button class="cbtn" onclick="adj('sKitchen',1)">+</button></div></div>
-      <div class="scard"><label>Laundry Room</label><div class="counter"><button class="cbtn" onclick="adj('sLaundry',-1)">−</button><div class="cval" id="sLaundry">0</div><button class="cbtn" onclick="adj('sLaundry',1)">+</button></div></div>
-      <div class="scard"><label>Closets</label><div class="counter"><button class="cbtn" onclick="adj('sCloset',-1)">−</button><div class="cval" id="sCloset">0</div><button class="cbtn" onclick="adj('sCloset',1)">+</button></div></div>
-      <div class="scard"><label>Stairwell</label><div class="counter"><button class="cbtn" onclick="adj('sStairSm',-1)">−</button><div class="cval" id="sStairSm">0</div><button class="cbtn" onclick="adj('sStairSm',1)">+</button></div></div>
-      <div class="scard"><label>Large Stairwell</label><div class="counter"><button class="cbtn" onclick="adj('sStairLg',-1)">−</button><div class="cval" id="sStairLg">0</div><button class="cbtn" onclick="adj('sStairLg',1)">+</button></div></div>
+      <div class="scard"><label>Kitchen</label><div class="counter"><button class="cbtn" onclick="adj('sKitchen',-1)">&#8722;</button><div class="cval" id="sKitchen">0</div><button class="cbtn" onclick="adj('sKitchen',1)">+</button></div></div>
+      <div class="scard"><label>Laundry Room</label><div class="counter"><button class="cbtn" onclick="adj('sLaundry',-1)">&#8722;</button><div class="cval" id="sLaundry">0</div><button class="cbtn" onclick="adj('sLaundry',1)">+</button></div></div>
+      <div class="scard"><label>Closets</label><div class="counter"><button class="cbtn" onclick="adj('sCloset',-1)">&#8722;</button><div class="cval" id="sCloset">0</div><button class="cbtn" onclick="adj('sCloset',1)">+</button></div></div>
+      <div class="scard"><label>Stairwell</label><div class="counter"><button class="cbtn" onclick="adj('sStairSm',-1)">&#8722;</button><div class="cval" id="sStairSm">0</div><button class="cbtn" onclick="adj('sStairSm',1)">+</button></div></div>
+      <div class="scard"><label>Large Stairwell</label><div class="counter"><button class="cbtn" onclick="adj('sStairLg',-1)">&#8722;</button><div class="cval" id="sStairLg">0</div><button class="cbtn" onclick="adj('sStairLg',1)">+</button></div></div>
     </div>
   </div>
   <div class="s-bot">
     <div class="nav">
-      <button class="nbtn bk" onclick="goScreen(3)">← Back</button>
-      <button class="nbtn pri" onclick="goNext(2)">Next →</button>
+      <button class="nbtn bk" onclick="goScreen(3)">&#8592; Back</button>
+      <button class="nbtn pri" onclick="goNext(2)">Next &#8594;</button>
     </div>
   </div>
 </div>
 
-<!-- SCREEN 3 — Contact -->
 <div class="screen" id="s3">
-
   <div class="s-top">
     <div class="step-lbl">Step 4 of 4</div>
     <h1>Your details.</h1>
@@ -301,134 +258,128 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
     <div class="sdiv">Photos (optional, up to 5)</div>
     <div class="nbox">Photos of the space help us follow up with more accurate information.</div>
     <input type="file" id="intPhotos" accept="image/*" multiple style="display:none" onchange="handlePhotos('int')">
-    <button class="nbtn" style="margin-bottom:.75rem;background:#f7f9fc;border:1.5px dashed var(--border)" onclick="document.getElementById('intPhotos').click()">📷 Add photos (optional)</button>
+    <button class="nbtn" style="margin-bottom:.75rem;background:#f7f9fc;border:1.5px dashed var(--border)" onclick="document.getElementById('intPhotos').click()">&#128247; Add photos (optional)</button>
     <div id="intPhotoPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.5rem"></div>
   </div>
   <div class="s-bot">
     <div class="nav">
-      <button class="nbtn bk" onclick="goScreen(2)">← Back</button>
-      <button class="nbtn pri" onclick="goNext(3)">Get my estimate →</button>
+      <button class="nbtn bk" onclick="goScreen(2)">&#8592; Back</button>
+      <button class="nbtn pri" onclick="goNext(3)">Get my estimate &#8594;</button>
     </div>
   </div>
 </div>
 
-
-<!-- EXTERIOR SCREEN A — Main surface -->
 <div class="screen" id="sExtA">
   <div class="s-top">
-    <div class="step-lbl">Exterior — Step 1 of 3</div>
+    <div class="step-lbl">Exterior &#8212; Step 1 of 3</div>
     <h1>What's the main surface?</h1>
     <p class="sub">Select the primary material on the exterior of the home.</p>
   </div>
   <div class="s-mid">
     <div class="cgrid c2" id="surfaceGrid">
-      <div class="ccard on" data-val="vinyl"><div class="ck"></div><span class="ci">🔲</span><div class="cl">Vinyl / Aluminum</div><span class="cs">Most common siding type</span></div>
-      <div class="ccard" data-val="wood"><div class="ck"></div><span class="ci">🪵</span><div class="cl">Wood</div><span class="cs">Wood siding or clapboard</span></div>
-      <div class="ccard" data-val="brick"><div class="ck"></div><span class="ci">🧱</span><div class="cl">Brick / Masonry</div><span class="cs">Painted or unpainted brick</span></div>
-      <div class="ccard" data-val="stucco"><div class="ck"></div><span class="ci">🏗️</span><div class="cl">Stucco</div><span class="cs">Textured stucco finish</span></div>
-      <div class="ccard" data-val="fiberCement"><div class="ck"></div><span class="ci">🏠</span><div class="cl">Fiber Cement</div><span class="cs">HardiePlank or similar</span></div>
-      <div class="ccard" data-val="metal"><div class="ck"></div><span class="ci">🔧</span><div class="cl">Metal / Steel</div><span class="cs">Metal siding or panels</span></div>
-      <div class="ccard" data-val="noWalls" style="grid-column:span 2"><div class="ck"></div><span class="ci">🚫</span><div class="cl">No walls — trim & elements only</div><span class="cs">Doors, trim, fence etc. — no main wall painting</span></div>
+      <div class="ccard on" data-val="vinyl"><div class="ck"></div><span class="ci">&#128306;</span><div class="cl">Vinyl / Aluminum</div><span class="cs">Most common siding type</span></div>
+      <div class="ccard" data-val="wood"><div class="ck"></div><span class="ci">&#129683;</span><div class="cl">Wood</div><span class="cs">Wood siding or clapboard</span></div>
+      <div class="ccard" data-val="brick"><div class="ck"></div><span class="ci">&#129521;</span><div class="cl">Brick / Masonry</div><span class="cs">Painted or unpainted brick</span></div>
+      <div class="ccard" data-val="stucco"><div class="ck"></div><span class="ci">&#127959;&#65039;</span><div class="cl">Stucco</div><span class="cs">Textured stucco finish</span></div>
+      <div class="ccard" data-val="fiberCement"><div class="ck"></div><span class="ci">&#127968;</span><div class="cl">Fiber Cement</div><span class="cs">HardiePlank or similar</span></div>
+      <div class="ccard" data-val="metal"><div class="ck"></div><span class="ci">&#128295;</span><div class="cl">Metal / Steel</div><span class="cs">Metal siding or panels</span></div>
+      <div class="ccard" data-val="noWalls" style="grid-column:span 2"><div class="ck"></div><span class="ci">&#128683;</span><div class="cl">No walls &#8212; trim &amp; elements only</div><span class="cs">Doors, trim, fence etc. &#8212; no main wall painting</span></div>
     </div>
   </div>
   <div class="s-bot">
     <div class="nav">
-      <button class="nbtn bk" onclick="goScreen('sIntro')">← Back</button>
-      <button class="nbtn pri" onclick="goExtNext('A')">Next →</button>
+      <button class="nbtn bk" onclick="goScreen('sIntro')">&#8592; Back</button>
+      <button class="nbtn pri" onclick="goExtNext('A')">Next &#8594;</button>
     </div>
   </div>
 </div>
 
-<!-- EXTERIOR SCREEN B — Elements + power wash -->
 <div class="screen" id="sExtB">
   <div class="s-top">
-    <div class="step-lbl">Exterior — Step 2 of 3</div>
+    <div class="step-lbl">Exterior &#8212; Step 2 of 3</div>
     <h1>What needs painting?</h1>
     <p class="sub">Select everything that needs to be painted. Select all that apply.</p>
   </div>
   <div class="s-mid">
     <div class="sdiv">Roof trim</div>
     <div class="cgrid c2">
-      <div class="ccard extElem" data-ext="soffit"><div class="ck"></div><span class="ci">📐</span><div class="cl">Soffits</div></div>
-      <div class="ccard extElem" data-ext="fascia"><div class="ck"></div><span class="ci">📏</span><div class="cl">Fascia</div></div>
-      <div class="ccard extElem" data-ext="gutters"><div class="ck"></div><span class="ci">🌧️</span><div class="cl">Gutters & Downspouts</div></div>
-      <div class="ccard extElem" data-ext="shutters"><div class="ck"></div><span class="ci">🪟</span><div class="cl">Window Frames & Shutters</div></div>
+      <div class="ccard extElem" data-ext="soffit"><div class="ck"></div><span class="ci">&#128208;</span><div class="cl">Soffits</div></div>
+      <div class="ccard extElem" data-ext="fascia"><div class="ck"></div><span class="ci">&#128207;</span><div class="cl">Fascia</div></div>
+      <div class="ccard extElem" data-ext="gutters"><div class="ck"></div><span class="ci">&#127783;&#65039;</span><div class="cl">Gutters &amp; Downspouts</div></div>
+      <div class="ccard extElem" data-ext="shutters"><div class="ck"></div><span class="ci">&#129695;</span><div class="cl">Window Frames &amp; Shutters</div></div>
     </div>
     <div class="sdiv">Doors</div>
     <div class="cgrid c2">
-      <div class="ccard extElem" data-ext="entryDoor"><div class="ck"></div><span class="ci">🚪</span><div class="cl">Entry Door(s)</div></div>
-      <div class="ccard extElem" data-ext="garageDoor"><div class="ck"></div><span class="ci">🚘</span><div class="cl">Garage Door(s)</div></div>
-      <div class="ccard extElem" data-ext="frenchDoor"><div class="ck"></div><span class="ci">🪟</span><div class="cl">Patio / French Doors</div></div>
-      <div class="ccard extElem" data-ext="foundation"><div class="ck"></div><span class="ci">🏗️</span><div class="cl">Foundation / Parging</div></div>
+      <div class="ccard extElem" data-ext="entryDoor"><div class="ck"></div><span class="ci">&#128682;</span><div class="cl">Entry Door(s)</div></div>
+      <div class="ccard extElem" data-ext="garageDoor"><div class="ck"></div><span class="ci">&#128664;</span><div class="cl">Garage Door(s)</div></div>
+      <div class="ccard extElem" data-ext="frenchDoor"><div class="ck"></div><span class="ci">&#129695;</span><div class="cl">Patio / French Doors</div></div>
+      <div class="ccard extElem" data-ext="foundation"><div class="ck"></div><span class="ci">&#127959;&#65039;</span><div class="cl">Foundation / Parging</div></div>
     </div>
     <div class="sdiv">Outdoor structures</div>
     <div class="cgrid c2">
-      <div class="ccard extElem" data-ext="fence"><div class="ck"></div><span class="ci">🌳</span><div class="cl">Fence</div></div>
-      <div class="ccard extElem" data-ext="deck"><div class="ck"></div><span class="ci">🪵</span><div class="cl">Deck / Porch Floor</div></div>
-      <div class="ccard extElem" data-ext="porch"><div class="ck"></div><span class="ci">🏡</span><div class="cl">Porch Ceiling & Columns</div></div>
-      <div class="ccard extElem" data-ext="railing"><div class="ck"></div><span class="ci">🔩</span><div class="cl">Railings</div></div>
-      <div class="ccard extElem" data-ext="pergola"><div class="ck"></div><span class="ci">🌲</span><div class="cl">Pergola / Gazebo</div></div>
-      <div class="ccard extElem" data-ext="retaining"><div class="ck"></div><span class="ci">🪨</span><div class="cl">Retaining Wall</div></div>
+      <div class="ccard extElem" data-ext="fence"><div class="ck"></div><span class="ci">&#127795;</span><div class="cl">Fence</div></div>
+      <div class="ccard extElem" data-ext="deck"><div class="ck"></div><span class="ci">&#129683;</span><div class="cl">Deck / Porch Floor</div></div>
+      <div class="ccard extElem" data-ext="porch"><div class="ck"></div><span class="ci">&#127969;</span><div class="cl">Porch Ceiling &amp; Columns</div></div>
+      <div class="ccard extElem" data-ext="railing"><div class="ck"></div><span class="ci">&#128297;</span><div class="cl">Railings</div></div>
+      <div class="ccard extElem" data-ext="pergola"><div class="ck"></div><span class="ci">&#127794;</span><div class="cl">Pergola / Gazebo</div></div>
+      <div class="ccard extElem" data-ext="retaining"><div class="ck"></div><span class="ci">&#129704;</span><div class="cl">Retaining Wall</div></div>
     </div>
     <div class="sdiv">Power wash</div>
     <div class="cgrid c3" id="washGrid">
-      <div class="ccard on" data-val="no"><div class="ck"></div><span class="ci">✋</span><div class="cl">Not needed</div><span class="cs">Surface is clean</span></div>
-      <div class="ccard" data-val="yes"><div class="ck"></div><span class="ci">💧</span><div class="cl">Yes — needed</div><span class="cs">Surface needs a wash first</span></div>
-      <div class="ccard" data-val="unsure"><div class="ck"></div><span class="ci">🤔</span><div class="cl">Not sure</div><span class="cs">We'll assess on-site</span></div>
+      <div class="ccard on" data-val="no"><div class="ck"></div><span class="ci">&#9995;</span><div class="cl">Not needed</div><span class="cs">Surface is clean</span></div>
+      <div class="ccard" data-val="yes"><div class="ck"></div><span class="ci">&#128167;</span><div class="cl">Yes &#8212; needed</div><span class="cs">Surface needs a wash first</span></div>
+      <div class="ccard" data-val="unsure"><div class="ck"></div><span class="ci">&#129300;</span><div class="cl">Not sure</div><span class="cs">We'll assess on-site</span></div>
     </div>
-
   </div>
   <div class="s-bot">
     <div class="nav">
-      <button class="nbtn bk" onclick="goScreen('sExtA')">← Back</button>
-      <button class="nbtn pri" onclick="goExtNext('B')">Next →</button>
+      <button class="nbtn bk" onclick="goScreen('sExtA')">&#8592; Back</button>
+      <button class="nbtn pri" onclick="goExtNext('B')">Next &#8594;</button>
     </div>
   </div>
 </div>
 
-<!-- EXTERIOR SCREEN C — Contact -->
 <div class="screen" id="sExtC">
   <div class="s-top">
-    <div class="step-lbl">Exterior — Step 3 of 3</div>
+    <div class="step-lbl">Exterior &#8212; Step 3 of 3</div>
     <h1>Your details.</h1>
     <p class="sub">Enter your info and we'll follow up within a few hours to discuss your project and put together a custom quote.</p>
   </div>
   <div class="s-mid">
-    <div class="nbox"><strong>Exterior jobs are priced on-site.</strong> Every exterior is different — surface condition, access, and prep requirements all affect the final price. We'll review your project details and get back to you with a custom quote after a quick on-site visit.</div>
+    <div class="nbox"><strong>Exterior jobs are priced on-site.</strong> Every exterior is different &#8212; surface condition, access, and prep requirements all affect the final price. We'll review your project details and get back to you with a custom quote after a quick on-site visit.</div>
     <div class="field"><label>Full name</label><input type="text" id="extName" placeholder="Sarah Chen" autocomplete="name"></div>
     <div class="field"><label>Phone number <span class="req">*</span></label><input type="tel" id="extPhone" placeholder="416-555-0100" autocomplete="tel" required><div class="err" id="extPhoneErr">Phone number is required</div></div>
     <div class="field"><label>Email address</label><input type="email" id="extEmail" placeholder="you@email.com" autocomplete="email"></div>
     <div class="field"><label>Property address</label><input type="text" id="extAddr" placeholder="123 King St W, Toronto" autocomplete="street-address"></div>
     <div class="sdiv">Photos (optional, up to 5)</div>
-    <div class="nbox">Add photos of the exterior — helps us prepare before we call you back.</div>
+    <div class="nbox">Add photos of the exterior &#8212; helps us prepare before we call you back.</div>
     <input type="file" id="extPhotos" accept="image/*" multiple style="display:none" onchange="handlePhotos('ext')">
-    <button class="nbtn" style="margin-bottom:.75rem;background:#f7f9fc;border:1.5px dashed var(--border)" onclick="document.getElementById('extPhotos').click()">📷 Add photos (optional)</button>
+    <button class="nbtn" style="margin-bottom:.75rem;background:#f7f9fc;border:1.5px dashed var(--border)" onclick="document.getElementById('extPhotos').click()">&#128247; Add photos (optional)</button>
     <div id="extPhotoPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.5rem"></div>
   </div>
   <div class="s-bot">
     <div class="nav">
-      <button class="nbtn bk" onclick="goScreen('sExtB')">← Back</button>
-      <button class="nbtn pri" onclick="submitExtAndShow()">Request a quote →</button>
+      <button class="nbtn bk" onclick="goScreen('sExtB')">&#8592; Back</button>
+      <button class="nbtn pri" onclick="submitExtAndShow()">Request a quote &#8594;</button>
     </div>
   </div>
 </div>
 
-<!-- MURAL SCREEN A — Surface & size -->
 <div class="screen" id="sMuralA">
   <div class="s-top">
-    <div class="step-lbl">Mural — Step 1 of 2</div>
+    <div class="step-lbl">Mural &#8212; Step 1 of 2</div>
     <h1>Tell us about the wall.</h1>
     <p class="sub">We'll reach out within a few hours to discuss your vision and provide a custom quote.</p>
   </div>
   <div class="s-mid">
     <div class="sdiv">Wall surface material</div>
     <div class="cgrid c2" id="muralSurfGrid">
-      <div class="ccard on" data-val="drywall"><div class="ck"></div><span class="ci">⬜</span><div class="cl">Drywall</div><span class="cs">Standard painted drywall</span></div>
-      <div class="ccard" data-val="brick"><div class="ck"></div><span class="ci">🧱</span><div class="cl">Brick / Concrete</div><span class="cs">Raw or painted masonry</span></div>
-      <div class="ccard" data-val="wood"><div class="ck"></div><span class="ci">🪵</span><div class="cl">Wood</div><span class="cs">Wood paneling or plank</span></div>
-      <div class="ccard" data-val="plaster"><div class="ck"></div><span class="ci">🏚️</span><div class="cl">Plaster / Stucco</div><span class="cs">Textured surface</span></div>
-      <div class="ccard" data-val="glass"><div class="ck"></div><span class="ci">🪟</span><div class="cl">Glass / Window</div><span class="cs">Painted glass panel</span></div>
-      <div class="ccard" data-val="other"><div class="ck"></div><span class="ci">❓</span><div class="cl">Other / Not sure</div><span class="cs">We'll assess on-site</span></div>
+      <div class="ccard on" data-val="drywall"><div class="ck"></div><span class="ci">&#11036;</span><div class="cl">Drywall</div><span class="cs">Standard painted drywall</span></div>
+      <div class="ccard" data-val="brick"><div class="ck"></div><span class="ci">&#129521;</span><div class="cl">Brick / Concrete</div><span class="cs">Raw or painted masonry</span></div>
+      <div class="ccard" data-val="wood"><div class="ck"></div><span class="ci">&#129683;</span><div class="cl">Wood</div><span class="cs">Wood paneling or plank</span></div>
+      <div class="ccard" data-val="plaster"><div class="ck"></div><span class="ci">&#127960;</span><div class="cl">Plaster / Stucco</div><span class="cs">Textured surface</span></div>
+      <div class="ccard" data-val="glass"><div class="ck"></div><span class="ci">&#129695;</span><div class="cl">Glass / Window</div><span class="cs">Painted glass panel</span></div>
+      <div class="ccard" data-val="other"><div class="ck"></div><span class="ci">&#10067;</span><div class="cl">Other / Not sure</div><span class="cs">We'll assess on-site</span></div>
     </div>
     <div class="sdiv">Wall dimensions</div>
     <div class="g2">
@@ -438,30 +389,29 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
     <div class="field"><label>Calculated wall area</label><input type="number" min="0" id="muralSqft" placeholder="auto" readonly style="background:#f7f9fc;color:#6b7280;font-weight:600"></div>
     <div class="sdiv">Surface condition</div>
     <div class="cgrid c3" id="muralCondGrid">
-      <div class="ccard on" data-val="good"><div class="ck"></div><span class="ci">✅</span><div class="cl">Good</div><span class="cs">Smooth, clean, ready to paint</span></div>
-      <div class="ccard" data-val="prep"><div class="ck"></div><span class="ci">🔧</span><div class="cl">Needs prep</div><span class="cs">Some cracks, texture or patches</span></div>
-      <div class="ccard" data-val="rough"><div class="ck"></div><span class="ci">🛠️</span><div class="cl">Rough / textured</div><span class="cs">Heavily textured or uneven</span></div>
+      <div class="ccard on" data-val="good"><div class="ck"></div><span class="ci">&#9989;</span><div class="cl">Good</div><span class="cs">Smooth, clean, ready to paint</span></div>
+      <div class="ccard" data-val="prep"><div class="ck"></div><span class="ci">&#128295;</span><div class="cl">Needs prep</div><span class="cs">Some cracks, texture or patches</span></div>
+      <div class="ccard" data-val="rough"><div class="ck"></div><span class="ci">&#128736;&#65039;</span><div class="cl">Rough / textured</div><span class="cs">Heavily textured or uneven</span></div>
     </div>
     <div class="sdiv">Tell us about your vision (optional)</div>
     <div class="field"><input type="text" id="muralNotes" placeholder="e.g. abstract floral, kids room, company logo, outdoor scene..." autocomplete="off"></div>
   </div>
   <div class="s-bot">
     <div class="nav">
-      <button class="nbtn bk" onclick="goScreen('sIntro')">← Back</button>
-      <button class="nbtn pri" onclick="goMuralNext()">Next →</button>
+      <button class="nbtn bk" onclick="goScreen('sIntro')">&#8592; Back</button>
+      <button class="nbtn pri" onclick="goMuralNext()">Next &#8594;</button>
     </div>
   </div>
 </div>
 
-<!-- MURAL SCREEN B — Photos + contact -->
 <div class="screen" id="sMuralB">
   <div class="s-top">
-    <div class="step-lbl">Mural — Step 2 of 2</div>
-    <h1>Your details & photos.</h1>
-    <p class="sub">Add a photo of the wall if you have one — it helps us a lot. We'll follow up within a few hours.</p>
+    <div class="step-lbl">Mural &#8212; Step 2 of 2</div>
+    <h1>Your details &amp; photos.</h1>
+    <p class="sub">Add a photo of the wall if you have one &#8212; it helps us a lot. We'll follow up within a few hours.</p>
   </div>
   <div class="s-mid">
-    <div class="nbox"><strong>Mural pricing is custom.</strong> Every mural is unique — complexity, detail level, surface prep, and size all affect the final price. We'll review your project and get back to you with a detailed quote.</div>
+    <div class="nbox"><strong>Mural pricing is custom.</strong> Every mural is unique &#8212; complexity, detail level, surface prep, and size all affect the final price. We'll review your project and get back to you with a detailed quote.</div>
     <div class="field"><label>Full name</label><input type="text" id="muralName" placeholder="Sarah Chen" autocomplete="name"></div>
     <div class="field"><label>Phone number <span class="req">*</span></label><input type="tel" id="muralPhone" placeholder="416-555-0100" autocomplete="tel" required><div class="err" id="muralPhoneErr">Phone number is required</div></div>
     <div class="field"><label>Email address</label><input type="email" id="muralEmail" placeholder="you@email.com" autocomplete="email"></div>
@@ -469,24 +419,22 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
     <div class="sdiv">Photos (up to 5)</div>
     <div class="nbox">Add a photo of the wall and any inspiration images. This helps us understand your space and vision.</div>
     <input type="file" id="muralPhotos" accept="image/*" multiple style="display:none" onchange="handlePhotos('mural')">
-    <button class="nbtn" style="margin-bottom:.75rem;background:#f7f9fc;border:1.5px dashed var(--border)" onclick="document.getElementById('muralPhotos').click()">📷 Add photos (up to 5)</button>
+    <button class="nbtn" style="margin-bottom:.75rem;background:#f7f9fc;border:1.5px dashed var(--border)" onclick="document.getElementById('muralPhotos').click()">&#128247; Add photos (up to 5)</button>
     <div id="muralPhotoPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.5rem"></div>
   </div>
   <div class="s-bot">
     <div class="nav">
-      <button class="nbtn bk" onclick="goScreen('sMuralA')">← Back</button>
-      <button class="nbtn pri" onclick="submitMural()">Request a quote →</button>
+      <button class="nbtn bk" onclick="goScreen('sMuralA')">&#8592; Back</button>
+      <button class="nbtn pri" onclick="submitMural()">Request a quote &#8594;</button>
     </div>
   </div>
 </div>
 
-<!-- SPINNER -->
 <div class="spin" id="spinner">
-  <div class="sdrop">🎨</div>
+  <div class="sdrop">&#127912;</div>
   <p>Crunching the numbers...<br><strong>Almost ready.</strong></p>
 </div>
 
-<!-- SCREEN 4 — Result -->
 <div class="screen" id="s4">
   <div class="s-top">
     <div class="step-lbl">Your estimate</div>
@@ -504,15 +452,15 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(20px,4.5vw,32px);line-he
     </div>
     <div class="ctabox">
       <h3>What happens next?</h3>
-      <p>Adam will call or text you within a few hours to answer questions and book your free on-site visit — that's where we lock in the final price. No surprises, no obligation.</p>
-      <a class="ctaa pri" href="tel:9055366799">📞 Call or text — 905-536-6799</a>
-      <a class="ctaa sec" href="https://tenbellpainting.com" target="_blank">🌐 tenbellpainting.com</a>
+      <p>Adam will call or text you within a few hours to answer questions and book your free on-site visit &#8212; that's where we lock in the final price. No surprises, no obligation.</p>
+      <a class="ctaa pri" href="tel:9055366799">&#128222; Call or text &#8212; 905-536-6799</a>
+      <a class="ctaa sec" href="https://tenbellpainting.com" target="_blank">&#127760; tenbellpainting.com</a>
     </div>
     <p class="disc">Preliminary estimate only. Final pricing depends on prep required, layout complexity, and confirmed scope. Estimates are always free and non-binding.</p>
   </div>
   <div class="s-bot">
     <div class="nav">
-      <button class="nbtn bk" onclick="goScreen(3)">← Adjust</button>
+      <button class="nbtn bk" onclick="goScreen(3)">&#8592; Adjust</button>
       <button class="nbtn pri" onclick="resetAll()">New estimate</button>
     </div>
   </div>
@@ -548,138 +496,38 @@ function showSpin(){
   postHeightToParent();
 }
 
-/* ── Iframe height auto-resize: tells parent (Wix) the document height
-   so the iframe can grow/shrink to fit. Eliminates double-scroll on mobile. */
 let __lastH=0;
 function postHeightToParent(){
   try{
-    const h=Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.offsetHeight
-    );
+    const h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight,document.body.offsetHeight,document.documentElement.offsetHeight);
     if(Math.abs(h-__lastH)<4) return;
     __lastH=h;
-    if(window.parent&&window.parent!==window){
-      window.parent.postMessage({type:'tenbell-estimator-height',height:h},'*');
-    }
+    if(window.parent&&window.parent!==window){window.parent.postMessage({type:'tenbell-estimator-height',height:h},'*');}
   }catch(e){}
 }
 window.addEventListener('load',()=>{postHeightToParent();setTimeout(postHeightToParent,300);setTimeout(postHeightToParent,1000);});
 window.addEventListener('resize',postHeightToParent);
-if(window.ResizeObserver){
-  try{new ResizeObserver(postHeightToParent).observe(document.body);}catch(e){}
-}
+if(window.ResizeObserver){try{new ResizeObserver(postHeightToParent).observe(document.body);}catch(e){}}
 setInterval(postHeightToParent,1500);
 
-function adj(id,d){
-  counts[id]=Math.max(0,counts[id]+d);
-  document.getElementById(id).textContent=counts[id];
-}
+function adj(id,d){counts[id]=Math.max(0,counts[id]+d);document.getElementById(id).textContent=counts[id];}
 
-// Type cards
-document.querySelectorAll('#typeGrid .ccard').forEach(el=>{
-  el.addEventListener('click',function(){
-    document.querySelectorAll('#typeGrid .ccard').forEach(e=>e.classList.remove('on'));
-    this.classList.add('on');S.type=this.dataset.val;
-    document.getElementById('typeErr').style.display='none';
-  });
-});
+document.querySelectorAll('#typeGrid .ccard').forEach(el=>{el.addEventListener('click',function(){document.querySelectorAll('#typeGrid .ccard').forEach(e=>e.classList.remove('on'));this.classList.add('on');S.type=this.dataset.val;document.getElementById('typeErr').style.display='none';});});
+document.querySelectorAll('#scopeGrid .ccard').forEach(el=>{el.addEventListener('click',function(){this.classList.toggle('on');const v=this.dataset.scope;const i=S.scope.indexOf(v);if(i>-1)S.scope.splice(i,1);else S.scope.push(v);if(!S.scope.length){S.scope.push('walls');document.querySelector('#scopeGrid .ccard[data-scope="walls"]').classList.add('on');}});});
+document.querySelectorAll('#condGrid .ccard').forEach(el=>{el.addEventListener('click',function(){document.querySelectorAll('#condGrid .ccard').forEach(e=>e.classList.remove('on'));this.classList.add('on');S.cond=this.dataset.val;});});
+[['coatGrp','coat'],['occGrp','occ']].forEach(([g,k])=>{document.querySelectorAll('#'+g+' .pill').forEach(el=>{el.addEventListener('click',function(){document.querySelectorAll('#'+g+' .pill').forEach(e=>e.classList.remove('on'));this.classList.add('on');S[k]=this.dataset.val;});});});
 
-// Scope cards (multi)
-document.querySelectorAll('#scopeGrid .ccard').forEach(el=>{
-  el.addEventListener('click',function(){
-    this.classList.toggle('on');
-    const v=this.dataset.scope;
-    const i=S.scope.indexOf(v);
-    if(i>-1)S.scope.splice(i,1);else S.scope.push(v);
-    if(!S.scope.length){S.scope.push('walls');document.querySelector('#scopeGrid .ccard[data-scope="walls"]').classList.add('on');}
-  });
-});
+function startInterior(){S.mode='interior';goScreen(0);}
+function startExterior(){S.mode='exterior';goScreen('sExtA');}
 
-// Condition cards
-document.querySelectorAll('#condGrid .ccard').forEach(el=>{
-  el.addEventListener('click',function(){
-    document.querySelectorAll('#condGrid .ccard').forEach(e=>e.classList.remove('on'));
-    this.classList.add('on');S.cond=this.dataset.val;
-  });
-});
-
-// Pill groups
-[['coatGrp','coat'],['occGrp','occ']].forEach(([g,k])=>{
-  document.querySelectorAll('#'+g+' .pill').forEach(el=>{
-    el.addEventListener('click',function(){
-      document.querySelectorAll('#'+g+' .pill').forEach(e=>e.classList.remove('on'));
-      this.classList.add('on');S[k]=this.dataset.val;
-    });
-  });
-});
-
-function startInterior(){
-  S.mode='interior';
-  goScreen(0);
-}
-function startExterior(){
-  S.mode='exterior';
-  goScreen('sExtA');
-}
-
-// Exterior element multi-select
 const extSel=new Set();
-document.querySelectorAll('.extElem').forEach(el=>{
-  el.addEventListener('click',function(){
-    this.classList.toggle('on');
-    const v=this.dataset.ext;
-    if(extSel.has(v))extSel.delete(v);else extSel.add(v);
-    
-  });
-});
+document.querySelectorAll('.extElem').forEach(el=>{el.addEventListener('click',function(){this.classList.toggle('on');const v=this.dataset.ext;if(extSel.has(v))extSel.delete(v);else extSel.add(v);});});
 
-// Exterior state
 const extS={surface:'vinyl',cond:'good',storeys:'1',coat:'match'};
+document.querySelectorAll('#surfaceGrid .ccard').forEach(el=>{el.addEventListener('click',function(){document.querySelectorAll('#surfaceGrid .ccard').forEach(e=>e.classList.remove('on'));this.classList.add('on');extS.surface=this.dataset.val;});});
+document.querySelectorAll('#washGrid .ccard').forEach(el=>{el.addEventListener('click',()=>{document.querySelectorAll('#washGrid .ccard').forEach(e=>e.classList.remove('on'));el.classList.add('on');extS.wash=el.dataset.val;});});
 
-// Surface type single select (sExtA)
-document.querySelectorAll('#surfaceGrid .ccard').forEach(el=>{
-  el.addEventListener('click',function(){
-    document.querySelectorAll('#surfaceGrid .ccard').forEach(e=>e.classList.remove('on'));
-    this.classList.add('on');extS.surface=this.dataset.val;
-  });
-});
-// Condition cards (sExtB2)
-document.querySelectorAll('#washGrid .ccard').forEach(el=>{
-  el.addEventListener('click',()=>{
-    document.querySelectorAll('#washGrid .ccard').forEach(e=>e.classList.remove('on'));
-    el.classList.add('on');
-    extS.wash=el.dataset.val;
-  });
-});
-document.querySelectorAll('#extCondGrid .ccard').forEach(el=>{
-  el.addEventListener('click',function(){
-    document.querySelectorAll('#extCondGrid .ccard').forEach(e=>e.classList.remove('on'));
-    this.classList.add('on');extS.cond=this.dataset.val;
-  });
-});
-// Storey and coat pills (sExtB2)
-[['storeyGrp','storeys'],['extCoatGrp','coat']].forEach(([g,k])=>{
-  document.querySelectorAll('#'+g+' .pill').forEach(el=>{
-    el.addEventListener('click',function(){
-      document.querySelectorAll('#'+g+' .pill').forEach(e=>e.classList.remove('on'));
-      this.classList.add('on');extS[k]=this.dataset.val;
-    });
-  });
-});
-
-function goExtNext(step){
-  if(step==='A'){
-    goScreen('sExtB');
-  } else if(step==='B'){
-    goScreen('sExtC');
-  } else if(step==='C'){
-    // validate phone handled in submitExtAndShow
-  }
-}
-
+function goExtNext(step){if(step==='A'){goScreen('sExtB');}else if(step==='B'){goScreen('sExtC');}}
 function gfe(id,fb=0){const v=parseFloat(document.getElementById(id)?.value);return isNaN(v)?fb:v;}
 
 function calcExteriorPrice(){
@@ -692,49 +540,9 @@ function calcExteriorPrice(){
   const cond=condMult[extS.cond]||1.00;
   const stor=storeyMult[extS.storeys]||1.00;
   const coat=coatMult[extS.coat]||1.00;
-  // Walls
   const wallSqft=gfe('extWallSqft');
-  if(wallSqft>0) base+=wallSqft*rate*cond*stor*coat;
-  // Soffit
-  const soffit=gfe('extSoffit');
-  if(soffit>0) base+=soffit*3.00*cond;
-  // Fascia
-  const fascia=gfe('extFascia');
-  if(fascia>0) base+=fascia*4.25*cond;
-  // Gutters
-  const gutters=gfe('extGutters');
-  if(gutters>0) base+=gutters*3.25*cond;
-  // Downspouts
-  const downspouts=gfe('extDownspouts');
-  if(downspouts>0) base+=downspouts*2.50*cond;
-  // Entry doors
-  const entryDoors=gfe('extEntryDoors');
-  if(entryDoors>0) base+=entryDoors*212;
-  // Garage doors
-  const garageDoors=gfe('extGarageDoors');
-  if(garageDoors>0) base+=garageDoors*375;
-  // Windows
-  const windows=gfe('extWindows');
-  if(windows>0) base+=windows*100;
-  // Shutters
-  const shutters=gfe('extShutters');
-  if(shutters>0) base+=shutters*105;
-  // Fence
-  const fence=gfe('extFence');
-  if(fence>0) base+=fence*5.50*cond;
-  // Deck
-  const deck=gfe('extDeck');
-  if(deck>0) base+=deck*3.25*cond;
-  // Railing
-  const railing=gfe('extRailing');
-  if(railing>0) base+=railing*6.50*cond;
-  // Porch ceiling
-  const porchCeil=gfe('extPorchCeil');
-  if(porchCeil>0) base+=porchCeil*2.875*cond;
-  // Columns
-  const columns=gfe('extColumns');
-  if(columns>0) base+=columns*100*cond;
-  if(base<572) base=572;
+  if(wallSqft>0)base+=wallSqft*rate*cond*stor*coat;
+  if(base<572)base=572;
   const mid=Math.round(base*1.05/50)*50;
   return{low:Math.round(mid*0.90/50)*50,high:Math.round(mid*1.20/50)*50,mid};
 }
@@ -749,80 +557,28 @@ async function submitExtAndShow(){
   const addr=document.getElementById('extAddr').value.trim();
   const{low,high,mid}=calcExteriorPrice();
   const surfaceLabel={vinyl:'Vinyl / Aluminum',wood:'Wood',brick:'Brick / Masonry',stucco:'Stucco',fiberCement:'Fiber Cement',metal:'Metal / Steel'};
-  const condLabel={good:'Good — ready to paint',fair:'Fair — light peeling/fading',poor:'Poor — heavy peeling/prep needed'};
+  const condLabel={good:'Good -- ready to paint',fair:'Fair -- light peeling/fading',poor:'Poor -- heavy peeling/prep needed'};
   const coatLabel={match:'Same / similar color',change:'Color change (2 coats)',major:'Major change / primer (3 coats)'};
   document.getElementById('rName').textContent=name?(name+"'s estimate is ready."):'Your estimate is ready.';
-  document.getElementById('rRange').textContent=fmt(low)+' – '+fmt(high);
-  const rows=[
-    ['Project','Exterior painting'],
-    ['Surface',surfaceLabel[extS.surface]||extS.surface],
-    ['Additional elements',extSel.size>0?Array.from(extSel).join(', '):'Walls only'],
-    ['Surface',surfaceLabel[extS.surface]||extS.surface],
-    ['Condition',condLabel[extS.cond]],
-    ['Storeys',extS.storeys+' storey'],
-    ['Color',coatLabel[extS.coat]],
-    ...(addr?[['Address',addr]]:[]),
-    ...(name?[['Name',name]]:[]),
-    ...(ph?[['Phone',ph]]:[]),
-  ];
+  document.getElementById('rRange').textContent=fmt(low)+' \u2013 '+fmt(high);
+  const rows=[['Project','Exterior painting'],['Surface',surfaceLabel[extS.surface]||extS.surface],['Additional elements',extSel.size>0?Array.from(extSel).join(', '):'Walls only'],['Condition',condLabel[extS.cond]],['Storeys',extS.storeys+' storey'],['Color',coatLabel[extS.coat]],...(addr?[['Address',addr]]:[]),...(name?[['Name',name]]:[]),...(ph?[['Phone',ph]]:[])];
   document.getElementById('sumRows').innerHTML=rows.map(r=>`<div class="rrow"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');
-  try{
-    await fetch('https://tenbell-bot.onrender.com/website-lead',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        name:name||'Website visitor',phone:ph,email,addr,
-        type:'exterior',
-        elements:extSel.size>0?Array.from(extSel).join(', '):'walls only',
-        surface:extS.surface,cond:extS.cond,
-        wash:extS.wash,
-        photos:photoStore.ext,photoCount:photoStore.ext.length,storeys:extS.storeys,coat:extS.coat,
-        wallSqft:gfe('extWallSqft'),soffit:gfe('extSoffit'),fascia:gfe('extFascia'),
-        gutters:gfe('extGutters'),downspouts:gfe('extDownspouts'),
-        entryDoors:gfe('extEntryDoors'),garageDoors:gfe('extGarageDoors'),
-        windows:gfe('extWindows'),shutters:gfe('extShutters'),
-        fence:gfe('extFence'),deck:gfe('extDeck'),railing:gfe('extRailing'),
-        porchCeil:gfe('extPorchCeil'),columns:gfe('extColumns'),
-        low,high,mid
-      })
-    });
-  }catch(e){console.log('ext lead err',e);}
+  try{await fetch('https://tenbell-bot.onrender.com/website-lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name||'Website visitor',phone:ph,email,addr,type:'exterior',elements:extSel.size>0?Array.from(extSel).join(', '):'walls only',surface:extS.surface,cond:extS.cond,wash:extS.wash,photos:photoStore.ext,photoCount:photoStore.ext.length,storeys:extS.storeys,coat:extS.coat,low,high,mid})});}catch(e){console.log('ext lead err',e);}
   setTimeout(()=>goScreen(4),1600);
 }
 
 function goNext(from){
-  if(from===0){
-    // Type selected → go to scope
-    if(!S.type){document.getElementById('typeErr').style.display='block';return;}
-    document.getElementById('typeErr').style.display='none';
-    goScreen(1);
-  } else if(from===1){
-    // Scope & details → validate sqft → go to spaces
-    const sq=parseFloat(document.getElementById('sqft').value);
-    if(!sq||sq<50){document.getElementById('sqftErr').style.display='block';return;}
-    document.getElementById('sqftErr').style.display='none';
-    goScreen(2);
-  } else if(from===2){
-    // Spaces → go to contact
-    goScreen(3);
-  } else if(from===3){
-    // Contact → validate phone → submit
+  if(from===0){if(!S.type){document.getElementById('typeErr').style.display='block';return;}document.getElementById('typeErr').style.display='none';goScreen(1);}
+  else if(from===1){const sq=parseFloat(document.getElementById('sqft').value);if(!sq||sq<50){document.getElementById('sqftErr').style.display='block';return;}document.getElementById('sqftErr').style.display='none';goScreen(2);}
+  else if(from===2){goScreen(3);}
+  else if(from===3){
     const ph=document.getElementById('cPhone').value.trim();
     const phoneDigits=ph.replace(/\D/g,'');
     const phoneErr=document.getElementById('phoneErr');
-    if(!ph||phoneDigits.length<10){
-      phoneErr.textContent=ph?'Please enter a valid 10-digit phone number':'Phone number is required';
-      phoneErr.style.display='block';
-      return;
-    }
+    if(!ph||phoneDigits.length<10){phoneErr.textContent=ph?'Please enter a valid 10-digit phone number':'Phone number is required';phoneErr.style.display='block';return;}
     phoneErr.style.display='none';
-    // Email is optional but if provided must look valid
     const em=document.getElementById('cEmail').value.trim();
-    if(em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){
-      let er=document.getElementById('emailErr');
-      if(!er){er=document.createElement('div');er.id='emailErr';er.className='err';document.getElementById('cEmail').parentNode.appendChild(er);}
-      er.textContent='Please check the email address';er.style.display='block';
-      return;
-    }
+    if(em&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){let er=document.getElementById('emailErr');if(!er){er=document.createElement('div');er.id='emailErr';er.className='err';document.getElementById('cEmail').parentNode.appendChild(er);}er.textContent='Please check the email address';er.style.display='block';return;}
     const er=document.getElementById('emailErr');if(er)er.style.display='none';
     submitAndShow();
   }
@@ -833,37 +589,58 @@ function gf(id,fb=0){const v=parseFloat(document.getElementById(id)?.value);retu
 function r50(n){return Math.round(n/50)*50;}
 function fmt(n){return '$'+Math.round(n).toLocaleString();}
 
-function getWallsRate(sqft,type){
-  if(type==='house'){if(sqft<=1000)return 2.75;if(sqft<=1500)return 2.55;if(sqft<=2000)return 2.35;return 2.10;}
-  if(type==='commercial')return getWallsRate(sqft,'condo')*1.20;
-  if(sqft<=300)return 3.75;if(sqft<=450)return 2.90;if(sqft<=700)return 2.55;
-  if(sqft<=900)return 2.50;if(sqft<=1300)return 2.40;if(sqft<=2000)return 2.15;return 1.85;
-}
-function getCeilRate(sqft){
-  if(sqft<=600)return 1.50;if(sqft<=800)return 1.35;if(sqft<=1100)return 1.20;
-  if(sqft<=1500)return 1.05;if(sqft<=2000)return 0.90;return 0.75;
-}
+// ── PRICING (aligned with quote.html on-site tool) ───────────
+// Same rates and coat factors so the estimator range always
+// contains the final on-site quote price.
+const WALL_RATIO   = 2.3;   // estimated wall sqft per floor sqft
+const WALL_RATE    = 0.66;  // $/wall sqft per coat
+const CEIL_RATE    = 0.42;  // $/floor sqft per coat
+const BASE_RATE    = 1.10;  // $/lft baseboards per coat
+const WIN_RATE     = 1.75;  // $/lft window casings per coat
+const DOOR_FRAME_R = 2.00;  // $/lft door frame casings per coat
+const DOOR_RATE    = 90;    // $/door slab per coat factor
+const TRIM_RATIO   = 0.34;  // estimated lft of trim per floor sqft
+const COAT_FACTOR  = {match:1.25, change:1.85, major:2.55};
 
 function calcPrice(){
-  const sqft=gf('sqft'),ceilH=gf('ceilH',8);
-  let base=0,wallBase=0;
-  if(S.scope.includes('walls')){wallBase=sqft*getWallsRate(sqft,S.type);base+=wallBase;}
-  if(S.scope.includes('trim'))base+=Math.max(40,Math.round(sqft*0.15))*2;
-  if(S.scope.includes('doors'))base+=200;
-  if(S.scope.includes('ceiling'))base+=sqft*getCeilRate(sqft);
-  if(ceilH>=10){const pct=ceilH>=12?0.18:ceilH>=11?0.12:0.10;base+=base*pct;}
-  let p=0;
-  p+=gn('sBed')*25;p+=gn('sOffice')*25;p+=gn('sHall')*50;
-  p+=gn('sBathSm')*75;p+=gn('sBathMd')*125;p+=gn('sBathLg')*150;
-  p+=gn('sKitchen')*75;p+=gn('sLaundry')*50;
-  const cl=gn('sCloset');if(cl===1)p+=50;else if(cl===2)p+=75;else if(cl>=3)p+=100;
-  p+=gn('sStairSm')*200;p+=gn('sStairLg')*350;
-  if(wallBase>0)p=Math.min(p,wallBase*0.15);
-  base+=p;
+  const sqft=gf('sqft')||0, ceilH=gf('ceilH',8);
+  if(!sqft) return{low:0,high:0,mid:0};
+  const cf=COAT_FACTOR[S.coat]||1.85;
+  const comm=S.type==='commercial'?1.40:1.0;
+  let base=0;
+
+  if(S.scope.includes('walls')){
+    const wallSqft=sqft*WALL_RATIO*0.85;
+    const ceilPrem=ceilH>=12?1.25:ceilH>=10?1.15:1.0;
+    base+=wallSqft*WALL_RATE*cf*comm*ceilPrem;
+  }
+  if(S.scope.includes('ceiling')){
+    const ceilOnly=S.scope.includes('walls')?1.0:1.5;
+    base+=sqft*CEIL_RATE*cf*comm*ceilOnly;
+  }
+  if(S.scope.includes('trim')){
+    const trimLft=sqft*TRIM_RATIO;
+    const estWin=Math.round(sqft/120);
+    base+=(trimLft*BASE_RATE+estWin*14*WIN_RATE)*cf*comm;
+  }
+  if(S.scope.includes('doors')){
+    const estDoors=Math.max(1,gn('sLiving')+gn('sBed')+gn('sOffice')+gn('sBathSm')+gn('sBathMd')+gn('sBathLg')+gn('sKitchen')+gn('sLaundry'));
+    base+=estDoors*(DOOR_RATE+17*DOOR_FRAME_R)*cf*comm;
+  }
+
+  let prem=0;
+  prem+=gn('sBathSm')*75;prem+=gn('sBathMd')*100;prem+=gn('sBathLg')*125;
+  prem+=gn('sKitchen')*75;prem+=gn('sHall')*30;prem+=gn('sLaundry')*30;
+  const cl=gn('sCloset');prem+=cl>=3?100:cl===2?75:cl===1?40:0;
+  prem+=gn('sStairSm')*200;prem+=gn('sStairLg')*350;
+  base+=Math.min(prem,base*0.12);
+
   if(S.cond==='minor')base*=1.12;else if(S.cond==='heavy')base*=1.30;
-  if(S.coat==='major')base*=1.30;else if(S.coat==='change')base*=1.15;
   if(S.occ==='yes')base+=75;
-  if(base<500)base=500;
+
+  const hasWalls=S.scope.includes('walls');
+  if(base<(hasWalls?400:550))base=hasWalls?400:550;
+
   const mid=r50(base*1.05);
   return{low:r50(mid*0.90),high:r50(mid*1.20),mid};
 }
@@ -876,125 +653,48 @@ async function submitAndShow(){
   const addr=document.getElementById('cAddr').value.trim();
   const sqft=gf('sqft'),ceilH=gf('ceilH',8);
   const{low,high,mid}=calcPrice();
-
   const tl={condo:'Condo',house:'House',apartment:'Apartment',rental:'Rental property',commercial:'Commercial'};
   document.getElementById('rName').textContent=name?(name+"'s estimate is ready."):'Your estimate is ready.';
-  document.getElementById('rRange').textContent=fmt(low)+' – '+fmt(high);
-
-  const rows=[
-    ['Project',tl[S.type]||S.type],
-    ['Floor area',sqft+' sqft'+(ceilH!==8?' | '+ceilH+'ft ceilings':'')],
-    ['Scope',S.scope.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(', ')],
-    ...(addr?[['Address',addr]]:[]),
-    ['Contact',phone+(email?' | '+email:'')],
-  ];
+  document.getElementById('rRange').textContent=fmt(low)+' \u2013 '+fmt(high);
+  const rows=[['Project',tl[S.type]||S.type],['Floor area',sqft+' sqft'+(ceilH!==8?' | '+ceilH+'ft ceilings':'')],['Scope',S.scope.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(', ')],...(addr?[['Address',addr]]:[]),['Contact',phone+(email?' | '+email:'')]];
   document.getElementById('sumRows').innerHTML=rows.map(r=>`<div class="rrow"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');
-
   let submitOk=true;
   try{
-    const resp=await fetch('https://tenbell-bot.onrender.com/website-lead',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        name:name||'Website visitor',phone,email,addr,
-        type:S.type,sqft,ceilH,scope:S.scope.join(', '),
-        coat:S.coat,cond:S.cond,occ:S.occ,
-        living:gn('sLiving'),beds:gn('sBed'),offices:gn('sOffice'),halls:gn('sHall'),
-        bathSm:gn('sBathSm'),bathMd:gn('sBathMd'),bathLg:gn('sBathLg'),
-        kitchen:gn('sKitchen'),laundry:gn('sLaundry'),closets:gn('sCloset'),
-        stairSm:gn('sStairSm'),stairLg:gn('sStairLg'),low,high,mid,
-        photos:photoStore.int,photoCount:photoStore.int.length
-      })
-    });
+    const resp=await fetch('https://tenbell-bot.onrender.com/website-lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name||'Website visitor',phone,email,addr,type:S.type,sqft,ceilH,scope:S.scope.join(', '),coat:S.coat,cond:S.cond,occ:S.occ,living:gn('sLiving'),beds:gn('sBed'),offices:gn('sOffice'),halls:gn('sHall'),bathSm:gn('sBathSm'),bathMd:gn('sBathMd'),bathLg:gn('sBathLg'),kitchen:gn('sKitchen'),laundry:gn('sLaundry'),closets:gn('sCloset'),stairSm:gn('sStairSm'),stairLg:gn('sStairLg'),low,high,mid,photos:photoStore.int,photoCount:photoStore.int.length})});
     if(!resp.ok)submitOk=false;
   }catch(e){submitOk=false;console.log('lead err',e);}
-
   setTimeout(()=>{
     goScreen(4);
-    if(!submitOk){
-      const note=document.createElement('div');
-      note.className='nbox';
-      note.style.cssText='background:#fff8e8;border-color:#f0c040;color:#7a5a00;margin-top:.75rem';
-      note.innerHTML='<strong>Heads up:</strong> we couldn\u2019t deliver your details automatically. Please call <strong>905-536-6799</strong> or email <strong>tenbellpainting@gmail.com</strong> with the estimate above so we can follow up.';
-      const r=document.getElementById('s4');
-      if(r){const sm=r.querySelector('.s-mid');(sm||r).insertBefore(note,(sm||r).firstChild);}
-    }
+    if(!submitOk){const note=document.createElement('div');note.className='nbox';note.style.cssText='background:#fff8e8;border-color:#f0c040;color:#7a5a00;margin-top:.75rem';note.innerHTML='<strong>Heads up:</strong> we couldn\u2019t deliver your details automatically. Please call <strong>905-536-6799</strong> or email <strong>tenbellpainting@gmail.com</strong> with the estimate above so we can follow up.';const r=document.getElementById('s4');if(r){const sm=r.querySelector('.s-mid');(sm||r).insertBefore(note,(sm||r).firstChild);}}
   },1600);
 }
 
-// ── Photo storage ────────────────────────────────────────────────────────────
 const photoStore={int:[],ext:[],mural:[]};
-
 function handlePhotos(type){
   const inputId={int:'intPhotos',ext:'extPhotos',mural:'muralPhotos'}[type];
   const previewId={int:'intPhotoPreview',ext:'extPhotoPreview',mural:'muralPhotoPreview'}[type];
-  const input=document.getElementById(inputId);
-  const preview=document.getElementById(previewId);
+  const input=document.getElementById(inputId);const preview=document.getElementById(previewId);
   if(!input||!preview)return;
   const files=Array.from(input.files).slice(0,5);
-  photoStore[type]=[];
-  preview.innerHTML='';
-  files.forEach((file,i)=>{
+  photoStore[type]=[];preview.innerHTML='';
+  files.forEach(file=>{
     const reader=new FileReader();
-    reader.onload=e=>{
-      const b64=e.target.result.split(',')[1];
-      photoStore[type].push({data:b64,type:file.type,name:file.name});
-      const img=document.createElement('img');
-      img.src=e.target.result;
-      img.style.cssText='width:72px;height:72px;object-fit:cover;border-radius:8px;border:1.5px solid var(--border)';
-      preview.appendChild(img);
-    };
+    reader.onload=e=>{const b64=e.target.result.split(',')[1];photoStore[type].push({data:b64,type:file.type,name:file.name});const img=document.createElement('img');img.src=e.target.result;img.style.cssText='width:72px;height:72px;object-fit:cover;border-radius:8px;border:1.5px solid var(--border)';preview.appendChild(img);};
     reader.readAsDataURL(file);
   });
 }
 
-// ── Mural state ───────────────────────────────────────────────────────────────
 const MURAL={surf:'drywall',cond:'good'};
-
-function startMural(){
-  S.mode='mural';
-  goScreen('sMuralA');
-}
-
-// Mural surface grid
-document.querySelectorAll('#muralSurfGrid .ccard').forEach(el=>{
-  el.addEventListener('click',function(){
-    document.querySelectorAll('#muralSurfGrid .ccard').forEach(e=>e.classList.remove('on'));
-    this.classList.add('on');MURAL.surf=this.dataset.val;
-  });
-});
-
-// Mural condition grid
-document.querySelectorAll('#muralCondGrid .ccard').forEach(el=>{
-  el.addEventListener('click',function(){
-    document.querySelectorAll('#muralCondGrid .ccard').forEach(e=>e.classList.remove('on'));
-    this.classList.add('on');MURAL.cond=this.dataset.val;
-  });
-});
-
-// Auto-calc mural sqft
-['muralWidth','muralHeight'].forEach(id=>{
-  document.getElementById(id)?.addEventListener('input',()=>{
-    const w=parseFloat(document.getElementById('muralWidth').value)||0;
-    const h=parseFloat(document.getElementById('muralHeight').value)||0;
-    const el=document.getElementById('muralSqft');
-    if(el)el.value=w>0&&h>0?Math.round(w*h):0;
-  });
-});
-
-function goMuralNext(){
-  goScreen('sMuralB');
-}
+function startMural(){S.mode='mural';goScreen('sMuralA');}
+document.querySelectorAll('#muralSurfGrid .ccard').forEach(el=>{el.addEventListener('click',function(){document.querySelectorAll('#muralSurfGrid .ccard').forEach(e=>e.classList.remove('on'));this.classList.add('on');MURAL.surf=this.dataset.val;});});
+document.querySelectorAll('#muralCondGrid .ccard').forEach(el=>{el.addEventListener('click',function(){document.querySelectorAll('#muralCondGrid .ccard').forEach(e=>e.classList.remove('on'));this.classList.add('on');MURAL.cond=this.dataset.val;});});
+['muralWidth','muralHeight'].forEach(id=>{document.getElementById(id)?.addEventListener('input',()=>{const w=parseFloat(document.getElementById('muralWidth').value)||0;const h=parseFloat(document.getElementById('muralHeight').value)||0;const el=document.getElementById('muralSqft');if(el)el.value=w>0&&h>0?Math.round(w*h):0;});});
+function goMuralNext(){goScreen('sMuralB');}
 
 async function submitMural(){
   const ph=document.getElementById('muralPhone').value.trim();
   if(!ph){document.getElementById('muralPhoneErr').style.display='block';return;}
   document.getElementById('muralPhoneErr').style.display='none';
-  const _w=parseFloat(document.getElementById('muralWidth').value)||0;
-  const _h=parseFloat(document.getElementById('muralHeight').value)||0;
-  if(_w===0&&_h===0){
-    // Allow submission without dimensions — they may not know exact size
-    // Just warn rather than block
-  }
   showSpin();
   const name=document.getElementById('muralName').value.trim();
   const email=document.getElementById('muralEmail').value.trim();
@@ -1004,58 +704,23 @@ async function submitMural(){
   const height=parseFloat(document.getElementById('muralHeight').value)||0;
   const wallSqft=parseFloat(document.getElementById('muralSqft').value)||Math.round(width*height);
   const surfLabels={drywall:'Drywall',brick:'Brick / Concrete',wood:'Wood',plaster:'Plaster / Stucco',glass:'Glass / Window',other:'Other / Not sure'};
-  const condLabels={good:'Good — ready',prep:'Needs prep',rough:'Rough / textured'};
-
+  const condLabels={good:'Good -- ready',prep:'Needs prep',rough:'Rough / textured'};
   document.getElementById('rName').textContent=name?('Thanks, '+name+'!'):'Thanks!';
-  document.getElementById('rRange').textContent='';
-  document.getElementById('rRange').style.display='none';
-  const rows=[
-    ['Project','Custom mural'],
-    ['Surface',surfLabels[MURAL.surf]||MURAL.surf],
-    ['Wall size',wallSqft>0?wallSqft+' sqft':'Not provided'],
-    ['Condition',condLabels[MURAL.cond]],
-    ...(notes?[['Vision',notes]]:[]),
-    ...(addr?[['Address',addr]]:[]),
-    ...(ph?[['Phone',ph]]:[]),
-    ...(email?[['Email',email]]:[]),
-    ...(photoStore.mural.length?[['Photos',photoStore.mural.length+' attached']]:[]),
-  ];
+  document.getElementById('rRange').textContent='';document.getElementById('rRange').style.display='none';
+  const rows=[['Project','Custom mural'],['Surface',surfLabels[MURAL.surf]||MURAL.surf],['Wall size',wallSqft>0?wallSqft+' sqft':'Not provided'],['Condition',condLabels[MURAL.cond]],...(notes?[['Vision',notes]]:[]),...(addr?[['Address',addr]]:[]),...(ph?[['Phone',ph]]:[]),...(email?[['Email',email]]:[]),...(photoStore.mural.length?[['Photos',photoStore.mural.length+' attached']]:[])];
   document.getElementById('sumRows').innerHTML=rows.map(r=>`<div class="rrow"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');
   document.querySelector('.ctabox h3').textContent="We'll be in touch shortly.";
-  document.querySelector('.ctabox p').textContent="Every mural is unique — we'll review your project details and reach out within a few hours to discuss your vision and provide a custom quote.";
-
-  try{
-    await fetch('https://tenbell-bot.onrender.com/website-lead',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        name:name||'Website visitor',phone:ph,email,addr,
-        type:'mural',surface:MURAL.surf,cond:MURAL.cond,
-        width,height,wallSqft,notes,
-        photos:photoStore.mural,
-        photoCount:photoStore.mural.length,
-        low:0,high:0,mid:0
-      })
-    });
-  }catch(e){console.log('mural lead err',e);}
-  setTimeout(()=>{
-    document.getElementById('rRange').style.display='';
-    goScreen(4);
-  },1600);
+  document.querySelector('.ctabox p').textContent="Every mural is unique -- we'll review your project details and reach out within a few hours to discuss your vision and provide a custom quote.";
+  try{await fetch('https://tenbell-bot.onrender.com/website-lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name||'Website visitor',phone:ph,email,addr,type:'mural',surface:MURAL.surf,cond:MURAL.cond,width,height,wallSqft,notes,photos:photoStore.mural,photoCount:photoStore.mural.length,low:0,high:0,mid:0})});}catch(e){console.log('mural lead err',e);}
+  setTimeout(()=>{document.getElementById('rRange').style.display='';goScreen(4);},1600);
 }
-
-
-// Mural progress handled in goScreen directly
 
 function resetAll(){
   S.type='';S.scope=['walls'];S.coat='match';S.cond='good';S.occ='no';S.mode='interior';
   MURAL.surf='drywall';MURAL.cond='good';
-  extSel.clear();
-  extS.surf='vinyl';extS.cond='good';extS.storeys='1';extS.coat='match';extS.wash='no';
+  extSel.clear();extS.surf='vinyl';extS.cond='good';extS.storeys='1';extS.coat='match';extS.wash='no';
   document.querySelectorAll('.extElem').forEach(e=>e.classList.remove('on'));
   document.querySelectorAll('#surfaceGrid .ccard').forEach((e,i)=>e.classList.toggle('on',i===0));
-  document.querySelectorAll('#extCondGrid .ccard').forEach((e,i)=>e.classList.toggle('on',i===0));
-  document.querySelectorAll('#storeyGrp .pill').forEach((e,i)=>e.classList.toggle('on',i===0));
-  document.querySelectorAll('#extCoatGrp .pill').forEach((e,i)=>e.classList.toggle('on',i===0));
   document.querySelectorAll('#washGrid .ccard').forEach((e,i)=>e.classList.toggle('on',i===0));
   photoStore.int=[];photoStore.ext=[];photoStore.mural=[];
   ['intPhotoPreview','extPhotoPreview','muralPhotoPreview'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
@@ -1063,14 +728,10 @@ function resetAll(){
   ['muralWidth','muralHeight','muralSqft','muralNotes','muralName','muralPhone','muralEmail','muralAddr'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.querySelectorAll('#muralSurfGrid .ccard').forEach((e,i)=>e.classList.toggle('on',i===0));
   document.querySelectorAll('#muralCondGrid .ccard').forEach((e,i)=>e.classList.toggle('on',i===0));
-  // Reset CTA box to interior defaults
-  const ctaH=document.querySelector('.ctabox h3');
-  const ctaP=document.querySelector('.ctabox p');
+  const ctaH=document.querySelector('.ctabox h3');const ctaP=document.querySelector('.ctabox p');
   if(ctaH)ctaH.textContent="What happens next?";
-  if(ctaP)ctaP.textContent="Adam will call or text you within a few hours to answer questions and book your free on-site visit. That's where we lock in the final price — no surprises, no obligation.";
-  // Reset rRange visibility
-  const rr=document.getElementById('rRange');
-  if(rr)rr.style.display='';
+  if(ctaP)ctaP.textContent="Adam will call or text you within a few hours to answer questions and book your free on-site visit. That's where we lock in the final price -- no surprises, no obligation.";
+  const rr=document.getElementById('rRange');if(rr)rr.style.display='';
   Object.keys(counts).forEach(k=>{counts[k]=0;const el=document.getElementById(k);if(el)el.textContent='0';});
   document.getElementById('sqft').value='';document.getElementById('ceilH').value='8';
   document.querySelectorAll('#typeGrid .ccard').forEach(e=>e.classList.remove('on'));
